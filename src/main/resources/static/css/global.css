@@ -1,0 +1,131 @@
+/* Global Styles */
+
+/* 1. Tipografía */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap');
+
+/* 2. Variables globales de colores */
+:root {
+    /* Colores principales */
+    --color-primary: #087E96;
+    --color-primary-light: #16A6B8;
+    --color-primary-dark: #065D70;
+
+    /* Colores secundarios */
+    --color-navy: #214676;
+    --color-background: #F5FAFB;
+    --color-surface: #DAF3F9;
+    --color-soft: #DDF5F7;
+
+    /* Colores de texto */
+    --color-text: #53749f;
+    --color-text-secondary: #64748B;
+    --color-text-light: #FFFFFF;
+
+    /* Estados */
+    --color-success: #23865B;
+    --color-danger: #C94343;
+    --color-warning: #D99A28;
+
+    /* Bordes y sombras */
+    --color-border: #DCE5EA;
+    --shadow-soft: 0 3px 12px rgba(23, 59, 101, 0.08);
+
+    /* Tipografía */
+    --font-main: 'Nunito Sans', sans-serif;
+
+    /* Tamaños de texto */
+    --text-small: 0.875rem;
+    --text-normal: 1rem;
+    --text-subtitle: 1.25rem;
+    --text-title: 1.875rem;
+
+    /* Bordes */
+    --radius-small: 8px;
+    --radius-medium: 14px;
+    --radius-large: 20px;
+}
+
+/* 3. Configuración general */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-main);
+    font-size: var(--text-normal);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    line-height: 1.5;
+}
+
+/* 4. Títulos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-main);
+    color: var(--color-navy);
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+/* 5. Enlaces */
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 6. Botones */
+button {
+    font-family: var(--font-main);
+    font-size: var(--text-normal);
+    cursor: pointer;
+}
+
+/* 7. Campos de formulario */
+input,
+select,
+textarea {
+    font-family: var(--font-main);
+    font-size: var(--text-normal);
+}
+
+/* 8. Accesibilidad: navegación con teclado */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 3px;
+}
+
+/* 9. Imágenes adaptables */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 10. Adaptación para pantallas pequeñas */
+@media (max-width: 600px) {
+    :root {
+        --text-title: 1.5rem;
+        --text-subtitle: 1.125rem;
+    }
+
+    body {
+        font-size: 0.9375rem;
+    }
+}

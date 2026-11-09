@@ -1,0 +1,49 @@
+<header th:fragment="header" class="main-header">
+
+    <!-- Botón para el menú del usuario -->
+    <div class="header-profile">
+
+        <button
+            type="button"
+            class="header-profile-button"
+            id="profile-menu-button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="profile-menu"
+            aria-label="Abrir menú de usuario">
+
+            <img
+                th:src="@{/img/Foto_Perfil.jpg}"
+                alt="Foto de perfil"
+                class="header-profile-image">
+
+            <span class="header-profile-arrow" aria-hidden="true">
+                ▾
+            </span>
+
+        </button>
+
+        <!-- Menú desplegable -->
+        <div
+            class="header-profile-dropdown"
+            id="profile-menu"
+            hidden>
+
+            <form th:action="@{/logout}" method="post">
+
+                <button
+                    type="submit"
+                    class="header-logout-button">
+
+                    <span aria-hidden="true">↪</span>
+                    <span>Cerrar sesión</span>
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</header>
