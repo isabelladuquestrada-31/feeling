@@ -1,0 +1,214 @@
+<footer th:fragment="footer"
+        class="feeling-footer"
+        aria-label="Pie de página de Feeling">
+
+    <div class="feeling-footer__main">
+
+        <!-- IDENTIDAD DE FEELING -->
+        <section class="feeling-footer__brand"
+                 aria-labelledby="footer-brand-title">
+
+            <a class="feeling-footer__brand-link"
+               th:href="@{/}"
+               aria-label="Feeling, ir al inicio">
+
+                <img class="feeling-footer__logo"
+                     th:src="@{/img/Logosímbolo_Sin_Fondo.png}"
+                     alt="Feeling">
+
+            </a>
+
+            <p id="footer-brand-title"
+               class="feeling-footer__tagline">
+
+                Juntos es más fácil
+                <span aria-hidden="true">♥</span>
+
+            </p>
+
+            <p class="feeling-footer__description">
+                Una comunidad universitaria que te acompaña,
+                te escucha y te apoya.
+            </p>
+
+        </section>
+
+
+        <!-- ENLACES RÁPIDOS -->
+        <nav class="feeling-footer__column"
+             aria-label="Enlaces rápidos">
+
+            <h2 class="feeling-footer__heading">
+                <span>Enlaces rápidos</span>
+            </h2>
+
+            <ul class="feeling-footer__links">
+
+                <li>
+                    <a th:href="@{/}" href="/">
+                        Inicio
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/voluntarios}"
+                       href="/voluntarios">
+                        Voluntarios
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/acompanamientos/solicitar}"
+                       href="/acompanamientos/solicitar">
+                        Solicitar apoyo
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/perfil}"
+                       href="/perfil">
+                        Perfil
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+
+        <!-- CONTACTO -->
+        <section class="feeling-footer__column feeling-footer__contact"
+                 aria-labelledby="footer-contact-title">
+
+            <h2 id="footer-contact-title"
+                class="feeling-footer__heading">
+
+                <span>Contáctanos</span>
+
+            </h2>
+
+            <ul class="feeling-footer__contact-list">
+
+                <!-- CORREO -->
+                <li>
+
+                    <svg class="feeling-footer__icon"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+
+                        <rect x="3"
+                              y="5"
+                              width="18"
+                              height="14"
+                              rx="2">
+                        </rect>
+
+                        <path d="m4 7 8 6 8-6"></path>
+
+                    </svg>
+
+                    <a href="mailto:yulieht.dominguezl@uam.edu.co">
+                        feeling@uam.edu.co
+                    </a>
+
+                </li>
+
+
+                <!-- WHATSAPP -->
+                <li>
+
+                    <svg class="feeling-footer__icon feeling-footer__icon--whatsapp"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+
+                        <path d="M20.5 11.7a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.5-4.8a8.4 8.4 0 1 1 16-4Z">
+                        </path>
+
+                        <path d="M8.5 8.2c.4-.7.8-.7 1.2-.1l.8 1.3c.2.3.1.6-.2.9l-.5.5c.7 1.3 1.6 2.2 2.9 2.9l.5-.6c.3-.3.6-.3.9-.1l1.3.8c.6.4.6.8-.1 1.2-.7.5-1.5.6-2.3.3-2.5-.9-4.8-3.2-5.7-5.7-.3-.8-.2-1.6.3-2.3Z">
+                        </path>
+
+                    </svg>
+
+                    <a href="https://wa.me/573207155596"
+                       target="_blank"
+                       rel="noopener noreferrer">
+
+                        +57 310 123 4567
+
+                        <span class="feeling-footer__sr-only">
+                            (abre WhatsApp en una nueva pestaña)
+                        </span>
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+            <p class="feeling-footer__contact-note">
+
+                ¡Escríbenos! Estamos aquí para ayudarte.
+
+                <span aria-hidden="true">♥</span>
+
+            </p>
+
+        </section>
+
+
+        <!-- SOBRE EL PROYECTO -->
+        <section class="feeling-footer__column feeling-footer__about"
+                 aria-labelledby="footer-about-title">
+
+            <h2 id="footer-about-title"
+                class="feeling-footer__heading">
+
+                <span>Sobre el proyecto</span>
+
+            </h2>
+
+            <p>
+                Feeling promueve el apoyo entre estudiantes,
+                fomentando una universidad más inclusiva,
+                solidaria y humana.
+            </p>
+
+            <a class="feeling-footer__about-link"
+               th:href="@{/acerca}"
+               href="/acerca">
+
+                Conoce más
+
+                <span aria-hidden="true">→</span>
+
+            </a>
+
+        </section>
+
+    </div>
+
+
+    <!-- FRANJA INFERIOR -->
+    <div class="feeling-footer__bottom">
+
+        <p>
+            ©
+            <span th:text="${#dates.year(#dates.createNow())}">
+                2026
+            </span>
+
+            Feeling. Universidad Autónoma de Manizales.
+            Todos los derechos reservados.
+        </p>
+
+        <p class="feeling-footer__motto">
+
+            Porque juntos llegamos más lejos
+
+            <span aria-hidden="true">♡</span>
+
+        </p>
+
+    </div>
+
+</footer>

@@ -1,0 +1,1305 @@
+
+/* =========================================
+   FEELING - MENÚ LATERAL
+   Estados compacto, expandido y móvil
+========================================= */
+
+/* ESTRUCTURA PRINCIPAL */
+
+.sidebar {
+    box-sizing: border-box;
+    width: 300px;
+    min-width: 300px;
+    flex: 0 0 300px;
+
+    height: 100vh;
+    height: 100dvh;
+
+    position: sticky;
+    top: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 24px 18px;
+
+    background: url('../img/Fondo_Sidebar.png') center / cover no-repeat;
+
+    color: #fefbfb;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+
+    z-index: 100;
+
+    transition: width 0.25s ease, min-width 0.25s ease,
+                flex-basis 0.25s ease, padding 0.25s ease;
+}
+
+/* ESTADO COMPACTO */
+
+.sidebar.sidebar--collapsed {
+    width: 88px;
+    min-width: 88px;
+    flex-basis: 88px;
+    padding: 20px 10px;
+}
+
+/* CABECERA Y LOGOS */
+
+.sidebar__brand {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 100px;
+    margin-bottom: 15px;
+}
+
+.sidebar__brand-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 65px;
+}
+
+.sidebar__logo {
+    display: block;
+    max-width: 100%;
+    max-height: 80px;
+    object-fit: contain;
+}
+
+/* Por defecto se muestra el logo completo */
+
+.sidebar__logo--compact {
+    display: none;
+}
+
+/* En modo compacto se muestra el isotipo */
+
+.sidebar--collapsed .sidebar__logo--expanded {
+    display: none;
+}
+
+.sidebar--collapsed .sidebar__logo--compact {
+    display: block;
+    width: 56px;
+    height: 56px;
+    max-height: 56px;
+}
+
+/* BOTÓN DE EXPANDIR Y CONTRAER */
+
+.sidebar__toggle {
+    position: relative;
+    order: -1;
+    align-self: flex-end;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 30px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #FFFFFF;
+    color: var(--color-navy);
+
+    cursor: pointer;
+    z-index: 2;
+
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar__toggle:hover {
+    background: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.sidebar__toggle-icon {
+    width: 21px;
+    height: 21px;
+    transition: transform 0.25s ease;
+}
+
+.sidebar--expanded .sidebar__toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* DIVISOR */
+
+.sidebar__divider {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid var(--color-border);
+    margin: 0 0 18px;
+}
+
+/* BOTÓN DE CERRAR EN MÓVILES */
+
+.sidebar__close {
+    display: none;
+
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: 0;
+    background: transparent;
+    color: var(--color-navy);
+
+    font-size: 28px;
+    line-height: 1;
+    padding: 5px;
+
+    cursor: pointer;
+}
+
+/* INFORMACIÓN DEL USUARIO */
+
+.sidebar__user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    min-width: 0;
+    padding: 15px 0;
+    margin-bottom: 20px;
+
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-medium);
+}
+
+.sidebar__avatar {
+    width: 75px;
+    height: 75px;
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #FFFFFF;
+}
+
+.sidebar__user-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.sidebar__user-name {
+    color: var(--color-navy);
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+    padding: 5px 0px;
+}
+
+.sidebar__user-role {
+    color: var(--color-text);
+    font-size: 0.9rem;
+}
+
+/* USUARIO EN MODO COMPACTO */
+
+.sidebar--collapsed .sidebar__user {
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.sidebar--collapsed .sidebar__avatar {
+    width: 48px;
+    height: 48px;
+}
+
+.sidebar--collapsed .sidebar__user-info {
+    display: none;
+}
+
+/* NAVEGACIÓN */
+
+.sidebar__navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sidebar__section-title {
+    color: var(--color-navy);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    margin: 0 10px 12px;
+}
+
+/* OPCIONES */
+
+.sidebar__link {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    min-width: 0;
+    min-height: 48px;
+    padding: 8px 13px;
+
+    color: var(--color-text);
+    font-size: 1rem;
+    font-weight: 650;
+
+    border-radius: 10px;
+    text-decoration: none;
+
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar__link:hover {
+    color: var(--color-primary);
+    background: var(--color-surface);
+    text-decoration: none;
+}
+
+.sidebar__link--active {
+    color: var(--color-navy);
+    background: #DDF5F7;
+    font-weight: 800;
+}
+
+.sidebar__link--active:hover {
+    color: var(--color-navy);
+    background: #FFFFFF;
+}
+
+.sidebar__icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+}
+
+/* MODO COMPACTO: ICONOS CENTRADOS */
+
+.sidebar--collapsed .sidebar__section-title {
+    display: none;
+}
+
+.sidebar--collapsed .sidebar__link {
+    justify-content: center;
+    gap: 0;
+    min-height: 58px;
+    padding: 10px 0;
+}
+
+.sidebar--collapsed .sidebar__link-label {
+    display: none;
+}
+
+/* TOOLTIP AL PASAR EL CURSOR O USAR EL TECLADO */
+
+.sidebar--collapsed .sidebar__link::after {
+    display: none;
+}
+
+/* INFORMACIÓN INSTITUCIONAL */
+
+.sidebar__decoration {
+    margin-top: auto;
+    text-align: center;
+}
+
+/* LOGO UAM SEGÚN EL ESTADO DEL MENÚ */
+
+.sidebar__uam-logo--expanded {
+    width: 150px;
+    height: auto;
+    object-fit: contain;
+}
+
+.sidebar__uam-logo--compact {
+    display: none;
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+}
+
+/* MENÚ COMPACTO */
+
+.sidebar--collapsed .sidebar__uam-logo--expanded {
+    display: none;
+}
+
+.sidebar--collapsed .sidebar__uam-logo--compact {
+    display: block;
+}
+
+/* FONDO PARA CERRAR EL MENÚ */
+
+.sidebar-backdrop {
+    display: none;
+}
+
+/* ACCESIBILIDAD */
+
+.sidebar a:focus-visible,
+.sidebar button:focus-visible {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 3px;
+}
+
+/* BOTÓN DE APERTURA EN MÓVILES */
+
+.sidebar-mobile-open {
+    display: none;
+}
+
+/* TABLET Y MÓVIL */
+
+@media (max-width: 768px) {
+
+    .sidebar,
+    .sidebar.sidebar--collapsed,
+    .sidebar.sidebar--expanded {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: min(290px, 85vw);
+        min-width: 0;
+        flex-basis: auto;
+
+        height: 100vh;
+        height: 100dvh;
+
+        padding: 24px 18px;
+
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+
+        z-index: 1001;
+    }
+
+    body.sidebar-is-open .sidebar {
+        transform: translateX(0);
+    }
+
+    /* En móvil siempre se muestra el menú completo */
+
+    .sidebar--collapsed .sidebar__logo--expanded {
+        display: block;
+    }
+
+    .sidebar--collapsed .sidebar__logo--compact {
+        display: none;
+    }
+
+    .sidebar--collapsed .sidebar__user {
+        justify-content: flex-start;
+        padding: 15px 0;
+    }
+
+    .sidebar--collapsed .sidebar__avatar {
+        width: 70px;
+        height: 70px;
+    }
+
+    .sidebar--collapsed .sidebar__user-info {
+        display: flex;
+    }
+
+    .sidebar--collapsed .sidebar__section-title {
+        display: block;
+    }
+
+    .sidebar--collapsed .sidebar__link {
+        justify-content: flex-start;
+        gap: 13px;
+        min-height: 48px;
+        padding: 8px 13px;
+    }
+
+    .sidebar--collapsed .sidebar__link-label {
+        display: inline;
+    }
+
+    .sidebar--collapsed .sidebar__link::after {
+        display: none;
+    }
+
+    .sidebar--collapsed .sidebar__uam-logo {
+        width: 62px;
+        height: 62px;
+        max-height: 62px;
+    }
+
+    .sidebar--collapsed .sidebar__icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .sidebar__toggle {
+        display: none;
+    }
+
+    .sidebar__close {
+        display: block;
+    }
+
+    .sidebar-mobile-open {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        position: fixed;
+        top: 14px;
+        left: 14px;
+
+        width: 44px;
+        height: 44px;
+
+        border: 0;
+        border-radius: 10px;
+
+        background: var(--color-primary);
+        color: #FFFFFF;
+
+        font-size: 26px;
+        cursor: pointer;
+
+        z-index: 999;
+
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar-backdrop {
+        display: none;
+
+        position: fixed;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        z-index: 1000;
+
+        background: rgba(10, 25, 45, 0.55);
+        border: 0;
+    }
+
+    body.sidebar-is-open .sidebar-backdrop {
+        display: block;
+    }
+
+    body.sidebar-is-open {
+        overflow: hidden;
+    }
+}
+
+/* MÓVIL HORIZONTAL O PANTALLAS BAJAS */
+
+@media (max-width: 768px) and (max-height: 500px) {
+
+    .sidebar,
+    .sidebar.sidebar--collapsed,
+    .sidebar.sidebar--expanded {
+        padding: 12px 18px;
+    }
+
+    .sidebar__brand {
+        min-height: 48px;
+        margin-bottom: 10px;
+    }
+
+    .sidebar__logo {
+        max-height: 42px;
+    }
+
+    .sidebar__divider {
+        margin-bottom: 10px;
+    }
+
+    .sidebar__user {
+        padding: 8px 0;
+        margin-bottom: 12px;
+    }
+
+    .sidebar__avatar {
+        width: 48px;
+        height: 48px;
+    }
+
+    .sidebar__navigation {
+        gap: 0;
+    }
+
+    .sidebar__section-title {
+        margin-bottom: 6px;
+    }
+
+    .sidebar__link {
+        min-height: 40px;
+        padding: 6px 10px;
+    }
+
+    .sidebar__decoration {
+        padding-top: 15px;
+    }
+
+    .sidebar__uam-logo {
+        width: 62px;
+        height: 50%;
+    }
+}
+
+/* MOVIMIENTO REDUCIDO */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sidebar,
+    .sidebar__link,
+    .sidebar__toggle-icon {
+        transition: none;
+    }
+}
+
+
+/* =========================================
+   HEADER - FEELING RESPONSIVE
+========================================= */
+
+/* ESTRUCTURA PRINCIPAL */
+
+.main-header {
+    box-sizing: border-box;
+
+    width: 100%;
+    height: clamp(60px, 8vw, 80px);
+    min-height: 60px;
+
+    padding: 12px 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    background-image: url('../img/Fondo_Header.png');
+    background-size: 90%;
+    background-position: 170px 60%;
+    background-repeat: no-repeat;
+
+    border-bottom: 1px solid #DCE7EB;
+
+    position: relative;
+    z-index: 20;
+}
+
+/* PERFIL */
+
+.header-profile {
+    position: relative;
+    z-index: 2;
+    transform: translateX(-30px);
+}
+
+.header-profile-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 5px 8px;
+
+    border: 2px solid transparent;
+    border-radius: 25px;
+
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+
+.header-profile-image {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    border: 2px solid #DDF5F7;
+}
+
+.header-profile-arrow {
+    color: #173B65;
+    font-size: 18px;
+}
+
+/* MENÚ DESPLEGABLE */
+
+.header-profile-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+
+    width: 190px;
+    padding: 6px;
+
+    background-color: #FFFFFF;
+    border: 1px solid #DCE7EB;
+    border-radius: 10px;
+
+    box-shadow: 0 4px 14px rgba(23, 59, 101, 0.12);
+}
+
+.header-profile-dropdown[hidden] {
+    display: none;
+}
+
+.header-profile-dropdown form {
+    margin: 0;
+}
+
+.header-logout-button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 12px;
+
+    border: none;
+    border-radius: 7px;
+
+    background-color: transparent;
+    color: #B42318;
+
+    font-size: 0.95rem;
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.header-logout-button:hover {
+    background-color: #FFF1F0;
+}
+
+/* ACCESIBILIDAD */
+
+.header-profile-button:focus-visible,
+.header-logout-button:focus-visible {
+    outline: 3px solid #16A6B8;
+    outline-offset: 3px;
+}
+
+/* TABLETS */
+
+@media (max-width: 768px) {
+
+    .main-header {
+        height: 60px;
+        min-height: 60px;
+        padding: 8px 14px;
+
+        background-position: 60px center;
+    }
+
+    .header-profile-image {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 480px) {
+
+    .main-header {
+        height: 60px;
+        min-height: 60px;
+        padding: 6px 10px;
+
+        background-position: 35px center;
+    }
+
+    .header-profile-image {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* PANTALLAS PEQUEÑAS */
+
+@media (max-width: 380px) {
+
+    .main-header {
+        box-sizing: border-box;
+        width: 100%;
+        height: 55px;
+        min-height: 55px;
+        padding: 5px 8px;
+
+        background-image: none;
+        background-color: var(--color-surface);
+    }
+
+    .header-profile-image {
+        width: 32px;
+        height: 32px;
+    }
+
+    .header-profile-button {
+        gap: 5px;
+        padding: 4px;
+    }
+}
+
+/* MOVIMIENTO REDUCIDO */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .header-profile-button,
+    .header-logout-button {
+        transition: none;
+    }
+}
+
+
+/* =========================================
+   FOOTER - FEELING
+   SCRUM-34
+   Responsive - Mobile First
+========================================= */
+
+/* ESTRUCTURA GENERAL */
+
+.feeling-footer {
+    position: relative;
+    isolation: isolate;
+
+    width: 100%;
+    margin-top: auto;
+
+    overflow: hidden;
+
+    color: var(--color-navy);
+
+    background: linear-gradient(
+        180deg,
+        #FFFFFF 0%,
+        var(--color-background) 100%
+    );
+
+    font-family: var(--font-main);
+}
+
+/* CONTENIDO PRINCIPAL */
+
+.feeling-footer__main {
+    width: 100%;
+
+    background-image: url('../img/Fondo_Footer.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: grid;
+    grid-template-columns: 1fr;
+
+    gap: 30px;
+
+    max-width: none;
+
+    margin: 0 auto;
+
+    padding: 40px 22px 0px;
+}
+
+/* IDENTIDAD DE FEELING */
+
+.feeling-footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    min-width: 0;
+
+    text-align: center;
+}
+
+.feeling-footer__brand-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 100%;
+
+    text-decoration: none;
+}
+
+.feeling-footer__brand-link:hover {
+    text-decoration: none;
+}
+
+.feeling-footer__logo {
+    display: block;
+
+    width: 100%;
+    max-width: 245px;
+    max-height: 100px;
+
+    object-fit: contain;
+}
+
+.feeling-footer__tagline {
+    margin-top: 8px;
+
+    color: var(--color-primary);
+
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.feeling-footer__tagline span {
+    color: var(--color-primary-light);
+}
+
+.feeling-footer__description {
+    max-width: 310px;
+
+    margin-top: 12px;
+
+    color: var(--color-navy);
+
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* COLUMNAS */
+
+.feeling-footer__column {
+    min-width: 0;
+    padding-top: 5px;
+}
+
+/* TÍTULOS DE LAS COLUMNAS */
+
+.feeling-footer__heading {
+    margin: 0 0 18px;
+
+    color: var(--color-navy);
+
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.feeling-footer__heading span {
+    display: inline-block;
+
+    padding: 7px 14px;
+
+    background-color: var(--color-soft);
+
+    border-radius: 30px;
+}
+
+/* ENLACES RÁPIDOS */
+
+.feeling-footer__links {
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+
+    padding: 0;
+    margin: 0;
+
+    list-style: none;
+}
+
+.feeling-footer__links li {
+    min-width: 0;
+}
+
+.feeling-footer__links a {
+    display: inline-block;
+
+    padding: 3px 0;
+
+    color: var(--color-navy);
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.feeling-footer__links a:hover {
+    color: var(--color-primary);
+
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+/* CONTACTO */
+
+.feeling-footer__contact-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 16px;
+
+    padding: 0;
+    margin: 0;
+
+    list-style: none;
+}
+
+.feeling-footer__contact-list li {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.feeling-footer__contact-list a {
+    color: var(--color-navy);
+
+    font-size: 0.98rem;
+    font-weight: 600;
+
+    overflow-wrap: anywhere;
+
+    text-decoration: none;
+}
+
+.feeling-footer__contact-list a:hover {
+    color: var(--color-primary);
+
+    text-decoration: underline;
+}
+
+/* ICONOS DE CONTACTO */
+
+.feeling-footer__icon {
+    display: block;
+
+    flex: 0 0 27px;
+
+    width: 27px;
+    height: 27px;
+
+    fill: none;
+
+    stroke: var(--color-primary);
+
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.feeling-footer__icon--whatsapp {
+    stroke: var(--color-primary-light);
+}
+
+/* MENSAJE DE CONTACTO */
+
+.feeling-footer__contact-note {
+    margin-top: 22px;
+
+    color: var(--color-primary-light);
+
+    font-size: 0.98rem;
+    font-weight: 700;
+
+    line-height: 1.5;
+}
+
+.feeling-footer__contact-note span {
+    color: var(--color-primary-light);
+}
+
+/* SOBRE EL PROYECTO */
+
+.feeling-footer__about p {
+    margin: 0 0 18px;
+
+    color: var(--color-navy);
+
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+/* BOTÓN CONOCE MÁS */
+
+.feeling-footer__about-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    min-height: 44px;
+
+    padding: 9px 18px;
+
+    color: var(--color-primary);
+
+    background-color: var(--color-soft);
+
+    border: 1px solid #B9E5EC;
+    border-radius: 30px;
+
+    font-size: 0.95rem;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition: background-color 0.2s ease,
+                color 0.2s ease;
+}
+
+.feeling-footer__about-link:hover {
+    color: #FFFFFF;
+
+    background-color: var(--color-primary);
+
+    text-decoration: none;
+}
+
+.feeling-footer__about-link span {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+/* FRANJA INFERIOR */
+
+.feeling-footer__bottom {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 28px;
+
+    width: 100%;
+
+    padding: 22px 20px;
+
+    color: #FFFFFF;
+
+    background: linear-gradient(
+        110deg,
+        var(--color-primary-dark),
+        var(--color-primary),
+        var(--color-primary-light)
+    );
+
+    text-align: center;
+}
+
+.feeling-footer__bottom p {
+    margin: 0;
+
+    color: #FFFFFF;
+
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.feeling-footer__motto {
+    font-weight: 800;
+}
+
+.feeling-footer__motto span {
+    font-size: 1.25rem;
+}
+
+/* TEXTO SOLO PARA LECTORES DE PANTALLA */
+
+.feeling-footer__sr-only {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+
+    clip: rect(0, 0, 0, 0);
+
+    white-space: nowrap;
+
+    border: 0;
+}
+
+/* ACCESIBILIDAD - FOCO DE TECLADO */
+
+.feeling-footer a:focus-visible {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 4px;
+
+    border-radius: 4px;
+}
+
+/* TABLETS */
+
+@media (min-width: 600px) {
+
+    .feeling-footer__main {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 22px;
+
+        padding: 45px 35px 70px;
+    }
+
+    .feeling-footer__brand {
+        align-items: flex-start;
+
+        text-align: left;
+    }
+
+    .feeling-footer__description {
+        margin-left: 0;
+    }
+}
+
+/* ESCRITORIO */
+
+@media (min-width: 1024px) {
+
+    .feeling-footer__main {
+        grid-template-columns:
+            minmax(220px, 1.15fr)
+            minmax(150px, 0.8fr)
+            minmax(220px, 1fr)
+            minmax(230px, 1.1fr);
+
+        gap: 22px;
+
+        padding: 50px 45px 75px;
+    }
+
+    .feeling-footer__column {
+        padding-left: 25px;
+
+        border-left: 1px solid #B8E5ED;
+    }
+
+    .feeling-footer__bottom {
+        flex-direction: row;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 22px;
+
+        padding: 20px 45px;
+
+        text-align: left;
+    }
+}
+
+/* PANTALLAS GRANDES */
+
+@media (min-width: 1400px) {
+
+    .feeling-footer__main {
+        padding-right: 60px;
+        padding-left: 60px;
+    }
+}
+
+/* FONDO RESPONSIVE DEL FOOTER */
+
+/* TABLET */
+
+@media (max-width: 1024px) {
+
+    .feeling-footer__main {
+        background-position: center;
+        background-size: cover;
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 600px) {
+
+    .feeling-footer__main {
+        background-image: none;
+        background-color: #FFFFFF;
+    }
+
+    .feeling-footer__contact-note {
+        color: var(--color-primary-light);
+    }
+
+    .feeling-footer__contact-note span {
+        color: var(--color-primary-light);
+    }
+}
+
+/* MÓVILES PEQUEÑOS */
+
+@media (max-width: 380px) {
+
+    .feeling-footer__main {
+        gap: 22px;
+
+        padding: 30px 16px 60px;
+    }
+
+    .feeling-footer__logo {
+        max-width: 210px;
+    }
+
+    .feeling-footer__heading {
+        font-size: 1rem;
+    }
+
+    .feeling-footer__bottom {
+        padding: 18px 14px;
+    }
+
+    .feeling-footer__bottom p {
+        font-size: 0.82rem;
+    }
+
+    .feeling-footer__contact-note {
+        color: var(--color-primary-light);
+    }
+
+    .feeling-footer__contact-note span {
+        color: var(--color-primary-light);
+    }
+}
+
+/* MOVIMIENTO REDUCIDO */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .feeling-footer__links a,
+    .feeling-footer__about-link {
+        transition: none;
+    }
+}
