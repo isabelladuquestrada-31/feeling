@@ -1,0 +1,80 @@
+
+USE feeling;
+
+INSERT INTO usuario (id, nombre_usuario, contrasena, rol) VALUES
+(1, 'admin',       '$2a$10$mWuO3G9L1ucsQfZbg5Jd3.tEsqLQBEtwHjYK2EAWrg6lyuOaNIusS', 'ADMIN'),
+(2, 'estudiante1', '$2a$10$Fu7fPZL8thLVPrGEKilGyeRrjrtkHqa.86zDvUktnkaXUfARqtaMe', 'ESTUDIANTE'),
+(3, 'estudiante2', '$2a$10$Fu7fPZL8thLVPrGEKilGyeRrjrtkHqa.86zDvUktnkaXUfARqtaMe', 'ESTUDIANTE'),
+(4, 'estudiante3', '$2a$10$Fu7fPZL8thLVPrGEKilGyeRrjrtkHqa.86zDvUktnkaXUfARqtaMe', 'ESTUDIANTE'),
+(5, 'voluntario1', '$2a$10$awzYUoUKnWsRq7w9B9uzqe33v5dxqrz90jN1Pl8k1oSBCzgIrymRy', 'ESTUDIANTE'),
+(6, 'voluntario2', '$2a$10$awzYUoUKnWsRq7w9B9uzqe33v5dxqrz90jN1Pl8k1oSBCzgIrymRy', 'ESTUDIANTE');
+
+INSERT INTO perfil (usuario_id, nombre_preferido, pronombres, whatsapp) VALUES
+(1, 'Admin',       NULL, '0001000001'),
+(2, 'Estudiante1', NULL, '0001000002'),
+(3, 'Estudiante2', NULL, '0001000003'),
+(4, 'Estudiante3', NULL, '0001000004'),
+(5, 'Voluntario1', NULL, '0001000005'),
+(6, 'Voluntario2', NULL, '0001000006');
+
+INSERT INTO preferencias_accesibilidad (usuario_id, letra_grande, alto_contraste) VALUES
+(2, FALSE, FALSE),
+(3, TRUE,  FALSE),
+(4, FALSE, TRUE),
+(5, FALSE, FALSE),
+(6, FALSE, FALSE);
+
+
+INSERT INTO estudiante (usuario_id, programa_academico) VALUES
+(2, 'Ingeniería de Sistemas'),
+(3, 'Ingeniería de Sistemas'),
+(4, 'Ingeniería de Sistemas'),
+(5, 'Ingeniería de Sistemas'),
+(6, 'Ingeniería de Sistemas');
+
+INSERT INTO materia (codigo, nombre) VALUES
+('MAT101', 'Cálculo Diferencial'),
+('MAT102', 'Cálculo Integral'),
+('MAT103', 'Álgebra Lineal'),
+('MAT104', 'Matemáticas Discretas'),
+('MAT105', 'Estadística y Probabilidad'),
+('ISW201', 'Programación Orientada a Objetos'),
+('ISW202', 'Estructura de Datos'),
+('ISW203', 'Bases de Datos I'),
+('ISW204', 'Ingeniería de Software I'),
+('FIS101', 'Física Mecánica');
+
+
+INSERT INTO voluntario (id, estudiante_id, estado) VALUES
+(1, 5, 'ACTIVO'),
+(2, 6, 'ACTIVO');
+
+
+INSERT INTO voluntario_tipo_apoyo (voluntario_id, tipo_apoyo) VALUES
+(1, 'TUTORIA'),
+(1, 'EXPLICACION_CONCEPTOS'),
+(1, 'PREPARACION_EXAMENES'),
+(2, 'TUTORIA'),
+(2, 'EXPLICACION_CONCEPTOS'),
+(2, 'COMPRENSION_MATERIAL');
+
+INSERT INTO voluntario_materia (voluntario_id, materia_codigo) VALUES
+(1, 'MAT101'),
+(1, 'MAT102'),
+(1, 'MAT103'),
+(1, 'MAT105'),
+(1, 'FIS101'),
+(2, 'ISW201'),
+(2, 'ISW202'),
+(2, 'ISW203'),
+(2, 'ISW204'),
+(2, 'MAT104');
+
+
+INSERT INTO disponibilidad (voluntario_id, dia, hora_inicio, hora_fin) VALUES
+(1, 'LUNES',     '14:00', '16:00'),
+(1, 'MIERCOLES', '10:00', '12:00'),
+(1, 'VIERNES',   '08:00', '10:00'),
+(2, 'MARTES',    '16:00', '18:00'),
+(2, 'JUEVES',    '14:00', '16:00'),
+(2, 'SABADO',    '09:00', '11:00');
