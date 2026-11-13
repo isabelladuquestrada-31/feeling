@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  */
 
 @Entity
-@Table(name= "Estudiante")
+@Table(name= "estudiante")
 public class Estudiante extends Usuario{
 
     /**Programa académico que cursa el estudiante. */
