@@ -1,13 +1,13 @@
 
 USE feeling;
-
+-- contraseñas de prueba: admin = Admin123, estudiantes = Estudiante123, voluntarios = Voluntario123
 INSERT INTO usuario (id, nombre_usuario, contrasena, rol) VALUES
-(1, 'admin',       '$2a$10$mWuO3G9L1ucsQfZbg5Jd3.tEsqLQBEtwHjYK2EAWrg6lyuOaNIusS', 'ADMIN'),
-(2, 'estudiante1', '$2a$10$Fu7fPZL8thLVPrGEKilGyeRrjrtkHqa.86zDvUktnkaXUfARqtaMe', 'ESTUDIANTE'),
-(3, 'estudiante2', '$2a$10$Fu7fPZL8thLVPrGEKilGyeRrjrtkHqa.86zDvUktnkaXUfARqtaMe', 'ESTUDIANTE'),
-(4, 'estudiante3', '$2a$10$Fu7fPZL8thLVPrGEKilGyeRrjrtkHqa.86zDvUktnkaXUfARqtaMe', 'ESTUDIANTE'),
-(5, 'voluntario1', '$2a$10$awzYUoUKnWsRq7w9B9uzqe33v5dxqrz90jN1Pl8k1oSBCzgIrymRy', 'ESTUDIANTE'),
-(6, 'voluntario2', '$2a$10$awzYUoUKnWsRq7w9B9uzqe33v5dxqrz90jN1Pl8k1oSBCzgIrymRy', 'ESTUDIANTE');
+(1, 'admin','$2a$10$ajVFJ6/e9aA4z684P7cho.ws.1gK78XhVe8JbY8t8yNSh9Sawmj4W', 'ADMIN'),
+(2, 'estudiante1', '$2a$10$7ngyYZrbQZaoNaT9/TTfSea78.zgd09plLYpmfSSwx15/hF.lTp/6', 'ESTUDIANTE'),
+(3, 'estudiante2', '$2a$10$7ngyYZrbQZaoNaT9/TTfSea78.zgd09plLYpmfSSwx15/hF.lTp/6', 'ESTUDIANTE'),
+(4, 'estudiante3', '$2a$10$7ngyYZrbQZaoNaT9/TTfSea78.zgd09plLYpmfSSwx15/hF.lTp/6', 'ESTUDIANTE'),
+(5, 'voluntario1', '$2a$10$iWTrLp8ub1MeqgjjnFcg4e.DTEZ9d3HVX66ToAK9EADOnbq2982ia', 'ESTUDIANTE'),
+(6, 'voluntario2', '$2a$10$iWTrLp8ub1MeqgjjnFcg4e.DTEZ9d3HVX66ToAK9EADOnbq2982ia', 'ESTUDIANTE');
 
 INSERT INTO perfil (usuario_id, nombre_preferido, pronombres, whatsapp) VALUES
 (1, 'Admin',       NULL, '0001000001'),
