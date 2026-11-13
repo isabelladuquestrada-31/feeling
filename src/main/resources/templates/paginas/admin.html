@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administración - Feeling</title>
+</head>
+<body>
+
+<h1>Panel de administración</h1>
+<p>Bienvenido, <span th:text="${session.usuario.nombreUsuario}"></span></p>
+<a th:href="@{/logout}">Cerrar sesión</a>
+
+</body>
+</html>
