@@ -125,3 +125,7 @@ comentario varchar(255),
 fecha datetime not null default current_timestamp,
 foreign key (solicitud_id) references solicitud(id)
 );
+
+use feeling;
+alter table usuario add programa_academico varchar(100) after rol;
+

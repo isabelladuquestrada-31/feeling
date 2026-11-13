@@ -1,6 +1,7 @@
 package com.feeling.feeling.model;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+
 
 /** Usuario encargado de administrar la plataforma
  * Hereda de Usuario los datos para iniciar esión.
@@ -10,6 +11,6 @@ import jakarta.persistence.Table;
  */
 
 @Entity
-@Table (name = "Administrador")
+@DiscriminatorValue("ADMIN")
 public class Administrador extends Usuario{
 }
