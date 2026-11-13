@@ -8,7 +8,6 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-
 /**
  * Representa a una persona registrada en la plataforma Feeling.
  * Es una clase abstracta: cada usuario es un Estudiante o un Administrador.
@@ -38,4 +37,43 @@ public abstract class Usuario {
     /** Fecha y hora en que el usuario se registró. */
     protected LocalDateTime fechaRegistro;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getContrasenaHash() {
+        return contrasenaHash;
+    }
+
+    public void setContrasenaHash(String contrasenaHash) {
+        this.contrasenaHash = contrasenaHash;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
 }
