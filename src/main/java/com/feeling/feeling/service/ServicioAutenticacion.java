@@ -25,14 +25,17 @@ public class ServicioAutenticacion implements IServicioAutenticacion {
     public Optional<Usuario> iniciarSesion(String nombreUsuario, String contrasena) {
         Optional<Usuario> resultado = usuarioRepository.findByNombreUsuario(nombreUsuario);
 
+
         if (resultado.isEmpty()) {
             return Optional.empty();
         }
         Usuario usuario = resultado.get();
 
+
         if (!usuario.isActivo()) {
             return Optional.empty();
         }
+
 
         if (!encriptador.matches(contrasena, usuario.getContrasenaHash())) {
             return Optional.empty();

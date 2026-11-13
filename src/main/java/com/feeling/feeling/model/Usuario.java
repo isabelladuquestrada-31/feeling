@@ -3,6 +3,7 @@ package com.feeling.feeling.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+ import jakarta.persistence.Column;
 
 /**
  * Representa a una persona registrada en la plataforma Feeling.
@@ -26,6 +27,7 @@ public abstract class Usuario {
     private String nombreUsuario;
 
     /** Contraseña encriptada con BCrypt. Nunca se guarda la contraseña real. */
+    @Column(name = "contrasena")
     private String contrasenaHash;
 
     /** Indica si el usuario puede usar la plataforma. El administrador puede desactivarlo. */
