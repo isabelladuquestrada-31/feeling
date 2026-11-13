@@ -3,9 +3,10 @@ package com.feeling.feeling.service;
 import com.feeling.feeling.model.Usuario;
 import com.feeling.feeling.repository.UsuarioRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
 public class ServicioAutenticacion implements IServicioAutenticacion {
 
     private final UsuarioRepository usuarioRepository;
