@@ -6,6 +6,9 @@ import com.feeling.feeling.repository.SolicitudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 /**
  * Contiene la lógica de negocio de las solicitudes de acompañamiento.
  *
@@ -69,5 +72,40 @@ public class SolicitudService {
             case CANCELADA -> "Esta solicitud ya estaba cancelada.";
             default -> "Esta solicitud no se puede cancelar.";
         };
+    }
+
+    /**
+     * RF-13: Devuelve los próximos acompañamientos aceptados del estudiante.
+     * del más cercano al más lejano
+     *
+     * @param estudianteId id del estudiante
+     * @return lista de acompañamientos aceptados que todavía no han pasado
+     */
+    public List<Solicitud> proximosDelEstudiante(Integer estudianteId) {
+        return solicitudRepository.findByEstudianteIdAndEstadoAndFechaProgramadaAfterOrderByFechaProgramadaAsc(
+                estudianteId, EstadoSolicitud.ACEPTADA, LocalDateTime.now());
+    }
+
+    /**
+     * RF-13: Devuelve los próximos acompañamientos aceptados del voluntario,
+     * del más cercano al más lejano
+     *
+     * @param voluntarioId id del voluntario
+     * @return lista de acompañamientos aceptados que tadavía no han pasado
+     */
+    public List<Solicitud> proximosDelVoluntario(Integer voluntarioId) {
+        return solicitudRepository.findByVoluntarioIdAndEstadoAndFechaProgramadaAfterOrderByFechaProgramadaAsc(
+                voluntarioId, EstadoSolicitud.ACEPTADA, LocalDateTime.now());
+    }
+
+    /**
+     * RF-13: devuelve todas la solicitudes del estudiante, sin importar su estado,
+     * de la más reciente a la más antigua.
+     *
+     * @param estudianteId id del estudiante
+     * @return historial de solicitudes; vacío si el estudiante no a hecho ninguna
+     */
+    public List<Solicitud> historialDelEstudiante(Integer estudianteId) {
+        return solicitudRepository.findByEstudianteIdOrderByFechaCreacionDesc(estudianteId);
     }
 }

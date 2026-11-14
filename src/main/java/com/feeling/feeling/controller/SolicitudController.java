@@ -2,6 +2,8 @@ package com.feeling.feeling.controller;
 
 import com.feeling.feeling.service.SolicitudService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -50,5 +52,20 @@ public class SolicitudController {
             redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
         }
         return "redirect:/mis-acompanamientos";
+    }
+
+    /**
+     * RF-13: muestra al estudiante sus próximos acompañamientos aceptados
+     * y su historial de solicitudes.
+     *
+     * @param model datos que se envían a la vista
+     * @return la visa de mis acompañamientos
+     */
+    @GetMapping("/mis-acompanamientos")
+    public String misAcompanamientos(Model model) {
+        model.addAttribute("proximos", solicitudService.proximosDelEstudiante(ESTUDIANTE_PRUEBA_ID));
+        model.addAttribute("historial", solicitudService.historialDelEstudiante(ESTUDIANTE_PRUEBA_ID));
+        return "paginas/mis-acompanamientos";
+
     }
 }
