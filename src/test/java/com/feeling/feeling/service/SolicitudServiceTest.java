@@ -5,10 +5,15 @@ import com.feeling.feeling.model.Solicitud;
 import com.feeling.feeling.repository.SolicitudRepository;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -72,5 +77,31 @@ class SolicitudServiceTest {
     void noCancelaSolicitudDeOtroEstudiante() {
         solicitudCon(EstadoSolicitud.PENDIENTE);
         assertThrows(IllegalArgumentException.class, () -> servicio.cancelar(1, 99));
+    }
+
+    /**
+     * Caso de éxito RF-13: el estudiante ve sus próximos acompañamientos aceptados.
+     */
+    @Test
+    void muestraProximosAcompanamientos() {
+        Solicitud aceptada = new Solicitud();
+        aceptada.setEstado(EstadoSolicitud.ACEPTADA);
+        when(repositorio.findByEstudianteIdAndEstadoAndFechaProgramadaAfterOrderByFechaProgramadaAsc(
+                eq(2), eq(EstadoSolicitud.ACEPTADA), any(LocalDateTime.class))).thenReturn(List.of(aceptada));
+
+        List<Solicitud> proximos = servicio.proximosDelEstudiante(2);
+
+        assertEquals(1, proximos.size());
+        assertEquals(EstadoSolicitud.ACEPTADA, proximos.get(0).getEstado());
+    }
+
+    /**
+     * Caso de fallo RF-13: un estudiante sin solicitudes recibe una lista vacía y la vista muestra el mensaje.
+     */
+    @Test
+    void historialVacioSinSolicitudes() {
+        when(repositorio.findByEstudianteIdOrderByFechaCreacionDesc(3)).thenReturn(List.of());
+
+        assertTrue(servicio.historialDelEstudiante(3).isEmpty());
     }
 }

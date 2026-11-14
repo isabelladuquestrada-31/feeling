@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis acompañamientos - Feeling</title>
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/interno.css}">
+    <script th:src="@{/js/header.js}" defer></script>
+    <script th:src="@{/js/sidebar.js}" defer></script>
+</head>
+<body>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <div class="app-shell__content">
+        <div th:replace="~{fragments/header :: header}"></div>
+        <main class="main-content" style="padding-left: 300px;">
+            <p th:if="${mensajeExito}" th:text="${mensajeExito}"></p>
+            <p th:if="${mensajeError}" th:text="${mensajeError}"></p>
+
+            <h1>Próximos acompañamientos</h1>
+            <p th:if="${#lists.isEmpty(proximos)}">No tienes acompañamientos próximos.</p>
+            <ul>
+                <li th:each="s : ${proximos}"
+                    th:text="${s.materiaCodigo} + ' - ' + ${s.tema} + ' - ' + ${#temporals.format(s.fechaProgramada, 'dd/MM/yyyy HH:mm')}"></li>
+            </ul>
+
+            <h1>Historial de solicitudes</h1>
+            <p th:if="${#lists.isEmpty(historial)}">Todavía no has hecho solicitudes.</p>
+            <ul>
+                <li th:each="s : ${historial}">
+                    <span th:text="${s.materiaCodigo} + ' - ' + ${s.tema} + ' - ' + ${s.estado}"></span>
+                    <form th:if="${s.estado.name() == 'PENDIENTE' or s.estado.name() == 'ACEPTADA'}"
+                          th:action="@{/solicitudes/{id}/cancelar(id=${s.id})}" method="post">
+                        <button type="submit">Cancelar</button>
+                    </form>
+                </li>
+            </ul>
+        </main>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+</div>
+</body>
+</html>
