@@ -1,5 +1,17 @@
 <header th:fragment="header" class="main-header">
 
+    <!-- Botón para abrir el menú lateral en celulares y tabletas -->
+    <button type="button"
+            class="sidebar-mobile-open"
+            data-sidebar-open
+            aria-controls="main-sidebar"
+            aria-expanded="false"
+            aria-label="Abrir menú de navegación">
+
+        <span aria-hidden="true">☰</span>
+
+    </button>
+
     <!-- Botón para el menú del usuario -->
     <div class="header-profile">
 

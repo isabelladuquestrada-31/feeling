@@ -108,4 +108,16 @@ public class SolicitudService {
     public List<Solicitud> historialDelEstudiante(Integer estudianteId) {
         return solicitudRepository.findByEstudianteIdOrderByFechaCreacionDesc(estudianteId);
     }
+
+    /**
+     * RF-10: devuelve las solicitudes pendientes que ha recibido el voluntario,
+     * de la más cercana a la más lejana.
+     *
+     * @param voluntarioId id del voluntario
+     * @return solicitudes pendientes del voluntario; vacía si no tiene ninguna
+     */
+    public List<Solicitud> solicitudesRecibidas(Integer voluntarioId) {
+        return solicitudRepository.findByVoluntarioIdAndEstadoOrderByFechaProgramadaAsc(
+                voluntarioId, EstadoSolicitud.PENDIENTE);
+    }
 }

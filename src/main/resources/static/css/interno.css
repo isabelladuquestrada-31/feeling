@@ -1303,3 +1303,32 @@
         transition: none;
     }
 }
+
+/* ==========================================================
+   ESTRUCTURA DE LAS PÁGINAS INTERNAS
+   El menú lateral y el contenido quedan lado a lado.
+   ========================================================== */
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.app-shell__content {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 32px clamp(16px, 4vw, 48px);
+}
+
+/* El fondo del encabezado ocupa todo el ancho disponible,
+   ahora que el menú lateral ya no queda encima del contenido. */
+.app-shell .main-header {
+    background-size: cover;
+    background-position: center 60%;
+}

@@ -14,7 +14,7 @@
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
     <div class="app-shell__content">
         <div th:replace="~{fragments/header :: header}"></div>
-        <main class="main-content" style="padding-left: 300px;">
+        <main class="main-content">
             <p th:if="${mensajeExito}" th:text="${mensajeExito}"></p>
             <p th:if="${mensajeError}" th:text="${mensajeError}"></p>
 
