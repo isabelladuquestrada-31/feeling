@@ -71,6 +71,7 @@ public class SolicitudController {
     public String misAcompanamientos(Model model) {
         model.addAttribute("proximos", solicitudService.proximosDelEstudiante(ESTUDIANTE_PRUEBA_ID));
         model.addAttribute("historial", solicitudService.historialDelEstudiante(ESTUDIANTE_PRUEBA_ID));
+        model.addAttribute("paginaActiva", "acompanamientos");
         return "paginas/mis-acompanamientos";
 
     }

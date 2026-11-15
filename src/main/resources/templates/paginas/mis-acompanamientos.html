@@ -1,44 +1,128 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Mis acompañamientos | Feeling', ~{::section})}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mis acompañamientos - Feeling</title>
-    <link rel="stylesheet" th:href="@{/css/global.css}">
-    <link rel="stylesheet" th:href="@{/css/interno.css}">
-    <script th:src="@{/js/header.js}" defer></script>
-    <script th:src="@{/js/sidebar.js}" defer></script>
+    <title>Mis acompañamientos | Feeling</title>
 </head>
 <body>
-<div class="app-shell">
-    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
-    <div class="app-shell__content">
-        <div th:replace="~{fragments/header :: header}"></div>
-        <main class="main-content">
-            <p th:if="${mensajeExito}" th:text="${mensajeExito}"></p>
-            <p th:if="${mensajeError}" th:text="${mensajeError}"></p>
 
-            <h1>Próximos acompañamientos</h1>
-            <p th:if="${#lists.isEmpty(proximos)}">No tienes acompañamientos próximos.</p>
-            <ul>
-                <li th:each="s : ${proximos}"
-                    th:text="${s.materiaCodigo} + ' - ' + ${s.tema} + ' - ' + ${#temporals.format(s.fechaProgramada, 'dd/MM/yyyy HH:mm')}"></li>
-            </ul>
+<section class="solicitudes acompanamientos sin-js" data-solicitudes aria-labelledby="titulo-acompanamientos">
 
-            <h1>Historial de solicitudes</h1>
-            <p th:if="${#lists.isEmpty(historial)}">Todavía no has hecho solicitudes.</p>
-            <ul>
-                <li th:each="s : ${historial}">
-                    <span th:text="${s.materiaCodigo} + ' - ' + ${s.tema} + ' - ' + ${s.estado}"></span>
-                    <form th:if="${s.estado.name() == 'PENDIENTE' or s.estado.name() == 'ACEPTADA'}"
-                          th:action="@{/solicitudes/{id}/cancelar(id=${s.id})}" method="post">
-                        <button type="submit">Cancelar</button>
-                    </form>
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/acompanamientos.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+
+    <!-- Encabezado -->
+    <header class="solicitudes__encabezado">
+        <span class="solicitudes__etiqueta">Panel del estudiante</span>
+        <h1 id="titulo-acompanamientos">Mis acompañamientos</h1>
+        <p>Consulta tus próximos acompañamientos y el estado de todas las solicitudes que has hecho.</p>
+    </header>
+
+    <!-- Mensajes después de cancelar -->
+    <div th:if="${mensajeExito}" class="solicitudes__alerta solicitudes__alerta--exito"
+         role="status" data-alerta>
+        <span th:text="${mensajeExito}"></span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <div th:if="${mensajeError}" class="solicitudes__alerta solicitudes__alerta--error"
+         role="alert" data-alerta>
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <!-- RF-13: próximos acompañamientos (fragmento reutilizable) -->
+    <div th:replace="~{fragments/proximos-acompanamientos :: proximos(${proximos})}"></div>
+
+    <!-- RF-13: historial de solicitudes -->
+    <div class="acompanamientos__bloque" role="region" aria-labelledby="titulo-historial">
+
+        <div class="acompanamientos__bloque-titulo">
+            <h2 id="titulo-historial">Historial de solicitudes</h2>
+        </div>
+
+        <!-- Sin solicitudes -->
+        <div th:if="${#lists.isEmpty(historial)}" class="acompanamientos__vacio">
+            <h3>Todavía no has hecho solicitudes</h3>
+            <p>Busca un voluntario y envíale una solicitud de acompañamiento.</p>
+            <a th:href="@{/voluntarios}" class="boton-enlace">Buscar voluntarios</a>
+        </div>
+
+        <th:block th:unless="${#lists.isEmpty(historial)}">
+
+            <!-- Filtros por estado -->
+            <div class="filtros" role="group" aria-label="Filtrar solicitudes por estado">
+                <button type="button" class="filtro filtro--activo" data-filtro="TODAS" aria-pressed="true">
+                    Todas <span class="filtro__cantidad" data-cantidad>0</span>
+                </button>
+                <button type="button" class="filtro" data-filtro="PENDIENTE" aria-pressed="false">
+                    Pendientes <span class="filtro__cantidad" data-cantidad>0</span>
+                </button>
+                <button type="button" class="filtro" data-filtro="ACEPTADA" aria-pressed="false">
+                    Aceptadas <span class="filtro__cantidad" data-cantidad>0</span>
+                </button>
+                <button type="button" class="filtro" data-filtro="REALIZADA" aria-pressed="false">
+                    Realizadas <span class="filtro__cantidad" data-cantidad>0</span>
+                </button>
+                <button type="button" class="filtro" data-filtro="CANCELADA" aria-pressed="false">
+                    Canceladas <span class="filtro__cantidad" data-cantidad>0</span>
+                </button>
+                <button type="button" class="filtro" data-filtro="RECHAZADA" aria-pressed="false">
+                    Rechazadas <span class="filtro__cantidad" data-cantidad>0</span>
+                </button>
+            </div>
+
+            <!-- Lista del historial -->
+            <ul class="historial__lista">
+                <li th:each="s : ${historial}" class="solicitudes__item"
+                    th:attr="data-estado=${s.estado.name()}">
+                    <article class="tarjeta-historial" th:attr="aria-labelledby='historial-' + ${s.id}">
+
+                        <div class="tarjeta-historial__info">
+                            <p class="tarjeta-solicitud__materia" th:text="${s.materiaCodigo}">MAT101</p>
+                            <h3 th:id="'historial-' + ${s.id}" th:text="${s.tema}">Tema</h3>
+                            <p class="tarjeta-historial__detalle">
+                                <span th:text="${#temporals.format(s.fechaProgramada, 'dd/MM/yyyy')}">16/11/2026</span>
+                                <span th:text="${#temporals.format(s.fechaProgramada, 'hh:mm a')}">02:00 p. m.</span>
+                                <span th:text="${#strings.capitalize(#strings.toLowerCase(s.modalidad))}">Virtual</span>
+                            </p>
+                        </div>
+
+                        <div class="tarjeta-historial__lado">
+                            <span class="estado"
+                                  th:classappend="'estado--' + ${#strings.toLowerCase(s.estado.name())}"
+                                  th:text="${#strings.capitalize(#strings.toLowerCase(s.estado.name()))}">Pendiente</span>
+
+                            <!-- RF-12: solo se puede cancelar si está pendiente o aceptada -->
+                            <form th:if="${s.estado.name() == 'PENDIENTE' or s.estado.name() == 'ACEPTADA'}"
+                                  th:action="@{/solicitudes/{id}/cancelar(id=${s.id})}" method="post"
+                                  data-accion="cancelar" class="tarjeta-historial__accion">
+                                <button type="submit" class="boton-accion boton-accion--cancelar"
+                                        th:attr="aria-label='Cancelar la solicitud: ' + ${s.tema}">Cancelar</button>
+                            </form>
+                        </div>
+
+                    </article>
                 </li>
             </ul>
-        </main>
-        <div th:replace="~{fragments/footer :: footer}"></div>
+
+            <!-- Cuando un filtro no tiene resultados -->
+            <div class="acompanamientos__vacio" data-sin-resultados hidden>
+                <h3>No hay solicitudes en este filtro</h3>
+                <p>Prueba con otro estado.</p>
+            </div>
+
+        </th:block>
     </div>
-</div>
+
+</section>
+
 </body>
 </html>
