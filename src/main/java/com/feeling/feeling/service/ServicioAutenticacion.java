@@ -1,10 +1,12 @@
 package com.feeling.feeling.service;
 
+import com.feeling.feeling.model.Estudiante;
 import com.feeling.feeling.model.Usuario;
 import com.feeling.feeling.repository.UsuarioRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 @Service
 public class ServicioAutenticacion implements IServicioAutenticacion {
@@ -42,6 +44,38 @@ public class ServicioAutenticacion implements IServicioAutenticacion {
         }
 
         return Optional.of(usuario);
+    }
+
+    /**
+     * Registra un estudiante nuevo con perfil y preferencias por defecto.
+     * Verifica que los datos no estén vacíos y que el nombre de usuario no exista,
+     * y guarda la contraseña cifrada con BCrypt.
+     *
+     * @param nombreUsuario nombre con el que la persona se registra
+     * @param contrasena    contraseña con la que la persona se registra
+     * @return el estudiante registrado
+     * @throws IllegalArgumentException si faltan datos o el nombre de usuario ya existe
+     */
+
+    @Override
+    public Estudiante registrar(String nombreUsuario, String contrasena) {
+
+        if (nombreUsuario == null || nombreUsuario.isBlank()
+                || contrasena == null || contrasena.isBlank()) {
+            throw new IllegalArgumentException("Se debe llenar el nombre de usuario y la contraseña");
+        }
+
+        if (usuarioRepository.findByNombreUsuario(nombreUsuario).isPresent()) {
+            throw new IllegalArgumentException("El nombre de usuario ya existe");
+        }
+
+        Estudiante estudiante = new Estudiante();
+        estudiante.setNombreUsuario(nombreUsuario);
+        estudiante.setContrasenaHash(encriptador.encode(contrasena));
+        estudiante.setFechaRegistro(LocalDateTime.now());
+
+
+        return usuarioRepository.save(estudiante);
     }
 }
 
