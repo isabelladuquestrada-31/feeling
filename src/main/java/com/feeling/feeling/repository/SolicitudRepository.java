@@ -51,4 +51,14 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
      * @return lista con el historial de solicitudes del estudiante
      */
     List<Solicitud> findByEstudianteIdOrderByFechaCreacionDesc(Integer estudianteId);
+
+    /**
+     * RF-10: busca las solicitudes de un voluntario en un estado dado,
+     * ordenadas de la más cercana a la más lejana.
+     *
+     * @param voluntarioId id del voluntario
+     * @param estado       estado de las solicitudes que se quieren buscar
+     * @return lista de solicitudes del voluntario
+     */
+    List<Solicitud> findByVoluntarioIdAndEstadoOrderByFechaProgramadaAsc(Integer voluntarioId, EstadoSolicitud estado);
 }

@@ -23,6 +23,12 @@ public class SolicitudController {
     private static final Integer ESTUDIANTE_PRUEBA_ID = 2;
 
     /**
+     * TEMPORAL: id de voluntario1 del data.sql. Se reemplaza por el voluntario
+     * de la sesión cuando exista la entidad Voluntario.
+     */
+    private static final Integer VOLUNTARIO_PRUEBA_ID = 1;
+
+    /**
      * Servicio con la lógica de las solicitudes.
      */
     private final SolicitudService solicitudService;
@@ -67,5 +73,19 @@ public class SolicitudController {
         model.addAttribute("historial", solicitudService.historialDelEstudiante(ESTUDIANTE_PRUEBA_ID));
         return "paginas/mis-acompanamientos";
 
+    }
+
+    /**
+     * RF-10: muestra al voluntario las solicitudes pendientes que ha recibido,
+     * con los botones para aceptarlas o rechazarlas.
+     *
+     * @param model datos que se envían a la vista
+     * @return la vista de solicitudes recibidas
+     */
+    @GetMapping("/solicitudes-recibidas")
+    public String solicitudesRecibidas(Model model) {
+        model.addAttribute("solicitudesRecibidas", solicitudService.solicitudesRecibidas(VOLUNTARIO_PRUEBA_ID));
+        model.addAttribute("paginaActiva", "acompanamientos");
+        return "paginas/solicitudes-recibidas";
     }
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Solicitudes recibidas | Feeling', ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitudes recibidas | Feeling</title>
+</head>
+<body>
+
+<section class="solicitudes sin-js" data-solicitudes aria-labelledby="titulo-solicitudes">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+
+    <!-- Encabezado con el número de solicitudes pendientes -->
+    <header class="solicitudes__encabezado">
+        <span class="solicitudes__etiqueta">Panel del voluntario</span>
+        <h1 id="titulo-solicitudes">Solicitudes recibidas</h1>
+        <p>Revisa las solicitudes que te han enviado y decide si puedes acompañar a cada estudiante.</p>
+        <p class="solicitudes__contador">
+            <span class="solicitudes__contador-numero" data-contador
+                  th:text="${#lists.size(solicitudesRecibidas)}">0</span>
+            pendientes
+        </p>
+    </header>
+
+    <!-- Mensajes después de aceptar o rechazar -->
+    <div th:if="${mensajeExito}" class="solicitudes__alerta solicitudes__alerta--exito"
+         role="status" data-alerta>
+        <span th:text="${mensajeExito}"></span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <div th:if="${mensajeError}" class="solicitudes__alerta solicitudes__alerta--error"
+         role="alert" data-alerta>
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <!-- Sin solicitudes (el JS también lo muestra cuando se responde la última) -->
+    <div class="solicitudes__vacio" data-vacio
+         th:hidden="${not #lists.isEmpty(solicitudesRecibidas)}">
+        <div class="solicitudes__vacio-icono" aria-hidden="true">✓</div>
+        <h2>No tienes solicitudes pendientes</h2>
+        <p>Cuando un estudiante te envíe una solicitud, aparecerá aquí.</p>
+    </div>
+
+    <!-- Tarjetas de solicitudes -->
+    <ul th:unless="${#lists.isEmpty(solicitudesRecibidas)}" class="solicitudes__lista">
+        <li th:each="s : ${solicitudesRecibidas}" class="solicitudes__item">
+            <article class="tarjeta-solicitud" th:attr="aria-labelledby='solicitud-' + ${s.id}">
+
+                <div class="tarjeta-solicitud__cabecera">
+                    <div>
+                        <p class="tarjeta-solicitud__materia" th:text="${s.materiaCodigo}">MAT101</p>
+                        <h2 th:id="'solicitud-' + ${s.id}" th:text="${s.tema}">Tema</h2>
+                    </div>
+                    <span class="estado estado--pendiente">Pendiente</span>
+                </div>
+
+                <dl class="tarjeta-solicitud__datos">
+                    <dt>Fecha</dt>
+                    <dd th:text="${#temporals.format(s.fechaProgramada, 'dd/MM/yyyy')}"></dd>
+                    <dt>Hora</dt>
+                    <dd th:text="${#temporals.format(s.fechaProgramada, 'hh:mm a')}"></dd>
+                    <dt>Tipo de apoyo</dt>
+                    <dd th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(s.tipo, '_', ' ')))}"></dd>
+                    <dt>Modalidad</dt>
+                    <dd th:text="${#strings.capitalize(#strings.toLowerCase(s.modalidad))}"></dd>
+                </dl>
+
+                <div class="tarjeta-solicitud__acciones">
+                    <form th:action="@{/solicitudes/{id}/aceptar(id=${s.id})}" method="post" data-accion="aceptar">
+                        <button type="submit" class="boton-accion boton-accion--aceptar"
+                                th:attr="aria-label='Aceptar la solicitud: ' + ${s.tema}">Aceptar</button>
+                    </form>
+                    <form th:action="@{/solicitudes/{id}/rechazar(id=${s.id})}" method="post" data-accion="rechazar">
+                        <button type="submit" class="boton-accion boton-accion--rechazar"
+                                th:attr="aria-label='Rechazar la solicitud: ' + ${s.tema}">Rechazar</button>
+                    </form>
+                </div>
+
+            </article>
+        </li>
+    </ul>
+
+</section>
+
+</body>
+</html>
