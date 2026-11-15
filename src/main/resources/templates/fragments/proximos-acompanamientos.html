@@ -1,0 +1,53 @@
+<!--
+    Próximos acompañamientos del estudiante (RF-13).
+    Fragmento reutilizable: se usa en "Mis acompañamientos" y se puede
+    incluir en la página de inicio del estudiante (SCRUM-53) así:
+    <div th:replace="~{fragments/proximos-acompanamientos :: proximos(${proximos})}"></div>
+-->
+<div th:fragment="proximos(proximos)"
+     class="acompanamientos__bloque"
+     role="region"
+     aria-labelledby="titulo-proximos">
+
+    <div class="acompanamientos__bloque-titulo">
+        <h2 id="titulo-proximos">Próximos acompañamientos</h2>
+        <p th:unless="${#lists.isEmpty(proximos)}"
+           th:text="${#lists.size(proximos) == 1} ? '1 acompañamiento aceptado' : ${#lists.size(proximos)} + ' acompañamientos aceptados'">
+        </p>
+    </div>
+
+    <!-- Sin acompañamientos próximos -->
+    <div th:if="${#lists.isEmpty(proximos)}" class="acompanamientos__vacio">
+        <h3>No tienes acompañamientos próximos</h3>
+        <p>Cuando un voluntario acepte una de tus solicitudes, aparecerá aquí.</p>
+        <a th:href="@{/voluntarios}" class="boton-enlace">Buscar voluntarios</a>
+    </div>
+
+    <!-- Tarjetas de los próximos acompañamientos -->
+    <ul th:unless="${#lists.isEmpty(proximos)}" class="proximos__lista">
+        <li th:each="s, estado : ${proximos}" class="solicitudes__item">
+            <article class="tarjeta-proximo" th:attr="aria-labelledby='proximo-' + ${s.id}">
+
+                <div class="tarjeta-proximo__fecha" aria-hidden="true">
+                    <span class="tarjeta-proximo__dia"
+                          th:text="${#temporals.format(s.fechaProgramada, 'dd')}">16</span>
+                    <span class="tarjeta-proximo__mes"
+                          th:text="${#strings.replace(#temporals.format(s.fechaProgramada, 'MMM'), '.', '')}">nov</span>
+                </div>
+
+                <div class="tarjeta-proximo__info">
+                    <span th:if="${estado.first}" class="tarjeta-proximo__siguiente">Siguiente</span>
+                    <p class="tarjeta-solicitud__materia" th:text="${s.materiaCodigo}">MAT101</p>
+                    <h3 th:id="'proximo-' + ${s.id}" th:text="${s.tema}">Tema</h3>
+                    <p class="tarjeta-proximo__detalle">
+                        <span th:text="${#temporals.format(s.fechaProgramada, 'dd/MM/yyyy')}">16/11/2026</span>
+                        <span th:text="${#temporals.format(s.fechaProgramada, 'hh:mm a')}">02:00 p. m.</span>
+                        <span th:text="${#strings.capitalize(#strings.toLowerCase(s.modalidad))}">Virtual</span>
+                    </p>
+                </div>
+
+            </article>
+        </li>
+    </ul>
+
+</div>

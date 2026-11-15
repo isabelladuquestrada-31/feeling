@@ -75,11 +75,11 @@
                 </dl>
 
                 <div class="tarjeta-solicitud__acciones">
-                    <form th:action="@{/solicitudes/{id}/aceptar(id=${s.id})}" method="post" data-accion="aceptar">
+                    <form th:action="@{/solicitudes/{id}/aceptar(id=${s.id})}" method="post" data-accion="aceptar" data-quitar-tarjeta>
                         <button type="submit" class="boton-accion boton-accion--aceptar"
                                 th:attr="aria-label='Aceptar la solicitud: ' + ${s.tema}">Aceptar</button>
                     </form>
-                    <form th:action="@{/solicitudes/{id}/rechazar(id=${s.id})}" method="post" data-accion="rechazar">
+                    <form th:action="@{/solicitudes/{id}/rechazar(id=${s.id})}" method="post" data-accion="rechazar" data-quitar-tarjeta>
                         <button type="submit" class="boton-accion boton-accion--rechazar"
                                 th:attr="aria-label='Rechazar la solicitud: ' + ${s.tema}">Rechazar</button>
                     </form>

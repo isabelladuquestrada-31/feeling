@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 3. Efecto de presión al tocar una tarjeta en pantallas táctiles.
-    seccion.querySelectorAll(".tarjeta-solicitud").forEach(tarjeta => {
+    seccion.querySelectorAll(".tarjeta-solicitud, .tarjeta-proximo, .tarjeta-historial").forEach(tarjeta => {
         tarjeta.addEventListener("pointerdown", evento => {
             if (evento.pointerType === "touch") {
                 tarjeta.classList.add("presionada");
@@ -90,17 +90,31 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => contador.classList.remove("cambio"), duracion(300));
     }
 
-    // 5. Envío de Aceptar y Rechazar.
+    // 5. Envío de los formularios de acción (aceptar, rechazar y cancelar).
     let restantes = items.length;
+
+    // Acciones que piden un segundo toque para evitar errores.
+    const textosConfirmar = {
+        rechazar: "Confirmar rechazo",
+        cancelar: "Confirmar cancelación"
+    };
+
+    // Texto que se muestra mientras se envía cada acción.
+    const textosCargando = {
+        aceptar: "Aceptando...",
+        rechazar: "Rechazando...",
+        cancelar: "Cancelando..."
+    };
 
     seccion.querySelectorAll("form[data-accion]").forEach(formulario => {
         const boton = formulario.querySelector("button");
         const accion = formulario.dataset.accion;
         const textoOriginal = boton.textContent.trim();
+        const quitarTarjeta = formulario.hasAttribute("data-quitar-tarjeta");
         let esperandoConfirmacion = false;
         let temporizador;
 
-        // Devuelve el botón de rechazar a su estado normal.
+        // Devuelve el botón a su estado normal.
         function cancelarConfirmacion() {
             esperandoConfirmacion = false;
             boton.classList.remove("confirmando");
@@ -110,12 +124,12 @@ document.addEventListener("DOMContentLoaded", () => {
         formulario.addEventListener("submit", evento => {
             evento.preventDefault();
 
-            // Rechazar pide un segundo toque para evitar errores.
-            if (accion === "rechazar" && !esperandoConfirmacion) {
+            // Primer toque: pide confirmación.
+            if (textosConfirmar[accion] && !esperandoConfirmacion) {
                 esperandoConfirmacion = true;
                 boton.classList.add("confirmando");
-                boton.textContent = "Confirmar rechazo";
-                anunciar("Toca otra vez el botón para confirmar el rechazo.");
+                boton.textContent = textosConfirmar[accion];
+                anunciar("Toca otra vez el botón para confirmar.");
 
                 temporizador = setTimeout(cancelarConfirmacion, 3500);
                 return;
@@ -124,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
             clearTimeout(temporizador);
 
             const item = formulario.closest(".solicitudes__item");
-            const botones = item.querySelectorAll(".boton-accion");
+            const botones = item ? item.querySelectorAll(".boton-accion") : [boton];
 
             // Evita que se envíe dos veces.
             botones.forEach(b => {
@@ -133,26 +147,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
             boton.classList.remove("confirmando");
             boton.innerHTML = '<span class="boton-accion__cargando" aria-hidden="true"></span>' +
-                (accion === "aceptar" ? "Aceptando..." : "Rechazando...");
-            item.setAttribute("aria-busy", "true");
+                (textosCargando[accion] || "Enviando...");
 
-            anunciar(accion === "aceptar" ? "Aceptando la solicitud." : "Rechazando la solicitud.");
+            if (item) {
+                item.setAttribute("aria-busy", "true");
+            }
 
-            // La tarjeta sale con una animación y luego se envía el formulario.
+            anunciar(textosCargando[accion] || "Enviando...");
+
+            // Si la tarjeta debe desaparecer, sale con una animación antes de enviar.
             setTimeout(() => {
-                item.classList.add("saliendo");
-                restantes -= 1;
-                actualizarContador(restantes);
+                if (quitarTarjeta && item) {
+                    item.classList.add("saliendo");
+                    restantes -= 1;
+                    actualizarContador(restantes);
 
-                if (restantes === 0 && vacio) {
-                    vacio.hidden = false;
+                    if (restantes === 0 && vacio) {
+                        vacio.hidden = false;
+                    }
                 }
 
-                setTimeout(() => formulario.submit(), duracion(350));
+                setTimeout(() => formulario.submit(), duracion(quitarTarjeta ? 350 : 150));
             }, duracion(250));
         });
 
-        // Si sale del botón sin confirmar, se cancela el rechazo.
+        // Si sale del botón sin confirmar, se cancela la confirmación.
         boton.addEventListener("blur", () => {
             if (esperandoConfirmacion) {
                 clearTimeout(temporizador);
@@ -178,5 +197,61 @@ document.addEventListener("DOMContentLoaded", () => {
         if (alerta.classList.contains("solicitudes__alerta--exito")) {
             setTimeout(cerrarAlerta, 6000);
         }
+    });
+
+    // 7. Filtros del historial por estado.
+    const botonesFiltro = Array.from(seccion.querySelectorAll("[data-filtro]"));
+    const itemsFiltrables = Array.from(seccion.querySelectorAll("[data-estado]"));
+    const sinResultados = seccion.querySelector("[data-sin-resultados]");
+
+    // Muestra en cada filtro cuántas solicitudes tiene.
+    botonesFiltro.forEach(boton => {
+        const filtro = boton.dataset.filtro;
+        const cantidad = filtro === "TODAS"
+            ? itemsFiltrables.length
+            : itemsFiltrables.filter(item => item.dataset.estado === filtro).length;
+        const etiqueta = boton.querySelector("[data-cantidad]");
+
+        if (etiqueta) {
+            etiqueta.textContent = String(cantidad);
+        }
+
+        // Oculta los filtros que no tienen solicitudes (menos "Todas").
+        if (filtro !== "TODAS" && cantidad === 0) {
+            boton.hidden = true;
+        }
+    });
+
+    function aplicarFiltro(filtro) {
+        let visibles = 0;
+
+        itemsFiltrables.forEach(item => {
+            const coincide = filtro === "TODAS" || item.dataset.estado === filtro;
+
+            item.hidden = !coincide;
+
+            if (coincide) {
+                visibles += 1;
+                // Repite la animación de entrada al mostrar la tarjeta.
+                item.classList.remove("visible");
+                requestAnimationFrame(() => item.classList.add("visible"));
+            }
+        });
+
+        botonesFiltro.forEach(boton => {
+            const activo = boton.dataset.filtro === filtro;
+            boton.classList.toggle("filtro--activo", activo);
+            boton.setAttribute("aria-pressed", String(activo));
+        });
+
+        if (sinResultados) {
+            sinResultados.hidden = visibles > 0;
+        }
+
+        anunciar(`${visibles} ${visibles === 1 ? "solicitud" : "solicitudes"} en este filtro.`);
+    }
+
+    botonesFiltro.forEach(boton => {
+        boton.addEventListener("click", () => aplicarFiltro(boton.dataset.filtro));
     });
 });
