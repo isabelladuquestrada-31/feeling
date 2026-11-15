@@ -16,7 +16,7 @@ import jakarta.persistence.*;
 public class Estudiante extends Usuario{
 
     /**Programa académico que cursa el estudiante. */
-    @Column(name = "programa_academico", table = "estudiante")
+    @Column(name = "programa_academico", table = "estudiante", length = 100, nullable = false)
     private String programaAcademico;
 
     public String getProgramaAcademico() {

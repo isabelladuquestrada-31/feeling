@@ -25,9 +25,11 @@ public interface IServicioAutenticacion {
      *
      * @param nombreUsuario Nombre con el que la persona se registra
      * @param contrasena    contraseña con la que la persona se registra
+     * @param programaAcademico programa académico que cursa
+     *  @param whatsapp          número de WhatsApp de 10 dígitos
      * @return el estudiante registrado
      * @throws IllegalArgumentException si faltan datos o el nombre de usuario ya existe
      */
-    Estudiante registrar(String nombreUsuario, String contrasena);
+    Estudiante registrar(String nombreUsuario, String contrasena, String programaAcademico, String whatsapp);
 }
 
