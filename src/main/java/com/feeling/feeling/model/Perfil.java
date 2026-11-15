@@ -25,12 +25,15 @@ public class Perfil {
     private Usuario usuario;
 
     /** Nombre con el que el estudiante quiere que lo llamen. */
+    @Column(length = 50)
     private String nombrePreferido;
 
     /** Pronombres del estudiante: él, ella, elle o prefiero no decir. */
+    @Column(length = 30)
     private String pronombres;
 
     /** Número de WhatsApp. Solo se comparte cuando una solicitud es aceptada. */
+    @Column(length = 20)
     private String whatsapp;
 
     /**
