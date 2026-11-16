@@ -1,6 +1,7 @@
 package com.feeling.feeling.controller;
 
 import com.feeling.feeling.model.Estudiante;
+import com.feeling.feeling.model.ProgramaAcademico;
 import com.feeling.feeling.service.IServicioAutenticacion;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -9,11 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
+
 /**
  * Maneja el registro de estudiantes nuevos.
  *
  * @author Isabella Duque
- * @version 1.2
+ * @version 1.3
  */
 @Controller
 public class RegistroController {
@@ -30,12 +33,14 @@ public class RegistroController {
     }
 
     /**
-     * Muestra el formulario de registro.
+     * Muestra el formulario de registro con la lista de programas académicos.
      *
+     * @param model modelo para enviar los programas a la vista
      * @return la vista del registro
      */
     @GetMapping("/registro")
-    public String mostrarRegistro() {
+    public String mostrarRegistro(Model model) {
+        model.addAttribute("programas", ProgramaAcademico.porFacultad());
         return "paginas/signup";
     }
 
@@ -46,7 +51,7 @@ public class RegistroController {
      * @param nombreUsuario       nombre de usuario escrito en el formulario
      * @param contrasena          contraseña escrita en el formulario
      * @param confirmarContrasena repetición de la contraseña
-     * @param programaAcademico   programa académico escrito en el formulario
+     * @param programaAcademico   código del programa elegido en la lista, por ejemplo INGENIERIA_SISTEMAS
      * @param whatsapp            número de WhatsApp escrito en el formulario
      * @param aceptaAviso         indica si marcó la casilla del tratamiento de datos
      * @param sesion              sesión donde se guarda el estudiante registrado
@@ -57,7 +62,7 @@ public class RegistroController {
     public String registrar(@RequestParam String nombreUsuario,
                             @RequestParam String contrasena,
                             @RequestParam String confirmarContrasena,
-                            @RequestParam String programaAcademico,
+                            @RequestParam(required = false) String programaAcademico,
                             @RequestParam("numeroWhatsApp") String whatsapp,
                             @RequestParam(name = "aceptaTratamientoDatos", required = false) boolean aceptaAviso,
                             HttpSession sesion,
@@ -68,6 +73,12 @@ public class RegistroController {
                     nombreUsuario, programaAcademico, whatsapp, aceptaAviso, model);
         }
 
+        Optional<ProgramaAcademico> programa = ProgramaAcademico.desdeCodigo(programaAcademico);
+        if (programa.isEmpty()) {
+            return mostrarError("Selecciona tu programa académico de la lista",
+                    nombreUsuario, programaAcademico, whatsapp, aceptaAviso, model);
+        }
+
         if (!aceptaAviso) {
             return mostrarError("Debes aceptar el aviso de tratamiento de datos",
                     nombreUsuario, programaAcademico, whatsapp, false, model);
@@ -75,7 +86,7 @@ public class RegistroController {
 
         try {
             Estudiante estudiante = servicioAutenticacion.registrar(
-                    nombreUsuario, contrasena, programaAcademico, limpiarWhatsapp(whatsapp));
+                    nombreUsuario, contrasena, programa.get().getEtiqueta(), limpiarWhatsapp(whatsapp));
             sesion.setAttribute("usuario", estudiante);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
@@ -105,7 +116,7 @@ public class RegistroController {
      *
      * @param error             mensaje que se muestra al estudiante
      * @param nombreUsuario     nombre de usuario que había escrito
-     * @param programaAcademico programa académico que había escrito
+     * @param programaAcademico código del programa que había elegido
      * @param whatsapp          número de WhatsApp que había escrito
      * @param aceptaAviso       si ya había marcado la casilla del tratamiento de datos
      * @param model             modelo para enviar los datos a la vista
@@ -116,6 +127,7 @@ public class RegistroController {
         model.addAttribute("error", error);
         model.addAttribute("nombreUsuario", nombreUsuario);
         model.addAttribute("programaAcademico", programaAcademico);
+        model.addAttribute("programas", ProgramaAcademico.porFacultad());
         model.addAttribute("numeroWhatsApp", whatsapp);
         model.addAttribute("aceptaTratamientoDatos", aceptaAviso);
         return "paginas/signup";

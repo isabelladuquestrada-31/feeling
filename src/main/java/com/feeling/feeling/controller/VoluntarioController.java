@@ -31,20 +31,24 @@ public class VoluntarioController {
     /**
      * RF-07: muestra la pantalla "Buscar voluntarios" con los resultados de los filtros.
      *
-     * @param materia código de la materia elegida (opcional)
-     * @param tipo    tipo de apoyo elegido (opcional)
-     * @param model   datos que se envían a la vista
+     * @param materia  código de la materia elegida (opcional)
+     * @param tipo     tipo de apoyo elegido (opcional)
+     * @param programa código del programa académico elegido (opcional)
+     * @param model    datos que se envían a la vista
      * @return la vista de búsqueda de voluntarios
      */
     @GetMapping("/voluntarios")
     public String buscar(@RequestParam(required = false) String materia,
                          @RequestParam(required = false) String tipo,
+                         @RequestParam(required = false) String programa,
                          Model model) {
-        model.addAttribute("voluntarios", busquedaService.buscar(materia, tipo));
+        model.addAttribute("voluntarios", busquedaService.buscar(materia, tipo, programa));
         model.addAttribute("materias", busquedaService.materias());
         model.addAttribute("tiposApoyo", busquedaService.tiposApoyo());
+        model.addAttribute("programas", busquedaService.programas());
         model.addAttribute("materiaSeleccionada", materia == null ? "" : materia);
         model.addAttribute("tipoSeleccionado", tipo == null ? "" : tipo);
+        model.addAttribute("programaSeleccionado", programa == null ? "" : programa);
         model.addAttribute("paginaActiva", "voluntarios");
         return "paginas/buscar-voluntarios";
     }

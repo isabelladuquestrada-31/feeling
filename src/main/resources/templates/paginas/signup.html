@@ -343,16 +343,31 @@
 
                             </svg>
 
-                            <input type="text"
-                                   id="programaAcademico"
-                                   name="programaAcademico"
-                                   placeholder="Ej. Ingeniería de Sistemas"
-                                   autocomplete="organization-title"
-                                   maxlength="100"
-                                   required
-                                   th:value="${programaAcademico}"
-                                   aria-describedby="errorProgramaAcademico"
-                                   th:attr="aria-invalid=${errorProgramaAcademico != null}">
+                            <!-- Lista cerrada de programas de la UAM: evita textos libres
+                                 y variaciones como "Ingeniería en Sistemas" -->
+                            <select id="programaAcademico"
+                                    name="programaAcademico"
+                                    required
+                                    aria-describedby="errorProgramaAcademico"
+                                    th:attr="aria-invalid=${errorProgramaAcademico != null}">
+
+                                <option value=""
+                                        disabled
+                                        th:selected="${programaAcademico == null or programaAcademico == ''}">
+                                    Selecciona tu programa
+                                </option>
+
+                                <optgroup th:each="facultad : ${programas}"
+                                          th:label="${facultad.key}">
+                                    <option th:each="p : ${facultad.value}"
+                                            th:value="${p.codigo}"
+                                            th:text="${p.etiqueta}"
+                                            th:selected="${p.codigo == programaAcademico}">
+                                        Programa
+                                    </option>
+                                </optgroup>
+
+                            </select>
 
                         </div>
 
@@ -645,4 +660,4 @@
 <script th:src="@{/js/signup.js}" defer></script>
 
 </body>
-</html>
+</html>

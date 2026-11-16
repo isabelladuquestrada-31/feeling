@@ -37,7 +37,8 @@
 }
 
 .signup-page button,
-.signup-page input {
+.signup-page input,
+.signup-page select {
     font-family: var(--font-main);
 }
 
@@ -502,7 +503,8 @@
 
 /* Campos de entrada */
 
-.signup-form__control input {
+.signup-form__control input,
+.signup-form__control select {
     display: block;
 
     width: 100%;
@@ -539,14 +541,16 @@
 
 /* Estado al pasar el cursor */
 
-.signup-form__control input:hover {
+.signup-form__control input:hover,
+.signup-form__control select:hover {
     border-color: var(--color-primary-light);
 }
 
 
 /* Estado de enfoque mediante teclado */
 
-.signup-form__control input:focus-visible {
+.signup-form__control input:focus-visible,
+.signup-form__control select:focus-visible {
     border-color: var(--color-primary);
 
     background-color: var(--color-text-light);
@@ -562,14 +566,18 @@
 /* Campos que presentan errores */
 
 .signup-form__control input[aria-invalid="true"],
-.signup-form__control input.is-invalid {
+.signup-form__control select[aria-invalid="true"],
+.signup-form__control input.is-invalid,
+.signup-form__control select.is-invalid {
     border-color: var(--color-danger);
 
     background-color: rgba(255, 255, 255, 0.98);
 }
 
 .signup-form__control input[aria-invalid="true"]:focus-visible,
-.signup-form__control input.is-invalid:focus-visible {
+.signup-form__control select[aria-invalid="true"]:focus-visible,
+.signup-form__control input.is-invalid:focus-visible,
+.signup-form__control select.is-invalid:focus-visible {
     outline-color: var(--color-danger);
 }
 
@@ -1340,7 +1348,8 @@
 
 .signup-page a:focus-visible,
 .signup-page button:focus-visible,
-.signup-page input:focus-visible {
+.signup-page input:focus-visible,
+.signup-page select:focus-visible {
     outline: 3px solid var(--color-primary-light);
     outline-offset: 3px;
 }
@@ -1349,7 +1358,8 @@
 /* Mantiene una separación al enfocar controles */
 
 .signup-page button:focus,
-.signup-page input:focus {
+.signup-page input:focus,
+.signup-page select:focus {
     scroll-margin: 100px;
 }
 
@@ -1381,7 +1391,8 @@
         row-gap: 21px;
     }
 
-    .signup-form__control input {
+    .signup-form__control input,
+    .signup-form__control select {
         height: 49px;
 
         font-size: 0.89rem;
@@ -1573,7 +1584,8 @@
             "logo";
     }
 
-    .signup-form__control input {
+    .signup-form__control input,
+    .signup-form__control select {
         height: 47px;
 
         font-size: 0.86rem;
@@ -1703,7 +1715,8 @@
         font-size: 1.65rem;
     }
 
-    .signup-form__control input {
+    .signup-form__control input,
+    .signup-form__control select {
         padding-left: 38px;
 
         font-size: 0.80rem;
@@ -1754,4 +1767,39 @@
         transition-duration: 0.01ms !important;
     }
 
+}
+
+
+/* =========================================================
+   LISTA DE PROGRAMAS ACADÉMICOS
+   El programa se elige de una lista cerrada (ProgramaAcademico)
+   para que no haya textos libres. Comparte el estilo de los
+   campos de texto y solo cambia la flecha y el cursor.
+   ========================================================= */
+
+.signup-form__control select {
+    appearance: none;
+    -webkit-appearance: none;
+
+    padding-right: 40px;
+
+    cursor: pointer;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23087E96' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-position: right 15px center;
+    background-repeat: no-repeat;
+
+    text-overflow: ellipsis;
+}
+
+/* Mientras no se elige programa, se ve como el texto de ejemplo */
+
+.signup-form__control select:invalid {
+    color: var(--color-text);
+}
+
+.signup-form__control select option,
+.signup-form__control select optgroup {
+    color: var(--color-text-secondary);
+    background-color: var(--color-text-light);
 }

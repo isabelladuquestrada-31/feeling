@@ -3,6 +3,7 @@ package com.feeling.feeling.service;
 
 import com.feeling.feeling.dto.OpcionFiltro;
 import com.feeling.feeling.dto.VoluntarioResumen;
+import com.feeling.feeling.model.ProgramaAcademico;
 import com.feeling.feeling.repository.BusquedaVoluntariosRepository;
 import org.springframework.stereotype.Service;
 
@@ -56,15 +57,19 @@ public class BusquedaVoluntariosService {
     }
 
     /**
-     * RF-07: busca voluntarios activos por materia y tipo de apoyo.
-     * Los filtros vacíos se ignoran.
+     * RF-07: busca voluntarios activos por materia, tipo de apoyo y programa académico.
+     * Los filtros vacíos se ignoran, y un código de programa que no existe también.
      *
-     * @param materiaCodigo código de la materia, puede venir vacío
-     * @param tipoApoyo     tipo de apoyo, puede venir vacío
+     * @param materiaCodigo  código de la materia, puede venir vacío
+     * @param tipoApoyo      tipo de apoyo, puede venir vacío
+     * @param programaCodigo código del programa, por ejemplo INGENIERIA_SISTEMAS; puede venir vacío
      * @return voluntarios encontrados, con los días ordenados y los textos legibles
      */
-    public List<VoluntarioResumen> buscar(String materiaCodigo, String tipoApoyo) {
-        return repositorio.buscar(limpiar(materiaCodigo), limpiar(tipoApoyo)).stream()
+    public List<VoluntarioResumen> buscar(String materiaCodigo, String tipoApoyo, String programaCodigo) {
+        String programa = ProgramaAcademico.desdeCodigo(programaCodigo)
+                .map(ProgramaAcademico::getEtiqueta)
+                .orElse(null);
+        return repositorio.buscar(limpiar(materiaCodigo), limpiar(tipoApoyo), programa).stream()
                 .map(v -> new VoluntarioResumen(
                         v.getId(),
                         v.getNombre(),
@@ -76,6 +81,15 @@ public class BusquedaVoluntariosService {
                                 .map(dia -> NOMBRES_DIAS.getOrDefault(dia, dia))
                                 .toList()))
                 .toList();
+    }
+
+    /**
+     * Devuelve los programas académicos agrupados por facultad para el filtro.
+     *
+     * @return programas de la UAM agrupados por facultad
+     */
+    public Map<String, List<ProgramaAcademico>> programas() {
+        return ProgramaAcademico.porFacultad();
     }
 
     /**

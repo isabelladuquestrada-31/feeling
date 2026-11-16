@@ -47,6 +47,7 @@ public class BusquedaVoluntariosRepository {
                                           WHERE vm2.voluntario_id = v.id AND vm2.materia_codigo = ?))
                AND (? IS NULL OR EXISTS (SELECT 1 FROM voluntario_tipo_apoyo vt2
                                           WHERE vt2.voluntario_id = v.id AND vt2.tipo_apoyo = ?))
+               AND (? IS NULL OR e.programa_academico = ?)
              ORDER BY nombre
             """;
     /**
@@ -68,9 +69,10 @@ public class BusquedaVoluntariosRepository {
      *
      * @param materiaCodigo código de la materia, o null para no filtrar
      * @param tipoApoyo     tipo de apoyo, o null para no filtrar
+     * @param programa      nombre oficial del programa académico, o null para no filtrar
      * @return voluntarios que cumplen los filtros ordenados por nombre
      */
-    public List<VoluntarioResumen> buscar(String materiaCodigo, String tipoApoyo) {
+    public List<VoluntarioResumen> buscar(String materiaCodigo, String tipoApoyo, String programa) {
         return jdbcTemplate.query(SQL_BUSCAR, (rs, fila) -> new VoluntarioResumen(
                         rs.getInt("id"),
                         rs.getString("nombre"),
@@ -78,7 +80,7 @@ public class BusquedaVoluntariosRepository {
                         separar(rs.getString("materias")),
                         separar(rs.getString("tipos")),
                         separar(rs.getString("dias"))),
-                materiaCodigo, materiaCodigo, tipoApoyo, tipoApoyo);
+                materiaCodigo, materiaCodigo, tipoApoyo, tipoApoyo, programa, programa);
     }
 
     /**

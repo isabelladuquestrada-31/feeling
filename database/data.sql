@@ -25,12 +25,13 @@ INSERT INTO preferencias_accesibilidad (usuario_id, letra_grande, alto_contraste
 (6, FALSE, FALSE);
 
 
+-- programa_academico debe ser el nombre oficial de un valor del enum ProgramaAcademico
 INSERT INTO estudiante (usuario_id, programa_academico) VALUES
 (2, 'Ingeniería de Sistemas'),
-(3, 'Ingeniería de Sistemas'),
+(3, 'Fisioterapia'),
 (4, 'Ingeniería de Sistemas'),
 (5, 'Ingeniería de Sistemas'),
-(6, 'Ingeniería de Sistemas');
+(6, 'Ingeniería Biomédica');
 
 INSERT INTO materia (codigo, nombre) VALUES
 ('MAT101', 'Cálculo Diferencial'),
@@ -77,4 +78,4 @@ INSERT INTO disponibilidad (voluntario_id, dia, hora_inicio, hora_fin) VALUES
 (1, 'VIERNES',   '08:00', '10:00'),
 (2, 'MARTES',    '16:00', '18:00'),
 (2, 'JUEVES',    '14:00', '16:00'),
-(2, 'SABADO',    '09:00', '11:00');
+(2, 'SABADO',    '09:00', '11:00');
