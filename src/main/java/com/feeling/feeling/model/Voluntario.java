@@ -10,47 +10,41 @@ import java.util.List;
  * Perfil de voluntario de un estudiante.
  *
  * <p>Un estudiante puede tener como máximo un perfil de voluntario.
- * El voluntario se identifica por su estudiante: la llave primaria
- * de la tabla {@code voluntario} es el id del estudiante.</p>
- *
- * <p>Todo voluntario debe dominar al menos una materia y ofrecer
+ * Todo voluntario debe dominar al menos una materia y ofrecer
  * al menos un tipo de apoyo.</p>
  *
  * @author Isabella Duque
- * @version 1.0
+ * @version 1.0l
  */
 @Entity
-@Table (name = "volunatrio")
+@Table(name = "voluntario")
 public class Voluntario {
 
-    /** Estudiante dueño de este perfil. Su id es la llave primaria del voluntario.
-     *
-     */
+    /** Identificador único del voluntario. */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    /** Estudiante dueño de este perfil. Un estudiante solo puede tener un perfil. */
     @OneToOne
-    @JoinColumn(name = "estudiante_id")
+    @JoinColumn(name = "estudiante_id", nullable = false, unique = true)
     private Estudiante estudiante;
 
-    /** Materias que domina el voluntario (al menos una)
-     *
-     */
+    /** Materias que domina el voluntario (al menos una). */
     @ManyToMany
     @JoinTable(
             name = "voluntario_materia",
-            joinColumns = @JoinColumn(name = "estudiante_id"),
-            inverseJoinColumns = @JoinColumn (name= "materia_codigo")
+            joinColumns = @JoinColumn(name = "voluntario_id"),
+            inverseJoinColumns = @JoinColumn(name = "materia_codigo")
     )
     private List<Materia> materias = new ArrayList<>();
 
-    /** Tipos de apoyo que ofrece el voluntario
-     *
-     */
-    @ElementCollection (fetch = FetchType.EAGER)
+    /** Tipos de apoyo que ofrece el voluntario (al menos uno). */
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "voluntario_tipo_apoyo",
-            joinColumns = @JoinColumn(name = "estudiante_id")
+            joinColumns = @JoinColumn(name = "voluntario_id")
     )
-
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_apoyo", nullable = false)
     private List<TipoApoyo> tiposApoyo = new ArrayList<>();
@@ -61,13 +55,13 @@ public class Voluntario {
     private EstadoVoluntario estado;
 
     /**
-     * Constructor vacío
+     * Constructor vacío requerido por JPA.
      */
-    public Voluntario() {
+    protected Voluntario() {
     }
 
     /**
-     * Crea el perfil de voluntario de un estudiante en estado activo
+     * Crea el perfil de voluntario de un estudiante en estado {@link EstadoVoluntario#ACTIVO}.
      *
      * @param estudiante estudiante que se activa como voluntario
      * @param materias   materias que domina
@@ -78,6 +72,15 @@ public class Voluntario {
         this.materias = new ArrayList<>(materias);
         this.tiposApoyo = new ArrayList<>(tiposApoyo);
         this.estado = EstadoVoluntario.ACTIVO;
+    }
+
+    /**
+     * Obtiene el identificador del voluntario.
+     *
+     * @return el id del voluntario
+     */
+    public Integer getId() {
+        return id;
     }
 
     /**
@@ -142,8 +145,4 @@ public class Voluntario {
     public void setEstado(EstadoVoluntario estado) {
         this.estado = estado;
     }
-}
-
-
-
 }
