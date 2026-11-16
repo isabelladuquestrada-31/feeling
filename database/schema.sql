@@ -129,36 +129,3 @@ foreign key (solicitud_id) references solicitud(id)
 use feeling;
 alter table usuario add programa_academico varchar(100) after rol;
 
-create table perfil (
-id int auto_increment primary key,
-usuario_id int not null unique,
-nombre_preferido varchar(50),
-pronombres varchar(20),
-whatsapp varchar(15) not null,
-foreign key (usuario_id) references usuario(id)
-);
-
-create table preferencias_accesibilidad (
-id int auto_increment primary key,
-usuario_id int not null unique,
-letra_grande boolean not null default false,
-alto_contraste boolean not null default false,
-foreign key (usuario_id) references usuario(id)
-);
-
-select * from usuario where nombre_usuario = 'prueba1';
-select * from estudiante;
-select * from perfil;
-select * from preferencias_accesibilidad;
-
-use feeling;
-show columns from voluntario;
-
-insert into materia (codigo, nombre) values
-('sis101', 'Sistemas Operativos'),
-('sis102', 'Ingeniería de Software'),
-('sis103', 'Bases de Datos'),
-('mat201', 'Cálculo Integral'),
-('fis101', 'Física Mecánica');
-
-select * from materia;
