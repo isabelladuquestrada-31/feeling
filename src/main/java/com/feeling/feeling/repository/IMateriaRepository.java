@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  * @version1.0
  */
 @Repository
-public interface IMateriaRepository extends JpaRepository<Materia, String> {
+public interface IMateriaRepository extends JpaRepository<Materia, Integer> {
 }

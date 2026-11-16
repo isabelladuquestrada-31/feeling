@@ -30,6 +30,16 @@ public class RegistroController {
     }
 
     /**
+     * Muestra el formulario de registro.
+     *
+     * @return la vista del registro
+     */
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "paginas/registro";
+    }
+
+    /**
      * Registra al estudiante y lo lleva a su página de inicio con la sesión iniciada.
      * Si algo falla, vuelve al formulario con el error y los datos que ya había escrito.
      *
