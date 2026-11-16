@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Contiene la lógica de negocio de las solicitudes de acompañamiento.
@@ -57,6 +58,66 @@ public class SolicitudService {
 
         solicitud.setEstado(EstadoSolicitud.CANCELADA);
         return solicitudRepository.save(solicitud);
+    }
+    /**
+     * RF-xx: el voluntario acepta una solicitud que sigue pendiente.
+     *
+     * @param solicitudId id de la solicitud
+     * @param voluntarioId id del voluntario que responde
+     * @return la solicitud en estado ACEPTADA
+     */
+    @Transactional
+    public Solicitud aceptar(Integer solicitudId, Integer voluntarioId) {
+        return responder(solicitudId, voluntarioId, EstadoSolicitud.ACEPTADA);
+    }
+
+    /**
+     * RF-xx: el voluntario rechaza una solicitud que sigue pendiente.
+     *
+     * @param solicitudId id de la solicitud
+     * @param voluntarioId id del voluntario que responde
+     * @return la solicitud en estado RECHAZADA
+     */
+    @Transactional
+    public Solicitud rechazar(Integer solicitudId, Integer voluntarioId) {
+        return responder(solicitudId, voluntarioId, EstadoSolicitud.RECHAZADA);
+    }
+
+    /**
+     * Cambia el estado de una solicitud pendiente al estado indicado (aceptada o rechazada).
+     * Falla si la solicitud no existe, es de otro voluntario o ya no está pendiente.
+     */
+    private Solicitud responder(Integer solicitudId, Integer voluntarioId, EstadoSolicitud nuevoEstado) {
+        Solicitud solicitud = solicitudRepository.findById(solicitudId)
+                .orElseThrow(() -> new IllegalArgumentException("La solicitud no existe."));
+
+        if (!voluntarioId.equals(solicitud.getVoluntarioId())) {
+            throw new IllegalArgumentException("Solo el voluntario al que se le hizo la solicitud puede responderla.");
+        }
+        if (solicitud.getEstado() != EstadoSolicitud.PENDIENTE) {
+            throw new IllegalStateException(motivoNoRespondible(solicitud.getEstado()));
+        }
+
+        solicitud.setEstado(nuevoEstado);
+        return solicitudRepository.save(solicitud);
+    }
+
+    /**
+     * Explica por qué una solicitud que ya no está pendiente no se puede aceptar ni rechazar.
+     */
+    private String motivoNoRespondible(EstadoSolicitud estado) {
+        switch (estado) {
+            case CANCELADA:
+                return "No se puede responder porque el estudiante canceló la solicitud.";
+            case ACEPTADA:
+                return "No se puede responder porque la solicitud ya fue aceptada.";
+            case RECHAZADA:
+                return "No se puede responder porque la solicitud ya fue rechazada.";
+            case REALIZADA:
+                return "No se puede responder porque el acompañamiento ya fue realizado.";
+            default:
+                return "No se puede responder porque la solicitud ya no está pendiente.";
+        }
     }
 
     /**
