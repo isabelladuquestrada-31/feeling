@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Maneja el registro de estudiantes nuevos.
  *
  * @author Isabella Duque
- * @version 1.1
+ * @version 1.2
  */
 @Controller
 public class RegistroController {
@@ -75,13 +75,28 @@ public class RegistroController {
 
         try {
             Estudiante estudiante = servicioAutenticacion.registrar(
-                    nombreUsuario, contrasena, programaAcademico, whatsapp);
+                    nombreUsuario, contrasena, programaAcademico, limpiarWhatsapp(whatsapp));
             sesion.setAttribute("usuario", estudiante);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
             return mostrarError(e.getMessage(),
                     nombreUsuario, programaAcademico, whatsapp, aceptaAviso, model);
         }
+    }
+
+    /**
+     * Deja el número de WhatsApp como lo espera el servicio: solo los 10 dígitos del celular.
+     * El formulario lo envía con el indicativo, por ejemplo "+57 3001234567".
+     *
+     * @param numero número escrito en el formulario
+     * @return el número sin espacios, sin símbolos y sin el indicativo 57
+     */
+    private String limpiarWhatsapp(String numero) {
+        String digitos = numero.replaceAll("\\D", "");
+        if (digitos.length() == 12 && digitos.startsWith("57")) {
+            return digitos.substring(2);
+        }
+        return digitos;
     }
 
     /**
