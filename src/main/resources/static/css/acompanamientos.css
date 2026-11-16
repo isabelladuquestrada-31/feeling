@@ -464,3 +464,12 @@
         transition-duration: 0.01ms !important;
     }
 }
+
+/* RF-11 (SCRUM-85): botón de WhatsApp en las tarjetas de próximos acompañamientos */
+.tarjeta-proximo__contacto {
+    margin-top: 12px;
+}
+
+.tarjeta-historial__lado .boton-whatsapp {
+    order: -1;
+}
