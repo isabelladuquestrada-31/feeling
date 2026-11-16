@@ -74,4 +74,13 @@ public class VoluntarioService {
         return voluntarioRepository.save(estudiante.getVoluntario());
     }
 
+    /**
+     * Obtiene todas las materias que un voluntario puede elegir.
+     *
+     * @return lista de todas las materias
+     */
+    public List<Materia> listarMaterias() {
+        return materiaRepository.findAll();
+    }
+
 }
