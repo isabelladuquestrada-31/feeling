@@ -2,6 +2,7 @@ package com.feeling.feeling.repository;
 
 import com.feeling.feeling.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 /**
@@ -20,4 +21,11 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByNombreUsuario(String nombreUsuario);
 
+    /**
+     * Cuenta los estudiantes registrados (sin contar administradores).
+     *
+     * @return cantidad de estudiantes
+     */
+    @Query("SELECT COUNT(e) FROM Estudiante e")
+    long contarEstudiantes();
 }

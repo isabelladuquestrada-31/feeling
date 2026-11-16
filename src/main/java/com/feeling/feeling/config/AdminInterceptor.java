@@ -18,8 +18,9 @@ public class AdminInterceptor implements HandlerInterceptor {
 
         if (usuario == null) {
             response.sendRedirect("/login");
-        }else {
-            response.sendRedirect("/");
+        } else {
+            // Un estudiante no puede entrar: vuelve a su inicio con el aviso de acceso denegado.
+            response.sendRedirect("/inicio?acceso=denegado");
         }
         return false;
     }

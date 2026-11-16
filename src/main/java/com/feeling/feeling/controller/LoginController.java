@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
@@ -17,7 +19,7 @@ import java.util.Optional;
  * Redirige a cada usuario a su página según su rol.
  *
  * @author Isabella Duque
- * @version 1.0
+ * @version 1.1
  */
 @Controller
 public class LoginController {
@@ -70,19 +72,20 @@ public class LoginController {
         if (usuario instanceof Administrador) {
             return "redirect:/admin";
         }
-        return "redirect:/";
+        return "redirect:/inicio";
     }
 
     /**
-     * Cierra la sesión del usuario.
+     * Cierra la sesión del usuario. Acepta GET y POST porque el menú
+     * del encabezado envía un formulario POST.
      *
      * @param sesion sesión que se va a cerrar
      * @return la redirección al login
      */
-    @GetMapping("/logout")
+    @RequestMapping(value = "/logout", method = {RequestMethod.GET, RequestMethod.POST})
     public String cerrarSesion(HttpSession sesion) {
         sesion.invalidate();
         return "redirect:/login";
     }
 
-}
+}

@@ -163,6 +163,9 @@
 
                 </a>
 
+                <!-- OPCIONES DEL ESTUDIANTE (el administrador tiene las suyas abajo) -->
+                <th:block th:unless="${usuarioRol == 'Administrador'}">
+
                 <!-- BUSCAR VOLUNTARIOS -->
                 <a href="/voluntarios"
                    th:href="@{/voluntarios}"
@@ -235,6 +238,35 @@
                     </svg>
 
                     <span class="sidebar__link-label">Ser voluntario</span>
+
+                </a>
+
+                </th:block>
+
+                <!-- OPCIONES DEL ADMINISTRADOR -->
+                <a th:if="${usuarioRol == 'Administrador'}"
+                   href="/admin#gestion-usuarios"
+                   th:href="@{/admin#gestion-usuarios}"
+                   class="sidebar__link"
+                   data-tooltip="Gestión de usuarios"
+                   title="Gestión de usuarios"
+                   th:classappend="${paginaActiva == 'usuarios'} ? ' sidebar__link--active' : ''"
+                   th:attr="aria-current=${paginaActiva == 'usuarios' ? 'page' : null}">
+
+                    <svg class="sidebar__icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         aria-hidden="true">
+
+                        <circle cx="9" cy="8" r="3"/>
+                        <circle cx="17" cy="9" r="2.5"/>
+                        <path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1M15 14h1a4 4 0 0 1 4 4v2"/>
+
+                    </svg>
+
+                    <span class="sidebar__link-label">Gestión de usuarios</span>
 
                 </a>
 

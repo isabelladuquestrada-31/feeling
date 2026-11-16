@@ -1,5 +1,6 @@
 package com.feeling.feeling.repository;
 
+import com.feeling.feeling.model.EstadoVoluntario;
 import com.feeling.feeling.model.Voluntario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IVoluntarioRepository extends JpaRepository<Voluntario, Integer> {
+
+    /**
+     * Cuenta los voluntarios que están en el estado indicado.
+     *
+     * @param estado estado que se quiere contar
+     * @return cantidad de voluntarios en ese estado
+     */
+    long countByEstado(EstadoVoluntario estado);
 }

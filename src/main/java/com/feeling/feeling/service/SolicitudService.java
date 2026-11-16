@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -157,6 +158,24 @@ public class SolicitudService {
     public List<Solicitud> proximosDelVoluntario(Integer voluntarioId) {
         return solicitudRepository.findByVoluntarioIdAndEstadoAndFechaProgramadaAfterOrderByFechaProgramadaAsc(
                 voluntarioId, EstadoSolicitud.ACEPTADA, LocalDateTime.now());
+    }
+
+    /**
+     * Inicio del estudiante (SCRUM-53): devuelve sus próximas solicitudes
+     * pendientes o aceptadas, de la más cercana a la más lejana.
+     *
+     * @param estudianteId id del estudiante
+     * @param limite      cantidad máxima de solicitudes que se devuelven
+     * @return próximas solicitudes; vacía si no tiene ninguna
+     */
+    public List<Solicitud> proximasSolicitudesDelEstudiante(Integer estudianteId, int limite) {
+        LocalDateTime ahora = LocalDateTime.now();
+        return solicitudRepository.findByEstudianteIdOrderByFechaCreacionDesc(estudianteId).stream()
+                .filter(s -> s.getEstado() == EstadoSolicitud.PENDIENTE || s.getEstado() == EstadoSolicitud.ACEPTADA)
+                .filter(s -> s.getFechaProgramada() != null && s.getFechaProgramada().isAfter(ahora))
+                .sorted(Comparator.comparing(Solicitud::getFechaProgramada))
+                .limit(limite)
+                .toList();
     }
 
     /**

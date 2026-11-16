@@ -1,14 +1,135 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Administración | Feeling', ~{::section})}">
 <head>
     <meta charset="UTF-8">
-    <title>Administración - Feeling</title>
+    <title>Administración | Feeling</title>
 </head>
 <body>
 
-<h1>Panel de administración</h1>
-<p>Bienvenido, <span th:text="${session.usuario.nombreUsuario}"></span></p>
-<a th:href="@{/logout}">Cerrar sesión</a>
+<!--
+    RF-02: pantalla de inicio del administrador (SCRUM-53).
+    Saludo, resumen de usuarios y acceso a la gestión de usuarios.
+    Sigue el estilo del mockup "Gestión de usuarios" (SCRUM-13).
+-->
+<section class="solicitudes panel panel--admin sin-js" data-solicitudes data-panel aria-labelledby="titulo-panel">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/inicio-panel.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/inicio-panel.js}" defer></script>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <div class="panel__grid">
+
+        <div class="panel__principal">
+
+            <!-- Saludo -->
+            <div class="panel-hero panel-hero--admin">
+                <div class="panel-hero__texto">
+                    <span class="solicitudes__etiqueta">Panel del administrador</span>
+                    <h1 id="titulo-panel">
+                        ¡Hola, <span th:text="${nombre}">Admin</span>!
+                        <span class="panel-hero__mano" aria-hidden="true">👋</span>
+                    </h1>
+                    <p>
+                        Desde aquí administras los usuarios de Feeling: puedes ver cuántos estudiantes
+                        y voluntarios hay y, muy pronto, gestionar su rol y su estado.
+                    </p>
+                </div>
+
+                <div class="panel-hero__arte" aria-hidden="true">
+                    <svg class="panel-hero__ilustracion panel-hero__ilustracion--admin" viewBox="0 0 220 140">
+                        <rect class="ilus-pantalla" x="40" y="22" width="140" height="92" rx="8"/>
+                        <path class="ilus-trazo" d="M40 40h140"/>
+                        <circle class="ilus-punto" cx="52" cy="31" r="3"/>
+                        <circle class="ilus-punto" cx="62" cy="31" r="3"/>
+                        <rect class="ilus-barra" x="60" y="80" width="16" height="22" rx="3"/>
+                        <rect class="ilus-barra ilus-barra--2" x="86" y="64" width="16" height="38" rx="3"/>
+                        <rect class="ilus-barra ilus-barra--3" x="112" y="72" width="16" height="30" rx="3"/>
+                        <rect class="ilus-barra ilus-barra--4" x="138" y="54" width="16" height="48" rx="3"/>
+                        <path class="ilus-trazo" d="M56 58l26-8 26 6 30-12"/>
+                        <path class="ilus-suelo" d="M20 124h180"/>
+                        <path class="ilus-hoja" d="M196 122c-8-12-6-26 4-34 6 12 6 24-4 34Z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Resumen de usuarios -->
+            <ul class="panel-cifras" aria-label="Resumen de usuarios">
+                <li class="solicitudes__item">
+                    <div class="cifra cifra--estudiantes">
+                        <span class="cifra__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1M15 14h1a4 4 0 0 1 4 4v2"/></svg>
+                        </span>
+                        <strong class="cifra__numero" th:text="${resumen.estudiantes}" data-contar>5</strong>
+                        <span class="cifra__texto">Estudiantes registrados</span>
+                    </div>
+                </li>
+                <li class="solicitudes__item">
+                    <div class="cifra cifra--activos">
+                        <span class="cifra__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>
+                        </span>
+                        <strong class="cifra__numero" th:text="${resumen.voluntariosActivos}" data-contar>2</strong>
+                        <span class="cifra__texto">Voluntarios activos</span>
+                    </div>
+                </li>
+                <li class="solicitudes__item">
+                    <div class="cifra cifra--suspendidos">
+                        <span class="cifra__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9v6M15 9v6"/></svg>
+                        </span>
+                        <strong class="cifra__numero" th:text="${resumen.voluntariosSuspendidos}" data-contar>0</strong>
+                        <span class="cifra__texto">Voluntarios suspendidos</span>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Acceso a la gestión de usuarios -->
+            <div class="panel-bloque gestion" id="gestion-usuarios" role="region" aria-labelledby="titulo-gestion">
+                <span class="gestion__icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1M15 14h1a4 4 0 0 1 4 4v2"/></svg>
+                </span>
+                <div class="gestion__texto">
+                    <h2 id="titulo-gestion">Gestión de usuarios</h2>
+                    <p>
+                        Consulta los usuarios de la plataforma con su rol y su estado, y suspende a un
+                        voluntario cuando sea necesario.
+                    </p>
+                </div>
+                <span class="panel-tarjeta__pronto">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    Muy pronto
+                </span>
+            </div>
+        </div>
+
+        <!-- Columna lateral -->
+        <aside class="panel__lateral" aria-label="Información del panel">
+
+            <div class="panel-tarjeta panel-tarjeta--exito">
+                <span class="panel-tarjeta__icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                </span>
+                <h2 class="panel-tarjeta__titulo">Voluntario suspendido</h2>
+                <p>Cuando suspendas a un voluntario, deja de aparecer en la búsqueda y no recibe solicitudes nuevas.</p>
+            </div>
+
+            <div class="panel-tarjeta panel-tarjeta--privado">
+                <span class="panel-tarjeta__icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                </span>
+                <h2 class="panel-tarjeta__titulo">Solo para administradores</h2>
+                <p>Si un estudiante intenta entrar a este panel, vuelve a su inicio con el aviso de acceso denegado.</p>
+            </div>
+
+            <p class="panel__lema">¡Juntos aprendemos, crecemos y avanzamos! <span aria-hidden="true">♥</span></p>
+        </aside>
+    </div>
+</section>
 
 </body>
 </html>
