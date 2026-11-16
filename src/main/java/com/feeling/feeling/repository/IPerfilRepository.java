@@ -3,6 +3,7 @@ package com.feeling.feeling.repository;
 import com.feeling.feeling.model.Perfil;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+
 /**
  * Repositorio para guardar y consultar los perfiles
  *
