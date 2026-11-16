@@ -1,0 +1,701 @@
+/* ==========================================================
+   Solicitar apoyo (RF-08, SCRUM-81) - Panel del estudiante
+   Se apoya en solicitudes.css (alertas, botones, animaciones)
+   y en las variables de global.css.
+   Basado en el mockup "Solicitar Apoyo".
+   ========================================================== */
+
+/* 1. Distribución: formulario a la izquierda y resumen a la derecha */
+
+.solicitar__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.solicitar__principal {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 2. Encabezado con botón para volver */
+
+.solicitar__encabezado {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.solicitar__encabezado h1 {
+    margin-bottom: 8px;
+    font-size: var(--text-title);
+}
+
+.solicitar__encabezado p {
+    max-width: 620px;
+    color: var(--color-text-secondary);
+}
+
+.solicitar__volver {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-top: 2px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s ease, background-color 0.25s ease;
+}
+
+.solicitar__volver:hover {
+    background-color: var(--color-surface);
+    transform: translateX(-3px);
+}
+
+.solicitar__volver:active {
+    transform: scale(0.92);
+}
+
+/* Íconos de línea de la página */
+.solicitar__volver svg,
+.paso-solicitud__numero svg,
+.opcion-solicitud__icono svg,
+.horario svg,
+.boton-accion__flecha {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.solicitar__volver svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* 3. Tarjeta del voluntario elegido */
+
+.voluntario-elegido {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background: linear-gradient(135deg, #FFFFFF 0%, #F2FBFC 100%);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.voluntario-elegido__avatar {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    color: var(--color-primary-dark);
+    font-size: 2rem;
+    font-weight: 800;
+    box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.9), var(--shadow-soft);
+}
+
+.voluntario-elegido__info {
+    min-width: 0;
+}
+
+.voluntario-elegido__rol {
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.voluntario-elegido h2 {
+    font-size: 1.5rem;
+}
+
+.voluntario-elegido__programa {
+    margin-bottom: 10px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.voluntario-elegido__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+}
+
+.voluntario-elegido__chips li {
+    padding: 4px 10px;
+    border-radius: 50px;
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.voluntario-elegido__chips .chip-apoyo {
+    background-color: #EEF2FA;
+    color: var(--color-navy);
+}
+
+/* 4. Pasos del formulario */
+
+.solicitar__formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.paso-solicitud {
+    min-width: 0;
+    margin: 0;
+    padding: 20px 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease both;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.paso-solicitud.con-error {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px rgba(201, 67, 67, 0.12);
+    animation: solicitar-sacudir 0.4s ease;
+}
+
+/* El título flota para quedar dentro de la tarjeta y no encima del borde */
+.paso-solicitud__titulo {
+    display: flex;
+    float: left;
+    width: 100%;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 0;
+}
+
+.paso-solicitud__titulo + * {
+    clear: both;
+}
+
+.paso-solicitud__titulo strong {
+    display: block;
+    color: var(--color-navy);
+    font-size: 1.05rem;
+}
+
+.paso-solicitud__titulo small {
+    display: block;
+    color: var(--color-text);
+    font-size: var(--text-small);
+}
+
+.paso-solicitud__numero {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    font-weight: 800;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.paso-solicitud__numero svg {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.25s ease, transform 0.3s ease;
+}
+
+.paso-solicitud.completo .paso-solicitud__numero {
+    background-color: var(--color-success);
+    transform: scale(1.05);
+}
+
+.paso-solicitud.completo .paso-solicitud__numero-texto {
+    opacity: 0;
+}
+
+.paso-solicitud.completo .paso-solicitud__numero svg {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.paso-solicitud__error {
+    margin-top: 10px;
+    color: var(--color-danger);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+/* 5. Opciones (materia, tipo de apoyo, modalidad) */
+
+.opciones-solicitud {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+    gap: 10px;
+}
+
+.opciones-solicitud--modalidad {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+}
+
+.opcion-solicitud {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.opcion-solicitud:hover {
+    border-color: rgba(8, 126, 150, 0.5);
+}
+
+.opcion-solicitud:active {
+    transform: scale(0.98);
+}
+
+.opcion-solicitud input,
+.horario input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opcion-solicitud__marca {
+    position: relative;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    background-color: var(--color-text-light);
+    transition: border-color 0.2s ease;
+}
+
+.opcion-solicitud__marca::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    transform: scale(0);
+    transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.6, 1);
+}
+
+.opcion-solicitud:has(input:checked),
+.opcion-solicitud.elegida {
+    border-color: var(--color-primary);
+    background-color: #F2FBFC;
+}
+
+.opcion-solicitud:has(input:checked) .opcion-solicitud__marca,
+.opcion-solicitud.elegida .opcion-solicitud__marca {
+    border-color: var(--color-primary);
+}
+
+.opcion-solicitud:has(input:checked) .opcion-solicitud__marca::after,
+.opcion-solicitud.elegida .opcion-solicitud__marca::after {
+    transform: scale(1);
+}
+
+.opcion-solicitud:has(input:focus-visible),
+.horario:has(input:focus-visible) {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+.opcion-solicitud__texto strong {
+    display: block;
+    color: var(--color-navy);
+    font-size: 0.95rem;
+}
+
+.opcion-solicitud__texto small {
+    color: var(--color-text);
+    font-size: 0.8rem;
+}
+
+.opcion-solicitud__icono {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.opcion-solicitud__icono svg {
+    width: 20px;
+    height: 20px;
+}
+
+.opcion-solicitud.pop {
+    animation: solicitar-pop 0.35s ease;
+}
+
+/* 6. Tema */
+
+.campo-tema input {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    color: var(--color-navy);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-tema input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
+    outline: none;
+}
+
+.campo-tema__contador {
+    margin-top: 6px;
+    color: var(--color-text);
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.campo-tema__contador.cerca {
+    color: #8A5A00;
+    font-weight: 700;
+}
+
+/* 7. Horarios disponibles */
+
+.horarios {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.horarios__fecha {
+    margin-bottom: 8px;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.horarios__opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.horario {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 16px;
+    border: 1.5px solid rgba(8, 126, 150, 0.35);
+    border-radius: 50px;
+    background-color: var(--color-text-light);
+    color: var(--color-primary-dark);
+    font-size: var(--text-small);
+    font-style: italic;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.horario svg {
+    width: 18px;
+    height: 18px;
+}
+
+.horario:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-soft);
+}
+
+.horario:active {
+    transform: scale(0.96);
+}
+
+.horario:has(input:checked),
+.horario.elegida {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    font-style: normal;
+    box-shadow: var(--shadow-soft);
+}
+
+.horario.pop {
+    animation: solicitar-pop 0.35s ease;
+}
+
+.horarios__vacio {
+    padding: 14px 16px;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-medium);
+    color: var(--color-text-secondary);
+}
+
+/* 8. Botón de enviar */
+
+.solicitar__envio {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.boton-accion--enviar {
+    display: inline-flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 30px;
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+}
+
+.boton-accion--enviar:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.boton-accion--enviar .boton-accion__flecha {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.2s ease;
+}
+
+.boton-accion--enviar:hover .boton-accion__flecha {
+    transform: translateX(4px);
+}
+
+.boton-accion--enviar:disabled {
+    cursor: not-allowed;
+}
+
+/* 9. Columna lateral: resumen y siguientes pasos */
+
+.solicitar__lateral {
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.resumen-solicitud,
+.despues-solicitud {
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease 0.1s both;
+}
+
+.resumen-solicitud {
+    background: linear-gradient(160deg, #FFFFFF 0%, var(--color-soft) 100%);
+}
+
+.resumen-solicitud h2,
+.despues-solicitud h2 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.resumen-solicitud dl {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.resumen-solicitud dt {
+    color: var(--color-text);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.resumen-solicitud dd {
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.resumen-solicitud dd.pendiente {
+    color: var(--color-text);
+    font-weight: 600;
+    font-style: italic;
+}
+
+.resumen-solicitud dd.actualizado {
+    animation: solicitar-resaltar 0.6s ease;
+}
+
+.resumen-solicitud__progreso {
+    overflow: hidden;
+    height: 8px;
+    margin-top: 16px;
+    border-radius: 50px;
+    background-color: var(--color-border);
+}
+
+.resumen-solicitud__progreso span {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary));
+    transition: width 0.4s ease;
+}
+
+.resumen-solicitud__pasos {
+    margin-top: 6px;
+    color: var(--color-text);
+    font-size: 0.8rem;
+}
+
+.despues-solicitud {
+    animation-delay: 0.2s;
+}
+
+.despues-solicitud ol {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 20px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+/* 10. Animaciones propias */
+
+@keyframes solicitar-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+@keyframes solicitar-sacudir {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+@keyframes solicitar-resaltar {
+    0% { background-color: rgba(8, 126, 150, 0.18); }
+    100% { background-color: transparent; }
+}
+
+/* 11. Tabletas: el resumen pasa arriba del botón, en dos columnas */
+
+@media (max-width: 1100px) {
+    .solicitar__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .solicitar__lateral {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* 12. Celulares */
+
+@media (max-width: 600px) {
+    .voluntario-elegido {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px 16px;
+    }
+
+    .voluntario-elegido__chips {
+        justify-content: center;
+    }
+
+    .paso-solicitud {
+        padding: 18px 16px;
+    }
+
+    .horario {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+
+    .solicitar__lateral {
+        display: flex;
+    }
+
+    /* El botón queda fijo abajo para enviar sin tener que bajar */
+    .solicitar__envio {
+        position: sticky;
+        bottom: 10px;
+        z-index: 3;
+    }
+
+    .boton-accion--enviar {
+        width: 100%;
+        min-height: 52px;
+    }
+}
+
+/* 13. Pantallas táctiles y menos movimiento */
+
+@media (hover: none) {
+    .opcion-solicitud:hover {
+        border-color: var(--color-border);
+    }
+
+    .horario:hover {
+        border-color: rgba(8, 126, 150, 0.35);
+        background-color: var(--color-text-light);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .solicitar *,
+    .solicitar *::before,
+    .solicitar *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

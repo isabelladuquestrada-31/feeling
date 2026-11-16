@@ -22,6 +22,14 @@
             Escribe el nombre de la materia o del programa y elige una opción.</p>
     </header>
 
+    <!-- Aviso cuando no se pudo abrir el formulario de solicitud (RF-08) -->
+    <div th:if="${mensajeError}" class="solicitudes__alerta solicitudes__alerta--error"
+         role="alert" data-alerta>
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
     <!-- Avisos para lectores de pantalla -->
     <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
 
@@ -132,7 +140,7 @@
                         </ul>
                     </div>
 
-                    <!-- RF-08: lleva al formulario de solicitud (lo hace Yeymi) -->
+                    <!-- RF-08: lleva al formulario "Solicitar apoyo" (SCRUM-81) -->
                     <div class="tarjeta-voluntario__accion">
                         <a th:href="@{/solicitudes/nueva(voluntario=${v.id})}"
                            class="boton-accion boton-accion--solicitar"

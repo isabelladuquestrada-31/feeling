@@ -72,4 +72,16 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
      * @return true si la franja ya está ocupada
      */
     boolean existsByVoluntarioIdAndFechaProgramadaAndEstadoIn(Integer voluntarioId, LocalDateTime fechaProgramada, List<EstadoSolicitud> estados);
+
+    /**
+     * Busca las solicitudes de un voluntario en los estados indicados que todavía no han pasado.
+     * Sirve para saber qué horarios ya están ocupados (RF-08).
+     *
+     * @param voluntarioId id del voluntario
+     * @param estados      estados que ocupan el horario (pendiente y aceptada)
+     * @param desde        fecha y hora desde la que se busca
+     * @return solicitudes que ocupan horarios del voluntario
+     */
+    List<Solicitud> findByVoluntarioIdAndEstadoInAndFechaProgramadaAfter(
+            Integer voluntarioId, List<EstadoSolicitud> estados, LocalDateTime desde);
 }
