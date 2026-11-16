@@ -12,6 +12,8 @@ import com.feeling.feeling.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -62,6 +64,32 @@ public class PanelService {
                 .filter(nombre -> nombre != null && !nombre.isBlank())
                 .map(String::trim)
                 .orElse(usuario.getNombreUsuario());
+    }
+
+    /**
+     * Devuelve el nombre con el que se muestra cada estudiante (su nombre preferido
+     * o, si no tiene, su nombre de usuario), por ejemplo en las solicitudes recibidas.
+     *
+     * @param ids ids de los estudiantes
+     * @return mapa de id del estudiante a su nombre
+     */
+    @Transactional(readOnly = true)
+    public Map<Integer, String> nombresDeEstudiantes(Collection<Integer> ids) {
+        Map<Integer, String> nombres = new HashMap<>();
+        if (ids == null || ids.isEmpty()) {
+            return nombres;
+        }
+        usuarioRepository.findAllById(ids)
+                .forEach(usuario -> nombres.put(usuario.getId(), usuario.getNombreUsuario()));
+        perfilRepository.findAllById(ids).forEach(perfil -> {
+            String preferido = perfil.getNombrePreferido();
+            Integer id = perfil.getUsuarioId() != null ? perfil.getUsuarioId()
+                    : perfil.getUsuario() != null ? perfil.getUsuario().getId() : null;
+            if (id != null && preferido != null && !preferido.isBlank()) {
+                nombres.put(id, preferido.trim());
+            }
+        });
+        return nombres;
     }
 
     /**

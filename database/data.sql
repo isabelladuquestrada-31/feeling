@@ -78,4 +78,14 @@ INSERT INTO disponibilidad (voluntario_id, dia, hora_inicio, hora_fin) VALUES
 (1, 'VIERNES',   '08:00', '10:00'),
 (2, 'MARTES',    '16:00', '18:00'),
 (2, 'JUEVES',    '14:00', '16:00'),
-(2, 'SABADO',    '09:00', '11:00');
+(2, 'SABADO',    '09:00', '11:00');
+
+-- Solicitudes de prueba para RF-10, RF-12 y RF-13 (SCRUM-83).
+-- Las fechas se calculan desde hoy para que siempre sean futuras.
+-- voluntario 1 = voluntario1, voluntario 2 = voluntario2; estudiante 2 = estudiante1, estudiante 3 = estudiante2.
+INSERT INTO solicitud (estudiante_id, voluntario_id, materia_codigo, tema, tipo, modalidad, estado, fecha_programada) VALUES
+(2, 1, 'MAT101', 'Derivadas',             'EXPLICACION_CONCEPTOS', 'VIRTUAL',    'PENDIENTE', TIMESTAMP(CURDATE() + INTERVAL 2 DAY, '14:00:00')),
+(3, 1, 'MAT102', 'Integrales por partes', 'PREPARACION_EXAMENES',  'PRESENCIAL', 'PENDIENTE', TIMESTAMP(CURDATE() + INTERVAL 3 DAY, '10:00:00')),
+(2, 1, 'FIS101', 'Leyes de Newton',       'TUTORIA',               'VIRTUAL',    'PENDIENTE', TIMESTAMP(CURDATE() + INTERVAL 5 DAY, '08:00:00')),
+(3, 2, 'ISW202', 'Árboles binarios',      'TUTORIA',               'PRESENCIAL', 'PENDIENTE', TIMESTAMP(CURDATE() + INTERVAL 4 DAY, '14:00:00')),
+(2, 2, 'ISW203', 'Normalización',         'COMPRENSION_MATERIAL',  'VIRTUAL',    'ACEPTADA',  TIMESTAMP(CURDATE() + INTERVAL 6 DAY, '16:00:00'));

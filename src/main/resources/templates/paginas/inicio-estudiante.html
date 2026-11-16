@@ -218,6 +218,16 @@
                     <ul class="panel-chips">
                         <li th:each="m : ${voluntario.materias}" th:text="${m.nombre}">Cálculo</li>
                     </ul>
+                    <a th:href="@{/solicitudes-recibidas}" class="panel-recibidas">
+                        <span class="panel-recibidas__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        </span>
+                        <span class="panel-recibidas__texto">Solicitudes recibidas</span>
+                        <span class="panel-recibidas__numero"
+                              th:classappend="${pendientesRecibidas > 0} ? ' panel-recibidas__numero--nuevas' : ''"
+                              th:text="${pendientesRecibidas}"
+                              th:attr="aria-label=${pendientesRecibidas == 1} ? '1 pendiente' : ${pendientesRecibidas} + ' pendientes'">0</span>
+                    </a>
                     <a th:href="@{/ser-voluntario}" class="panel-bloque__enlace">
                         Ver mi perfil
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
