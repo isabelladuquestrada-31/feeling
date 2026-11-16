@@ -4,9 +4,8 @@ import com.feeling.feeling.model.EstadoSolicitud;
 import com.feeling.feeling.model.Solicitud;
 import com.feeling.feeling.repository.SolicitudRepository;
 import org.junit.jupiter.api.Test;
-
-
 import org.junit.jupiter.api.function.Executable;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -15,22 +14,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import org.junit.jupiter.api.function.Executable;
-
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
- *  * Pruebas de RF-08 (registrar solicitud), RF-12 (cancelar solicitud) y RF-13 (próximos acompañamientos e historial).
+ * * Pruebas de RF-08 (registrar solicitud), RF-12 (cancelar solicitud) y RF-13 (próximos acompañamientos e historial).
  *
  * @author Daniel Blandón
  */
-class SolicitudServiceTest {
+class git add srcSolicitudServiceTest {
 
     private final SolicitudRepository repositorio = mock(SolicitudRepository.class);
     private final SolicitudService servicio = new SolicitudService(repositorio);
@@ -266,5 +262,49 @@ class SolicitudServiceTest {
             }
         });
         verify(repositorio, never()).save(any(Solicitud.class));
+    }
+
+    /**
+     * Crea una solicitud del estudiante 2 con estado y fecha programada.
+     */
+    private Solicitud solicitudProgramada(String tema, EstadoSolicitud estado, LocalDateTime fecha) {
+        Solicitud solicitud = new Solicitud();
+        solicitud.setEstudianteId(2);
+        solicitud.setTema(tema);
+        solicitud.setEstado(estado);
+        solicitud.setFechaProgramada(fecha);
+        return solicitud;
+    }
+
+    /**
+     * SCRUM-53: el inicio muestra solo las pendientes y aceptadas que no han pasado,
+     * de la más cercana a la más lejana y sin pasar del límite.
+     */
+    @Test
+    void proximasSolicitudesFiltraOrdenaYLimita() {
+        LocalDateTime ahora = LocalDateTime.now();
+        when(repositorio.findByEstudianteIdOrderByFechaCreacionDesc(2)).thenReturn(List.of(
+                solicitudProgramada("lejana", EstadoSolicitud.PENDIENTE, ahora.plusDays(9)),
+                solicitudProgramada("cancelada", EstadoSolicitud.CANCELADA, ahora.plusDays(1)),
+                solicitudProgramada("pasada", EstadoSolicitud.ACEPTADA, ahora.minusDays(1)),
+                solicitudProgramada("cercana", EstadoSolicitud.ACEPTADA, ahora.plusDays(2)),
+                solicitudProgramada("media", EstadoSolicitud.PENDIENTE, ahora.plusDays(5)),
+                solicitudProgramada("rechazada", EstadoSolicitud.RECHAZADA, ahora.plusDays(3))));
+
+        List<Solicitud> proximas = servicio.proximasSolicitudesDelEstudiante(2, 2);
+
+        assertEquals(2, proximas.size());
+        assertEquals("cercana", proximas.get(0).getTema());
+        assertEquals("media", proximas.get(1).getTema());
+    }
+
+    /**
+     * SCRUM-53: si el estudiante no tiene solicitudes, el inicio recibe una lista vacía.
+     */
+    @Test
+    void proximasSolicitudesVaciaSinSolicitudes() {
+        when(repositorio.findByEstudianteIdOrderByFechaCreacionDesc(2)).thenReturn(List.of());
+
+        assertTrue(servicio.proximasSolicitudesDelEstudiante(2, 3).isEmpty());
     }
 }
