@@ -5,6 +5,8 @@ import com.feeling.feeling.model.Solicitud;
 import com.feeling.feeling.repository.SolicitudRepository;
 import org.junit.jupiter.api.Test;
 
+
+import org.junit.jupiter.api.function.Executable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +18,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /**
  * Pruebas del caso de éxito y del caso de fallo de RF-12 (cancelar solicitud).
@@ -103,5 +109,90 @@ class SolicitudServiceTest {
         when(repositorio.findByEstudianteIdOrderByFechaCreacionDesc(3)).thenReturn(List.of());
 
         assertTrue(servicio.historialDelEstudiante(3).isEmpty());
+    }
+
+    /**
+     * Crea una solicitud de prueba del voluntario 5 con el estado indicado.
+     */
+    private Solicitud solicitudDelVoluntario(EstadoSolicitud estado) {
+        Solicitud solicitud = new Solicitud();
+        solicitud.setVoluntarioId(5);
+        solicitud.setEstado(estado);
+        when(repositorio.findById(1)).thenReturn(Optional.of(solicitud));
+        when(repositorio.save(solicitud)).thenReturn(solicitud);
+        return solicitud;
+    }
+
+    /**
+     * Caso de éxito: el voluntario acepta una solicitud pendiente.
+     */
+    @Test
+    void aceptaSolicitudPendiente() {
+        Solicitud solicitud = solicitudDelVoluntario(EstadoSolicitud.PENDIENTE);
+        servicio.aceptar(1, 5);
+        assertEquals(EstadoSolicitud.ACEPTADA, solicitud.getEstado());
+    }
+
+    /**
+     * Caso de éxito: el voluntario rechaza una solicitud pendiente.
+     */
+    @Test
+    void rechazaSolicitudPendiente() {
+        Solicitud solicitud = solicitudDelVoluntario(EstadoSolicitud.PENDIENTE);
+        servicio.rechazar(1, 5);
+        assertEquals(EstadoSolicitud.RECHAZADA, solicitud.getEstado());
+    }
+
+    /**
+     * Caso de fallo: no se puede aceptar una solicitud que el estudiante ya canceló.
+     */
+    @Test
+    void noAceptaSolicitudCancelada() {
+        Solicitud solicitud = solicitudDelVoluntario(EstadoSolicitud.CANCELADA);
+
+        IllegalStateException error = assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                servicio.aceptar(1, 5);
+            }
+        });
+
+        assertEquals("No se puede responder porque el estudiante canceló la solicitud.", error.getMessage());
+        assertEquals(EstadoSolicitud.CANCELADA, solicitud.getEstado());
+        verify(repositorio, never()).save(any(Solicitud.class));
+    }
+
+    /**
+     * Caso de fallo: no se puede rechazar una solicitud que ya fue aceptada.
+     */
+    @Test
+    void noRechazaSolicitudYaAceptada() {
+        Solicitud solicitud = solicitudDelVoluntario(EstadoSolicitud.ACEPTADA);
+
+        IllegalStateException error = assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                servicio.rechazar(1, 5);
+            }
+        });
+
+        assertEquals("No se puede responder porque la solicitud ya fue aceptada.", error.getMessage());
+        assertEquals(EstadoSolicitud.ACEPTADA, solicitud.getEstado());
+    }
+
+    /**
+     * Caso de fallo: un voluntario no puede responder la solicitud de otro.
+     */
+    @Test
+    void noAceptaSolicitudDeOtroVoluntario() {
+        solicitudDelVoluntario(EstadoSolicitud.PENDIENTE);
+
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() {
+                servicio.aceptar(1, 99);
+            }
+        });
+        verify(repositorio, never()).save(any(Solicitud.class));
     }
 }
