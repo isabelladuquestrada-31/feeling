@@ -9,6 +9,11 @@ package com.feeling.feeling.model;
  */
 public enum TipoApoyo {
 
+    /**
+     * Tutoría general en una materia.
+     */
+    TUTORIA,
+
     /** Explicaion de los conceptos o temas de la materia.
      *
      */
