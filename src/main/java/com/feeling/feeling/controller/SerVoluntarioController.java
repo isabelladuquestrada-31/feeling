@@ -43,6 +43,18 @@ public class SerVoluntarioController {
                 new String[]{"Comprensión de material", "Ayudar a entender apuntes, lecturas o guías de estudio."});
     }
 
+    /**
+     * Devuelve el nombre en español de cada tipo de apoyo ("Tutoría"),
+     * para mostrarlo en otras vistas como las solicitudes recibidas.
+     *
+     * @return mapa del nombre del enum a su etiqueta
+     */
+    static Map<String, String> etiquetasDeApoyo() {
+        Map<String, String> etiquetas = new LinkedHashMap<>();
+        TEXTOS_APOYO.forEach((tipo, textos) -> etiquetas.put(tipo, textos[0]));
+        return etiquetas;
+    }
+
     private final VoluntarioService voluntarioService;
 
     /**

@@ -95,4 +95,34 @@ class PanelServiceTest {
 
         assertEquals(new ResumenAdmin(5, 2, 1), servicio.resumenAdmin());
     }
+
+    /**
+     * Las solicitudes recibidas muestran el nombre preferido del estudiante
+     * y, si no tiene, su nombre de usuario.
+     */
+    @Test
+    void nombresDeEstudiantesUsaNombrePreferidoONombreDeUsuario() {
+        Estudiante conPerfil = estudiante();
+        Estudiante sinPerfil = new Estudiante();
+        sinPerfil.setId(4);
+        sinPerfil.setNombreUsuario("estudiante3");
+        Perfil perfil = new Perfil();
+        perfil.setUsuario(conPerfil);
+        perfil.setNombrePreferido("Yuli");
+        when(usuarioRepository.findAllById(List.of(3, 4))).thenReturn(List.of(conPerfil, sinPerfil));
+        when(perfilRepository.findAllById(List.of(3, 4))).thenReturn(List.of(perfil));
+
+        Map<Integer, String> nombres = servicio.nombresDeEstudiantes(List.of(3, 4));
+
+        assertEquals("Yuli", nombres.get(3));
+        assertEquals("estudiante3", nombres.get(4));
+    }
+
+    /**
+     * Sin estudiantes no se consulta la base de datos.
+     */
+    @Test
+    void nombresDeEstudiantesVacioSinIds() {
+        assertEquals(Map.of(), servicio.nombresDeEstudiantes(List.of()));
+    }
 }

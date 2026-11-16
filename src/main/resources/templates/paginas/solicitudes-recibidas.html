@@ -7,20 +7,39 @@
 </head>
 <body>
 
-<section class="solicitudes sin-js" data-solicitudes aria-labelledby="titulo-solicitudes">
+<!--
+    RF-10: solicitudes recibidas del voluntario con Aceptar y Rechazar (SCRUM-83).
+    Basada en el bloque "Solicitudes que has recibido" del mockup del panel del voluntario (SCRUM-13).
+    El envío de los formularios, la confirmación al rechazar y la salida de la tarjeta
+    los maneja solicitudes.js; el botón "Ver" lo maneja solicitudes-recibidas.js.
+-->
+<section class="solicitudes recibidas sin-js" data-solicitudes data-recibidas aria-labelledby="titulo-solicitudes">
 
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/solicitudes-recibidas.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/solicitudes-recibidas.js}" defer></script>
 
     <!-- Encabezado con el número de solicitudes pendientes -->
-    <header class="solicitudes__encabezado">
-        <span class="solicitudes__etiqueta">Panel del voluntario</span>
-        <h1 id="titulo-solicitudes">Solicitudes recibidas</h1>
-        <p>Revisa las solicitudes que te han enviado y decide si puedes acompañar a cada estudiante.</p>
-        <p class="solicitudes__contador">
+    <header class="recibidas__encabezado">
+        <a th:href="@{/ser-voluntario}" class="recibidas__volver" aria-label="Volver a mi perfil de voluntario">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        </a>
+        <div class="recibidas__titulos">
+            <span class="solicitudes__etiqueta">Panel del voluntario</span>
+            <h1 id="titulo-solicitudes">
+                <span class="recibidas__campana" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                </span>
+                Solicitudes que has recibido
+            </h1>
+            <p>Revisa las solicitudes que te han enviado y decide si puedes acompañar a cada estudiante.</p>
+        </div>
+        <p th:if="${esVoluntario}" class="solicitudes__contador">
             <span class="solicitudes__contador-numero" data-contador
                   th:text="${#lists.size(solicitudesRecibidas)}">0</span>
-            pendientes
+            <span data-contador-texto
+                  th:text="${#lists.size(solicitudesRecibidas) == 1} ? 'pendiente' : 'pendientes'">pendientes</span>
         </p>
     </header>
 
@@ -42,52 +61,96 @@
     <!-- Avisos para lectores de pantalla -->
     <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
 
-    <!-- Sin solicitudes (el JS también lo muestra cuando se responde la última) -->
-    <div class="solicitudes__vacio" data-vacio
-         th:hidden="${not #lists.isEmpty(solicitudesRecibidas)}">
-        <div class="solicitudes__vacio-icono" aria-hidden="true">✓</div>
-        <h2>No tienes solicitudes pendientes</h2>
-        <p>Cuando un estudiante te envíe una solicitud, aparecerá aquí.</p>
+    <!-- Todavía no es voluntario -->
+    <div th:unless="${esVoluntario}" class="recibidas__aviso">
+        <span class="recibidas__aviso-icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z"/></svg>
+        </span>
+        <div>
+            <h2>Todavía no eres voluntario</h2>
+            <p>Cuando te actives como voluntario, aquí verás las solicitudes que te envíen otros estudiantes.</p>
+        </div>
+        <a th:href="@{/ser-voluntario}" class="boton-accion boton-accion--aceptar recibidas__aviso-boton">Quiero ser voluntario</a>
     </div>
 
-    <!-- Tarjetas de solicitudes -->
-    <ul th:unless="${#lists.isEmpty(solicitudesRecibidas)}" class="solicitudes__lista">
-        <li th:each="s : ${solicitudesRecibidas}" class="solicitudes__item">
-            <article class="tarjeta-solicitud" th:attr="aria-labelledby='solicitud-' + ${s.id}">
+    <th:block th:if="${esVoluntario}">
 
-                <div class="tarjeta-solicitud__cabecera">
-                    <div>
-                        <p class="tarjeta-solicitud__materia" th:text="${s.materiaCodigo}">MAT101</p>
-                        <h2 th:id="'solicitud-' + ${s.id}" th:text="${s.tema}">Tema</h2>
+        <!-- Sin solicitudes (el JS también lo muestra cuando se responde la última) -->
+        <div class="solicitudes__vacio" data-vacio
+             th:hidden="${not #lists.isEmpty(solicitudesRecibidas)}">
+            <div class="solicitudes__vacio-icono" aria-hidden="true">✓</div>
+            <h2>No tienes solicitudes pendientes</h2>
+            <p>Cuando un estudiante te envíe una solicitud, aparecerá aquí.</p>
+        </div>
+
+        <!-- Solicitudes pendientes -->
+        <ul th:unless="${#lists.isEmpty(solicitudesRecibidas)}" class="recibidas__lista">
+            <li th:each="s : ${solicitudesRecibidas}" class="solicitudes__item"
+                th:with="nombre=${nombresEstudiantes.get(s.estudianteId) != null ? nombresEstudiantes.get(s.estudianteId) : 'Estudiante'},
+                         materia=${nombresMaterias.get(s.materiaCodigo) != null ? nombresMaterias.get(s.materiaCodigo) : s.materiaCodigo}">
+                <article class="recibida" th:attr="aria-labelledby='solicitud-' + ${s.id}">
+
+                    <span class="recibida__avatar" aria-hidden="true"
+                          th:classappend="' recibida__avatar--' + ${s.estudianteId % 4}"
+                          th:text="${#strings.toUpperCase(#strings.substring(nombre, 0, 1))}">E</span>
+
+                    <div class="recibida__info">
+                        <h2 th:id="'solicitud-' + ${s.id}" th:text="${nombre}">Carlos R.</h2>
+                        <p class="recibida__tema">
+                            <strong th:text="${materia}">Cálculo</strong>
+                            <span aria-hidden="true">–</span>
+                            <span th:text="${s.tema}">Derivadas</span>
+                        </p>
+                        <p class="recibida__fecha">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+                            <span th:text="${#strings.capitalize(#temporals.format(s.fechaProgramada, 'EEE, d MMM yyyy', idioma))} + ' · ' + ${#temporals.format(s.fechaProgramada, 'h:mm a', idioma)}">
+                                Vie, 24 oct 2026 · 3:00 p. m.
+                            </span>
+                        </p>
                     </div>
+
                     <span class="estado estado--pendiente">Pendiente</span>
-                </div>
 
-                <dl class="tarjeta-solicitud__datos">
-                    <dt>Fecha</dt>
-                    <dd th:text="${#temporals.format(s.fechaProgramada, 'dd/MM/yyyy')}"></dd>
-                    <dt>Hora</dt>
-                    <dd th:text="${#temporals.format(s.fechaProgramada, 'hh:mm a')}"></dd>
-                    <dt>Tipo de apoyo</dt>
-                    <dd th:text="${#strings.capitalize(#strings.toLowerCase(#strings.replace(s.tipo, '_', ' ')))}"></dd>
-                    <dt>Modalidad</dt>
-                    <dd th:text="${#strings.capitalize(#strings.toLowerCase(s.modalidad))}"></dd>
-                </dl>
+                    <div class="recibida__acciones">
+                        <button type="button" class="boton-accion boton-accion--ver"
+                                aria-expanded="false" th:attr="aria-controls='detalle-' + ${s.id}"
+                                data-ver>Ver</button>
+                        <form th:action="@{/solicitudes/{id}/aceptar(id=${s.id})}" method="post"
+                              data-accion="aceptar" data-quitar-tarjeta>
+                            <button type="submit" class="boton-accion boton-accion--aceptar"
+                                    th:attr="aria-label='Aceptar la solicitud de ' + ${nombre} + ': ' + ${s.tema}">Aceptar</button>
+                        </form>
+                        <form th:action="@{/solicitudes/{id}/rechazar(id=${s.id})}" method="post"
+                              data-accion="rechazar" data-quitar-tarjeta>
+                            <button type="submit" class="boton-accion boton-accion--rechazar"
+                                    th:attr="aria-label='Rechazar la solicitud de ' + ${nombre} + ': ' + ${s.tema}">Rechazar</button>
+                        </form>
+                    </div>
 
-                <div class="tarjeta-solicitud__acciones">
-                    <form th:action="@{/solicitudes/{id}/aceptar(id=${s.id})}" method="post" data-accion="aceptar" data-quitar-tarjeta>
-                        <button type="submit" class="boton-accion boton-accion--aceptar"
-                                th:attr="aria-label='Aceptar la solicitud: ' + ${s.tema}">Aceptar</button>
-                    </form>
-                    <form th:action="@{/solicitudes/{id}/rechazar(id=${s.id})}" method="post" data-accion="rechazar" data-quitar-tarjeta>
-                        <button type="submit" class="boton-accion boton-accion--rechazar"
-                                th:attr="aria-label='Rechazar la solicitud: ' + ${s.tema}">Rechazar</button>
-                    </form>
-                </div>
+                    <!-- Detalle que se abre con "Ver" -->
+                    <dl class="recibida__detalle" th:id="'detalle-' + ${s.id}" hidden>
+                        <div>
+                            <dt>Tipo de apoyo</dt>
+                            <dd th:text="${etiquetasApoyo.get(s.tipo) != null} ? ${etiquetasApoyo.get(s.tipo)} : ${#strings.capitalize(#strings.toLowerCase(#strings.replace(s.tipo, '_', ' ')))}">Tutoría</dd>
+                        </div>
+                        <div>
+                            <dt>Modalidad</dt>
+                            <dd th:text="${#strings.capitalize(#strings.toLowerCase(s.modalidad))}">Virtual</dd>
+                        </div>
+                        <div>
+                            <dt>Código de la materia</dt>
+                            <dd th:text="${s.materiaCodigo}">MAT101</dd>
+                        </div>
+                        <div th:if="${s.fechaCreacion != null}">
+                            <dt>Solicitud enviada</dt>
+                            <dd th:text="${#temporals.format(s.fechaCreacion, 'd MMM yyyy, h:mm a', idioma)}">20 oct 2026</dd>
+                        </div>
+                    </dl>
 
-            </article>
-        </li>
-    </ul>
+                </article>
+            </li>
+        </ul>
+    </th:block>
 
 </section>
 

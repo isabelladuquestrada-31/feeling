@@ -569,6 +569,24 @@
     margin-top: 8px;
 }
 
+/* Botón con borde para la acción secundaria del perfil */
+.boton-accion--secundario {
+    display: inline-flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 26px;
+    border-color: var(--color-primary);
+    background-color: var(--color-text-light);
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.boton-accion--secundario:hover {
+    background-color: var(--color-soft);
+    text-decoration: none;
+}
+
 .estado--activo {
     color: var(--color-success);
     background-color: #E5F5EE;

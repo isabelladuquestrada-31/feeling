@@ -714,6 +714,73 @@
     font-weight: 700;
 }
 
+/* Acceso a las solicitudes recibidas del voluntario, con su contador */
+.panel-recibidas {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: #F7FCFD;
+    color: var(--color-navy);
+    font-weight: 800;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.panel-recibidas:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-soft);
+    text-decoration: none;
+}
+
+.panel-recibidas:active {
+    transform: scale(0.97);
+}
+
+.panel-recibidas__icono {
+    display: inline-flex;
+    color: var(--color-primary);
+}
+
+.panel-recibidas__icono svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.panel-recibidas__numero--nuevas ~ .panel-recibidas__icono,
+.panel-recibidas:has(.panel-recibidas__numero--nuevas) .panel-recibidas__icono {
+    animation: panel-campana 2.4s ease-in-out 1s 2;
+    transform-origin: top center;
+}
+
+.panel-recibidas__texto {
+    flex: 1;
+    font-size: var(--text-small);
+}
+
+.panel-recibidas__numero {
+    min-width: 26px;
+    padding: 2px 8px;
+    border-radius: 50px;
+    background-color: var(--color-border);
+    color: var(--color-navy);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.panel-recibidas__numero--nuevas {
+    background-color: var(--color-danger);
+    color: var(--color-text-light);
+}
+
 .panel-tarjeta--exito {
     border-color: #CDEBDA;
     background-color: #EEF8F2;
@@ -882,6 +949,12 @@
 @keyframes panel-crecer {
     from { transform: scaleY(0); }
     to { transform: scaleY(1); }
+}
+
+@keyframes panel-campana {
+    0%, 50%, 100% { transform: rotate(0); }
+    10%, 30% { transform: rotate(14deg); }
+    20%, 40% { transform: rotate(-14deg); }
 }
 
 @keyframes panel-resaltar {

@@ -78,8 +78,11 @@ public class PanelController {
                 solicitudService.proximasSolicitudesDelEstudiante(estudiante.getId(), PROXIMAS_EN_INICIO));
         model.addAttribute("nombresMaterias", panelService.nombresDeMaterias());
         model.addAttribute("idioma", ESPANOL);
-        voluntarioService.buscarPorEstudiante(estudiante.getId())
-                .ifPresent(voluntario -> model.addAttribute("voluntario", voluntario));
+        voluntarioService.buscarPorEstudiante(estudiante.getId()).ifPresent(voluntario -> {
+            model.addAttribute("voluntario", voluntario);
+            model.addAttribute("pendientesRecibidas",
+                    solicitudService.solicitudesRecibidas(voluntario.getId()).size());
+        });
         model.addAttribute("accesoDenegado", "denegado".equals(acceso));
 
         model.addAttribute("paginaActiva", "inicio");
