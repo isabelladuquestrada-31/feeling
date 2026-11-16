@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Maneja el registro de estudiantes nuevos.
  *
  * @author Isabella Duque
- * @version 1.0
+ * @version 1.1
  */
 @Controller
 public class RegistroController {
@@ -36,34 +36,41 @@ public class RegistroController {
      */
     @GetMapping("/registro")
     public String mostrarRegistro() {
-        return "paginas/registro";
+        return "paginas/signup";
     }
 
     /**
      * Registra al estudiante y lo lleva a su página de inicio con la sesión iniciada.
      * Si algo falla, vuelve al formulario con el error y los datos que ya había escrito.
      *
-     * @param nombreUsuario     nombre de usuario escrito en el formulario
-     * @param contrasena        contraseña escrita en el formulario
-     * @param programaAcademico programa académico escrito en el formulario
-     * @param whatsapp          número de WhatsApp escrito en el formulario
-     * @param aceptaAviso       indica si marcó la casilla del aviso de tratamiento de datos
-     * @param sesion            sesión donde se guarda el estudiante registrado
-     * @param model             modelo para enviar el error y los datos a la vista
+     * @param nombreUsuario       nombre de usuario escrito en el formulario
+     * @param contrasena          contraseña escrita en el formulario
+     * @param confirmarContrasena repetición de la contraseña
+     * @param programaAcademico   programa académico escrito en el formulario
+     * @param whatsapp            número de WhatsApp escrito en el formulario
+     * @param aceptaAviso         indica si marcó la casilla del tratamiento de datos
+     * @param sesion              sesión donde se guarda el estudiante registrado
+     * @param model               modelo para enviar el error y los datos a la vista
      * @return la redirección al inicio, o el formulario con el error
      */
     @PostMapping("/registro")
     public String registrar(@RequestParam String nombreUsuario,
                             @RequestParam String contrasena,
+                            @RequestParam String confirmarContrasena,
                             @RequestParam String programaAcademico,
-                            @RequestParam String whatsapp,
-                            @RequestParam(required = false) boolean aceptaAviso,
+                            @RequestParam("numeroWhatsApp") String whatsapp,
+                            @RequestParam(name = "aceptaTratamientoDatos", required = false) boolean aceptaAviso,
                             HttpSession sesion,
                             Model model) {
 
+        if (!contrasena.equals(confirmarContrasena)) {
+            return mostrarError("Las contraseñas no coinciden",
+                    nombreUsuario, programaAcademico, whatsapp, aceptaAviso, model);
+        }
+
         if (!aceptaAviso) {
             return mostrarError("Debes aceptar el aviso de tratamiento de datos",
-                    nombreUsuario, programaAcademico, whatsapp, model);
+                    nombreUsuario, programaAcademico, whatsapp, false, model);
         }
 
         try {
@@ -72,7 +79,8 @@ public class RegistroController {
             sesion.setAttribute("usuario", estudiante);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
-            return mostrarError(e.getMessage(), nombreUsuario, programaAcademico, whatsapp, model);
+            return mostrarError(e.getMessage(),
+                    nombreUsuario, programaAcademico, whatsapp, aceptaAviso, model);
         }
     }
 
@@ -84,15 +92,17 @@ public class RegistroController {
      * @param nombreUsuario     nombre de usuario que había escrito
      * @param programaAcademico programa académico que había escrito
      * @param whatsapp          número de WhatsApp que había escrito
+     * @param aceptaAviso       si ya había marcado la casilla del tratamiento de datos
      * @param model             modelo para enviar los datos a la vista
      * @return la vista del registro
      */
-    private String mostrarError(String error, String nombreUsuario,
-                                String programaAcademico, String whatsapp, Model model) {
+    private String mostrarError(String error, String nombreUsuario, String programaAcademico,
+                                String whatsapp, boolean aceptaAviso, Model model) {
         model.addAttribute("error", error);
         model.addAttribute("nombreUsuario", nombreUsuario);
         model.addAttribute("programaAcademico", programaAcademico);
-        model.addAttribute("whatsapp", whatsapp);
-        return "paginas/registro";
+        model.addAttribute("numeroWhatsApp", whatsapp);
+        model.addAttribute("aceptaTratamientoDatos", aceptaAviso);
+        return "paginas/signup";
     }
 }
