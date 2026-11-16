@@ -5,7 +5,7 @@ import com.feeling.feeling.model.Solicitud;
 import com.feeling.feeling.repository.SolicitudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Arrays;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -119,5 +119,36 @@ public class SolicitudService {
     public List<Solicitud> solicitudesRecibidas(Integer voluntarioId) {
         return solicitudRepository.findByVoluntarioIdAndEstadoOrderByFechaProgramadaAsc(
                 voluntarioId, EstadoSolicitud.PENDIENTE);
+    }
+
+    /**
+     * RF-08: registra una solicitud de acompañamiento en estado PENDIENTE.
+     * Valida que vengan los campos obligatorios y que el voluntario no tenga
+     * otra solicitud pendiente o aceptada en la misma fecha y hora.
+     *
+     * @param solicitud solicitud a registrar
+     * @return la solicitud guardada
+     */
+    @Transactional
+    public Solicitud registrar(Solicitud solicitud) {
+        if (solicitud.getEstudianteId() == null
+                || solicitud.getVoluntarioId() == null
+                || solicitud.getMateriaCodigo() == null || solicitud.getMateriaCodigo().isBlank()
+                || solicitud.getTema() == null || solicitud.getTema().isBlank()
+                || solicitud.getTipo() == null || solicitud.getTipo().isBlank()
+                || solicitud.getModalidad() == null || solicitud.getModalidad().isBlank()
+                || solicitud.getFechaProgramada() == null) {
+            throw new IllegalArgumentException("Faltan campos obligatorios de la solicitud.");
+        }
+
+        List<EstadoSolicitud> ocupan =
+                Arrays.asList(EstadoSolicitud.PENDIENTE, EstadoSolicitud.ACEPTADA);
+        boolean ocupada = solicitudRepository.existsByVoluntarioIdAndFechaProgramadaAndEstadoIn(solicitud.getVoluntarioId(), solicitud.getFechaProgramada(), ocupan);
+        if (ocupada) {
+            throw new IllegalStateException("El voluntario ya tiene una solicitud en esa franja.");
+        }
+
+        solicitud.setEstado(EstadoSolicitud.PENDIENTE);
+        return solicitudRepository.save(solicitud);
     }
 }

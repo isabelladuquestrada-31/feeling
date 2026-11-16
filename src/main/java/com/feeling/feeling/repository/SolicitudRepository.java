@@ -61,4 +61,15 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
      * @return lista de solicitudes del voluntario
      */
     List<Solicitud> findByVoluntarioIdAndEstadoOrderByFechaProgramadaAsc(Integer voluntarioId, EstadoSolicitud estado);
+
+    /**
+     * Indica si un voluntario ya tiene una solicitud en una fecha y hora
+     * programada, contando solo las que tengan alguno de los estados indicados.
+     *
+     * @param voluntarioId    id del voluntario
+     * @param fechaProgramada fecha y hora de la sesión
+     * @param estados         estados que se consideran ocupados
+     * @return true si la franja ya está ocupada
+     */
+    boolean existsByVoluntarioIdAndFechaProgramadaAndEstadoIn(Integer voluntarioId, LocalDateTime fechaProgramada, List<EstadoSolicitud> estados);
 }
