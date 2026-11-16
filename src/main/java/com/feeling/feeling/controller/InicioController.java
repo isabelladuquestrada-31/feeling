@@ -1,15 +1,15 @@
-
 package com.feeling.feeling.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * Controlador encargado de gestionar las vistas públicas
- * de inicio y registro de la plataforma Feeling.
+ * Controlador encargado de gestionar la vista pública
+ * de inicio de la plataforma Feeling.
+ * El formulario de registro lo maneja {@link RegistroController}.
  *
  * @author Yulipaola Domínguez
- * @version 1.1.0
+ * @version 1.2.0
  */
 @Controller
 public class InicioController {
@@ -22,15 +22,5 @@ public class InicioController {
     @GetMapping("/")
     public String inicio() {
         return "paginas/index";
-    }
-
-    /**
-     * Muestra el formulario de registro de nuevos estudiantes.
-     *
-     * @return nombre de la vista de registro.
-     */
-    @GetMapping("/registro")
-    public String mostrarRegistro() {
-        return "paginas/signup";
     }
 }
