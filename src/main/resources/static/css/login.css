@@ -1,0 +1,1692 @@
+
+/*
+ * =========================================================
+ * PROYECTO: FEELING
+ * MÓDULO: AUTENTICACIÓN DE USUARIOS
+ * ARCHIVO: login.css
+ * VERSIÓN: 2.1.0
+ * =========================================================
+ *
+ * DESCRIPCIÓN:
+ * Define la presentación visual de la pantalla de inicio
+ * de sesión de la plataforma Feeling.
+ *
+ * DISTRIBUCIÓN PRINCIPAL:
+ * - El formulario se centra respecto a toda la pantalla.
+ * - En escritorio amplio, el cuadro informativo aparece
+ *   a la izquierda del formulario y ligeramente más abajo
+ *   del centro vertical.
+ * - El cuadro informativo mantiene un tamaño compacto.
+ * - Cuando no existe espacio suficiente para ubicar ambos
+ *   elementos lado a lado, el cuadro informativo se mueve
+ *   automáticamente encima del formulario.
+ * - En pantallas pequeñas, el contenido se reorganiza
+ *   verticalmente para evitar superposiciones.
+ *
+ * CARACTERÍSTICAS:
+ * - Imagen de fondo a pantalla completa.
+ * - Cuadro informativo con efecto de vidrio.
+ * - Tarjeta de autenticación translúcida.
+ * - Logotipo de Feeling.
+ * - Campos con iconos.
+ * - Mensajes de error del servidor.
+ * - Botones interactivos.
+ * - Diseño adaptable a escritorio, tabletas y celulares.
+ * - Accesibilidad mediante teclado.
+ * - Compatibilidad con movimiento reducido.
+ *
+ * DEPENDENCIAS:
+ * - global.css
+ * - login.html
+ *
+ * RECURSOS:
+ * - Fondo_LogIn.jpg
+ * - Logosímbolo_Sin_Fondo.png
+ * - Logo_UAM.png
+ *
+ * IMPORTANTE:
+ * Este archivo controla únicamente los estilos visuales.
+ * La autenticación y las sesiones son responsabilidad
+ * del backend de Spring Boot.
+ */
+
+
+/* =========================================================
+   1. CONFIGURACIÓN GENERAL
+   ========================================================= */
+
+/*
+ * Se establecen los estilos generales de la página.
+ * Se utiliza box-sizing border-box para facilitar
+ * el cálculo de dimensiones de los elementos.
+ */
+
+.login-page {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+
+    margin: 0;
+
+    color: var(--color-text-secondary, #173B65);
+    font-family: var(--font-main, Arial, sans-serif);
+
+    background-color: var(--color-background, #F5F9FA);
+}
+
+.login-page *,
+.login-page *::before,
+.login-page *::after {
+    box-sizing: border-box;
+}
+
+.login-page button,
+.login-page input {
+    font: inherit;
+}
+
+.login-page button {
+    cursor: pointer;
+}
+
+.login-page img {
+    display: block;
+    max-width: 100%;
+}
+
+.login-page a {
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   2. CONTENEDOR PRINCIPAL Y FONDO
+   ========================================================= */
+
+/*
+ * El contenedor principal utiliza position: relative
+ * para ubicar los elementos informativos e institucionales.
+ *
+ * En escritorio amplio, el formulario se centra respecto
+ * a toda la pantalla y el cuadro informativo se ubica
+ * independientemente a su izquierda.
+ *
+ * En pantallas con menos espacio, los elementos pasan
+ * a una distribución vertical.
+ */
+
+.login-main {
+    position: relative;
+    isolation: isolate;
+
+    display: block;
+
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100svh;
+
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
+
+    background-image: url("../img/Fondo_LogIn.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* Capa de contraste sobre la imagen de fondo */
+
+.login-main__overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: -1;
+
+    background: linear-gradient(
+        105deg,
+        rgba(8, 45, 68, 0.12) 0%,
+        rgba(8, 126, 150, 0.08) 48%,
+        rgba(23, 59, 101, 0.16) 100%
+    );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   3. CUADRO INFORMATIVO SUPERIOR
+   ========================================================= */
+
+/*
+ * Este panel contiene el mensaje:
+ *
+ * "Tu bienestar también es parte de tu éxito".
+ *
+ * En escritorio amplio se ubica a la izquierda del
+ * formulario, ligeramente por debajo del centro vertical.
+ *
+ * Su tamaño es compacto para no competir visualmente
+ * con la tarjeta de autenticación.
+ *
+ * Cuando la pantalla no dispone de espacio suficiente,
+ * su posición cambia mediante las reglas responsive.
+ */
+
+.login-presentation {
+    position: absolute;
+
+    top: 60%;
+    left: clamp(35px, 13vw, 200px);
+
+    z-index: 2;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: min(300px, calc(50% - 35px));
+
+    margin: 0;
+
+    transform: translateY(-50%);
+}
+
+
+/* Tarjeta translúcida del mensaje institucional */
+
+.login-presentation__content {
+    width: 100%;
+    max-width: 300px;
+
+    margin: 0;
+    padding: 16px 18px;
+
+    background: rgba(255, 255, 255, 0.60);
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 17px;
+
+    box-shadow:
+        0 12px 35px rgba(23, 59, 101, 0.15);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+
+/* Título principal del panel informativo */
+
+.login-presentation__title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin: 0;
+
+    color: var(--color-navy, #173B65);
+
+    font-size: 2rem;
+    font-weight: 800;
+
+    line-height: 1.16;
+    letter-spacing: -0.035em;
+
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.45);
+}
+
+
+/* Cada línea del título */
+
+.login-presentation__title span {
+    display: block;
+}
+
+
+/* Colores de las líneas del mensaje */
+
+.login-presentation__title span:nth-child(1) {
+    color: #052C5A;
+}
+
+.login-presentation__title span:nth-child(2) {
+    color: #087E96;
+}
+
+/* Verde menta para destacar el mensaje final */
+
+.login-presentation__title span:nth-child(3) {
+    color: #4DAB7C;
+}
+
+
+/* Descripción del acompañamiento de Feeling */
+
+.login-presentation__description {
+    max-width: 235px;
+
+    margin: 10px 0 0;
+
+    color: #173B65;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    line-height: 1.45;
+
+    text-shadow: 0 1px 6px rgba(255, 255, 255, 0.55);
+}
+
+
+/* =========================================================
+   4. PANEL DE AUTENTICACIÓN
+   ========================================================= */
+
+/*
+ * CENTRADO DEL FORMULARIO:
+ *
+ * El panel se posiciona al 50% del ancho y al 50% de la
+ * altura de toda la pantalla.
+ *
+ * La transformación translate(-50%, -50%) desplaza la
+ * tarjeta la mitad de su propio tamaño hacia arriba
+ * y hacia la izquierda.
+ *
+ * Así se obtiene el centro real de la página y no
+ * el centro de una columna.
+ */
+
+.login-form-panel {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    z-index: 3;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: min(390px, calc(100% - 40px));
+
+    margin: 0;
+    padding: 0;
+
+    transform: translate(-50%, -50%);
+}
+
+
+/* Tarjeta de autenticación con efecto de vidrio */
+
+.login-form-panel__content {
+    width: 100%;
+    max-width: 390px;
+
+    margin: 0 auto;
+    padding: clamp(25px, 2.6vw, 34px);
+
+    /* Efecto de vidrio esmerilado */
+
+    background: rgba(255, 255, 255, 0.60);
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 19px;
+
+    box-shadow:
+        0 12px 35px rgba(23, 59, 101, 0.20),
+        0 3px 9px rgba(23, 59, 101, 0.10);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    animation: login-aparecer 0.65s ease both;
+}
+
+
+/* =========================================================
+   5. ENCABEZADO Y LOGOTIPO DE FEELING
+   ========================================================= */
+
+.login-form-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    width: 100%;
+
+    margin-bottom: 20px;
+}
+
+
+/* Contenedor del logotipo */
+
+.login-form-header__brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    margin-bottom: 13px;
+}
+
+
+/* Imagen del logotipo */
+
+.login-form-header__brand img {
+    width: 100%;
+    max-width: 205px;
+    max-height: 85px;
+
+    object-fit: contain;
+    object-position: center;
+}
+
+
+/* Título de bienvenida */
+
+.login-form-header__title {
+    width: 100%;
+
+    margin: 0;
+
+    color: var(--color-navy, #173B65);
+
+    font-size: clamp(1.65rem, 2.2vw, 2rem);
+    font-weight: 800;
+
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+}
+
+
+/* Descripción del encabezado */
+
+.login-form-header__description {
+    width: 100%;
+
+    margin: 9px 0 0;
+
+    color: var(--color-text-secondary, #173B65);
+
+    font-size: 0.82rem;
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   6. ESTRUCTURA DEL FORMULARIO
+   ========================================================= */
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 17px;
+
+    width: 100%;
+}
+
+
+/* Grupo individual de cada campo */
+
+.login-form__group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* Etiquetas de los campos */
+
+.login-form__group > label {
+    color: var(--color-navy, #173B65);
+
+    font-size: 0.82rem;
+    font-weight: 800;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   7. CAMPOS DE ENTRADA E ICONOS
+   ========================================================= */
+
+.login-form__control {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* Iconos de usuario y contraseña */
+
+.login-form__icon {
+    position: absolute;
+
+    left: 12px;
+
+    width: 19px;
+    height: 19px;
+
+    flex-shrink: 0;
+
+    color: var(--color-primary, #087E96);
+
+    pointer-events: none;
+}
+
+
+/* Campos de texto */
+
+.login-form__control input {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+    height: 45px;
+
+    padding: 0 13px 0 40px;
+
+    color: var(--color-text-secondary, #173B65);
+
+    background-color: rgba(255, 255, 255, 0.91);
+
+    border: 1px solid var(--color-border, #A8BEC9);
+    border-radius: var(--radius-small, 6px);
+
+    font-family: var(--font-main, Arial, sans-serif);
+    font-size: 0.83rem;
+    font-weight: 500;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+/* Texto de ejemplo */
+
+.login-form__control input::placeholder {
+    color: #60798A;
+    opacity: 0.85;
+}
+
+
+/* Estado hover */
+
+.login-form__control input:hover {
+    border-color: var(--color-primary, #087E96);
+}
+
+
+/* Estado de enfoque */
+
+.login-form__control input:focus {
+    border-color: var(--color-primary, #087E96);
+
+    background-color: #FFFFFF;
+
+    outline: none;
+
+    box-shadow: 0 0 0 3px rgba(22, 166, 184, 0.15);
+}
+
+
+/* =========================================================
+   8. VALIDACIÓN VISUAL DE LOS CAMPOS
+   ========================================================= */
+
+.login-form__control input:focus:invalid {
+    border-color: var(--color-danger, #C94343);
+}
+
+
+/* =========================================================
+   9. MENSAJE DE ERROR DEL SERVIDOR
+   ========================================================= */
+
+/*
+ * El LoginController agrega el atributo "error" cuando
+ * las credenciales ingresadas no son correctas.
+ *
+ * Thymeleaf muestra este elemento dentro del formulario.
+ */
+
+.login-form__server-error {
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+    padding: 11px 13px;
+
+    color: var(--color-danger, #C94343);
+
+    background-color: rgba(201, 67, 67, 0.09);
+
+    border: 1px solid rgba(201, 67, 67, 0.55);
+    border-radius: var(--radius-small, 6px);
+
+    font-size: 0.81rem;
+    font-weight: 700;
+
+    line-height: 1.5;
+
+    overflow-wrap: break-word;
+}
+
+
+/* =========================================================
+   10. BOTÓN DE INICIO DE SESIÓN
+   ========================================================= */
+
+.login-form__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: min(100%, 175px);
+    min-height: 44px;
+
+    align-self: center;
+
+    margin-top: 1px;
+    padding: 11px 23px;
+
+    color: #FFFFFF;
+
+    background: linear-gradient(
+        115deg,
+        var(--color-primary, #087E96),
+        var(--color-primary-light, #16A6B8)
+    );
+
+    border: 1px solid transparent;
+    border-radius: 30px;
+
+    box-shadow: 0 5px 14px rgba(8, 126, 150, 0.19);
+
+    font-family: var(--font-main, Arial, sans-serif);
+    font-size: 0.86rem;
+    font-weight: 800;
+
+    text-align: center;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+
+/* Estado hover */
+
+.login-form__submit:hover:not(:disabled) {
+    filter: brightness(1.06);
+
+    box-shadow: 0 8px 19px rgba(8, 126, 150, 0.27);
+
+    transform: translateY(-2px);
+}
+
+
+/* Estado activo */
+
+.login-form__submit:active:not(:disabled) {
+    transform: translateY(0);
+
+    box-shadow: 0 3px 8px rgba(8, 126, 150, 0.18);
+}
+
+
+/* Estado deshabilitado */
+
+.login-form__submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   11. PIE DE LA TARJETA Y ACCESO AL REGISTRO
+   ========================================================= */
+
+.login-form-footer {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    margin-top: 19px;
+    padding-top: 13px;
+
+    border-top: 1px solid rgba(8, 126, 150, 0.18);
+}
+
+
+/* Texto de registro */
+
+.login-form-footer__description {
+    margin: 0;
+
+    color: var(--color-text-secondary, #173B65);
+
+    font-size: 0.78rem;
+    font-weight: 500;
+
+    line-height: 1.4;
+
+    text-align: center;
+}
+
+
+/* Enlace de registro */
+
+.login-form-footer__register {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: min(100%, 175px);
+    min-height: 40px;
+
+    padding: 9px 20px;
+
+    color: #FFFFFF;
+
+    background-color: var(--color-primary-light, #16A6B8);
+
+    border: 1px solid transparent;
+    border-radius: 30px;
+
+    font-family: var(--font-main, Arial, sans-serif);
+    font-size: 0.83rem;
+    font-weight: 800;
+
+    text-align: center;
+
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* Estado hover del enlace */
+
+.login-form-footer__register:hover {
+    color: #FFFFFF;
+
+    background-color: var(--color-primary-dark, #06677B);
+
+    box-shadow: 0 5px 13px rgba(8, 126, 150, 0.19);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   12. LOGOTIPO DE LA UNIVERSIDAD
+   ========================================================= */
+
+/*
+ * El logotipo institucional se mantiene en la esquina
+ * inferior izquierda en escritorio.
+ *
+ * En pantallas pequeñas pasa al flujo normal del contenido
+ * para evitar que tape el formulario.
+ */
+
+.login-university-logo {
+    position: absolute;
+
+    left: clamp(10px, 1.2vw, 18px);
+    bottom: clamp(10px, 1.2vw, 18px);
+
+    z-index: 4;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 120px;
+    min-height: 62px;
+
+    padding: 5px;
+
+    background-color: rgba(255, 255, 255, 0.15);
+
+    border-radius: 5px;
+}
+
+
+/* Imagen institucional */
+
+.login-university-logo img {
+    width: 100%;
+    max-height: 55px;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   13. ANIMACIÓN DE ENTRADA
+   ========================================================= */
+
+@keyframes login-aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   14. ACCESIBILIDAD Y NAVEGACIÓN POR TECLADO
+   ========================================================= */
+
+.login-page a:focus-visible,
+.login-page button:focus-visible,
+.login-page input:focus-visible {
+    outline: 3px solid var(--color-primary-light, #16A6B8);
+    outline-offset: 3px;
+}
+
+
+/* Evita contornos adicionales al hacer clic con el mouse */
+
+.login-form__submit:focus:not(:focus-visible),
+.login-form-footer__register:focus:not(:focus-visible) {
+    outline: none;
+}
+
+
+/* =========================================================
+   15. RESPONSIVE: PANTALLAS GRANDES
+   ========================================================= */
+
+/*
+ * En pantallas grandes se conserva el tamaño compacto
+ * del cuadro informativo.
+ *
+ * No se aumenta su tamaño para evitar que se acerque
+ * demasiado al formulario.
+ */
+
+@media (min-width: 1500px) {
+
+    .login-presentation {
+    left: clamp(60px, 13vw, 300px);
+
+        width: 290px;
+    }
+
+    .login-presentation__content {
+        max-width: 290px;
+
+        padding: 18px 20px;
+    }
+
+    .login-presentation__title {
+        font-size: 1.55rem;
+    }
+
+    .login-presentation__description {
+        max-width: 250px;
+        font-size: 0.80rem;
+    }
+
+    .login-form-panel {
+        width: 420px;
+    }
+
+    .login-form-panel__content {
+        max-width: 420px;
+        padding: 36px;
+    }
+
+    .login-form-header__brand img {
+        max-width: 220px;
+        max-height: 95px;
+    }
+
+    .login-form__control input {
+        height: 48px;
+    }
+
+    .login-university-logo {
+        width: 140px;
+        min-height: 73px;
+    }
+}
+
+
+/* =========================================================
+   16. RESPONSIVE: PORTÁTILES Y TABLETAS GRANDES
+   ========================================================= */
+
+/*
+ * Esta sección conserva las dimensiones generales.
+ *
+ * La distribución vertical o lateral se controla en la
+ * sección 22, dependiendo del espacio disponible.
+ */
+
+@media (min-width: 851px) and (max-width: 1100px) {
+
+    
+    .login-presentation__content {
+        padding: 16px 18px;
+        
+    }
+
+    .login-presentation__title {
+        font-size: 1.45rem;
+    }
+
+    .login-presentation__description {
+        margin-top: 9px;
+        font-size: 0.78rem;
+    }
+
+    .login-form-panel__content {
+        padding: 25px;
+    }
+}
+
+
+/* =========================================================
+   17. RESPONSIVE: TABLETAS
+   ========================================================= */
+
+/*
+ * En tabletas el cuadro informativo aparece arriba
+ * y el formulario debajo.
+ *
+ * Ambos elementos utilizan el flujo normal del documento.
+ */
+
+@media (min-width: 601px) and (max-width: 850px) {
+
+    .login-main {
+        gap: 22px;
+
+        padding: 30px 25px 95px;
+    }
+
+    .login-presentation {
+        width: min(420px, 100%);
+    }
+
+    .login-presentation__content {
+        max-width: 420px;
+
+        padding: 18px 22px;
+
+        text-align: center;
+    }
+
+    .login-presentation__title {
+        align-items: center;
+
+        font-size: clamp(1.45rem, 3.5vw, 1.8rem);
+    }
+
+    .login-presentation__description {
+        max-width: 370px;
+
+        margin: 10px auto 0;
+
+        font-size: 0.82rem;
+    }
+
+    .login-form-panel {
+        width: min(410px, 100%);
+    }
+
+    .login-form-panel__content {
+        max-width: 410px;
+        padding: 29px;
+    }
+
+    .login-university-logo {
+        width: 105px;
+        min-height: 55px;
+    }
+
+    .login-university-logo img {
+        max-height: 47px;
+    }
+}
+
+
+/* =========================================================
+   18. RESPONSIVE: CELULARES
+   ========================================================= */
+
+/*
+ * En celulares los elementos se organizan verticalmente.
+ *
+ * El cuadro informativo aparece arriba y el formulario
+ * debajo, evitando que ambos elementos se superpongan.
+ */
+
+@media (max-width: 600px) {
+
+    .login-main {
+        gap: 18px;
+
+        padding: 23px 17px 85px;
+
+        background-position: center;
+    }
+
+    .login-presentation {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .login-presentation__content {
+        max-width: 350px;
+
+        margin: 0 auto;
+        padding: 17px 17px;
+
+        text-align: center;
+    }
+
+    .login-presentation__title {
+        align-items: center;
+
+        font-size: clamp(1.4rem, 6vw, 1.75rem);
+    }
+
+    .login-presentation__description {
+        max-width: 310px;
+
+        margin: 9px auto 0;
+
+        font-size: 0.80rem;
+        line-height: 1.5;
+    }
+
+    /*
+     * La tarjeta ocupa todo el ancho disponible hasta
+     * su tamaño máximo y se centra horizontalmente.
+     */
+
+    .login-form-panel {
+        width: 100%;
+        max-width: 390px;
+    }
+
+    .login-form-panel__content {
+        max-width: 390px;
+
+        padding: 25px 21px;
+
+        border-radius: 16px;
+    }
+
+    .login-form-header {
+        margin-bottom: 18px;
+    }
+
+    .login-form-header__brand {
+        margin-bottom: 11px;
+    }
+
+    .login-form-header__brand img {
+        max-width: 185px;
+        max-height: 75px;
+    }
+
+    .login-form-header__title {
+        font-size: 1.75rem;
+    }
+
+    .login-form-header__description {
+        font-size: 0.80rem;
+    }
+
+    .login-form {
+        gap: 15px;
+    }
+
+    .login-form__control input {
+        height: 46px;
+        font-size: 0.84rem;
+    }
+
+    .login-form__submit {
+        min-height: 44px;
+    }
+
+    .login-form-footer {
+        margin-top: 17px;
+    }
+
+    .login-university-logo {
+        width: 95px;
+        min-height: 49px;
+    }
+
+    .login-university-logo img {
+        max-height: 42px;
+    }
+}
+
+
+/* =========================================================
+   19. RESPONSIVE: CELULARES PEQUEÑOS
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .login-main {
+        gap: 15px;
+        padding: 19px 12px 80px;
+    }
+
+    .login-presentation__content {
+        padding: 14px 13px;
+    }
+
+    .login-presentation__title {
+        font-size: 1.35rem;
+    }
+
+    .login-presentation__description {
+        font-size: 0.75rem;
+    }
+
+    .login-form-panel__content {
+        padding: 22px 16px;
+    }
+
+    .login-form-header__brand img {
+        max-width: 165px;
+        max-height: 68px;
+    }
+
+    .login-form-header__title {
+        font-size: 1.6rem;
+    }
+
+    .login-form-header__description {
+        font-size: 0.76rem;
+    }
+
+    .login-form__control input {
+        padding-left: 37px;
+        font-size: 0.79rem;
+    }
+
+    .login-form__icon {
+        left: 10px;
+
+        width: 17px;
+        height: 17px;
+    }
+
+    .login-university-logo {
+        width: 85px;
+        min-height: 44px;
+    }
+
+    .login-university-logo img {
+        max-height: 38px;
+    }
+}
+
+
+/* =========================================================
+   20. RESPONSIVE: PANTALLAS BAJAS
+   ========================================================= */
+
+/*
+ * En pantallas de escritorio con poca altura se utiliza
+ * una distribución vertical.
+ *
+ * De esta manera, el cuadro informativo no invade el espacio
+ * que necesita la tarjeta de autenticación.
+ *
+ * El desplazamiento vertical permite acceder a todo
+ * el contenido cuando no cabe en la ventana.
+ */
+
+@media (max-height: 700px) {
+
+    .login-main {
+        padding-top: 20px;
+        padding-bottom: 90px;
+    }
+
+    .login-presentation__content {
+        padding: 14px 18px;
+    }
+
+    .login-presentation__title {
+        font-size: 1.35rem;
+    }
+
+    .login-presentation__description {
+        margin-top: 7px;
+        font-size: 0.76rem;
+    }
+
+    .login-form-panel__content {
+        padding: 22px 25px;
+    }
+
+    .login-form-header {
+        margin-bottom: 12px;
+    }
+
+    .login-form-header__brand {
+        margin-bottom: 7px;
+    }
+
+    .login-form-header__brand img {
+        max-height: 58px;
+    }
+
+    .login-form {
+        gap: 11px;
+    }
+
+    .login-form-footer {
+        margin-top: 12px;
+        padding-top: 9px;
+    }
+}
+
+
+/* =========================================================
+   21. ACCESIBILIDAD: MOVIMIENTO REDUCIDO
+   ========================================================= */
+
+/*
+ * Respeta la preferencia del sistema operativo para usuarios
+ * que prefieren reducir las animaciones y transiciones.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .login-page *,
+    .login-page *::before,
+    .login-page *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* =========================================================
+   22. DISTRIBUCIÓN RESPONSIVE Y PREVENCIÓN DE SUPERPOSICIÓN
+   ========================================================= */
+
+/*
+ * Esta sección controla la distribución definitiva
+ * del cuadro informativo y del formulario.
+ *
+ * ESCRITORIO CON ESPACIO SUFICIENTE:
+ * - El cuadro informativo aparece a la izquierda.
+ * - El formulario permanece centrado en la pantalla.
+ * - Ambos elementos tienen espacios independientes.
+ *
+ * PANTALLAS CON ESPACIO LIMITADO:
+ * - El cuadro informativo pasa automáticamente arriba.
+ * - El formulario queda debajo.
+ * - Ambos elementos utilizan position: relative.
+ * - La página permite desplazamiento vertical.
+ *
+ * IMPORTANTE:
+ * Esta sección tiene prioridad sobre las posiciones
+ * establecidas en las secciones responsive anteriores.
+ */
+
+
+/* ---------------------------------------------------------
+   22.1. ESCRITORIO: DISTRIBUCIÓN LATERAL
+   --------------------------------------------------------- */
+
+/*
+ * Se utiliza la distribución lateral solamente cuando
+ * el ancho y la altura de la pantalla son suficientes.
+ *
+ * El cuadro informativo se mantiene separado del formulario
+ * y no modifica el centrado de la tarjeta de autenticación.
+ */
+
+@media (min-width: 1101px) and (min-height: 701px) {
+
+    .login-main {
+        display: block;
+
+        min-height: 100vh;
+        min-height: 100svh;
+
+        height: auto;
+
+        padding: 0;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    /* Cuadro informativo a la izquierda del formulario */
+
+    .login-presentation {
+        position: absolute;
+
+        top: 54%;
+        left: clamp(28px, 4vw, 65px);
+
+        z-index: 2;
+
+        display: flex;
+
+        width: min(270px, calc(50% - 35px));
+
+        margin: 0;
+
+        transform: translateY(-50%);
+    }
+
+    .login-presentation__content {
+        width: 100%;
+        max-width: 270px;
+
+        padding: 16px 18px;
+    }
+
+    .login-presentation__title {
+        font-size: clamp(1.35rem, 1.6vw, 1.55rem);
+    }
+
+    .login-presentation__description {
+        max-width: 235px;
+
+        margin-top: 10px;
+
+        font-size: 0.78rem;
+    }
+
+    /* Formulario centrado respecto a toda la pantalla */
+
+    .login-form-panel {
+        position: absolute;
+
+        top: 50%;
+        left: 50%;
+
+        z-index: 3;
+
+        width: min(390px, calc(100% - 40px));
+
+        margin: 0;
+
+        transform: translate(-50%, -50%);
+    }
+
+    .login-form-panel__content {
+        width: 100%;
+        max-width: 390px;
+    }
+
+    /* Logotipo institucional en la esquina inferior */
+
+    .login-university-logo {
+        position: absolute;
+
+        left: clamp(10px, 1.2vw, 18px);
+        bottom: clamp(10px, 1.2vw, 18px);
+    }
+}
+
+
+/* ---------------------------------------------------------
+   22.2. PANTALLAS CON ESPACIO LIMITADO
+   --------------------------------------------------------- */
+
+/*
+ * Cuando el ancho es menor o igual a 1100 píxeles,
+ * o la altura es menor o igual a 700 píxeles,
+ * los elementos se organizan verticalmente.
+ *
+ * El cuadro informativo aparece primero y el formulario
+ * queda debajo, sin superponerse.
+ */
+
+@media (max-width: 1100px), (max-height: 700px) {
+
+    .login-main {
+        position: relative;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        justify-content: flex-start;
+
+        gap: 22px;
+
+        width: 100%;
+
+        min-height: 100vh;
+        min-height: 100svh;
+
+        height: auto;
+
+        margin: 0;
+
+        padding: 25px 20px 30px;
+
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    /* Cuadro informativo en la parte superior */
+
+    .login-presentation {
+        position: relative;
+
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+
+        z-index: 2;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: min(100%, 340px);
+        max-width: 340px;
+
+        margin: 0 auto;
+
+        transform: none;
+    }
+
+    .login-presentation__content {
+        width: 100%;
+        max-width: 340px;
+
+        margin: 0;
+        padding: 16px 19px;
+
+        text-align: center;
+    }
+
+    .login-presentation__title {
+        align-items: center;
+
+        font-size: clamp(1.35rem, 2.5vw, 1.65rem);
+        line-height: 1.15;
+    }
+
+    .login-presentation__description {
+        max-width: 300px;
+
+        margin: 9px auto 0;
+
+        font-size: 0.80rem;
+        line-height: 1.45;
+    }
+
+    /* Formulario debajo del cuadro informativo */
+
+    .login-form-panel {
+        position: relative;
+
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+
+        z-index: 3;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: min(100%, 390px);
+        max-width: 390px;
+
+        margin: 0 auto;
+
+        transform: none;
+    }
+
+    .login-form-panel__content {
+        width: 100%;
+        max-width: 390px;
+
+        padding: clamp(20px, 3vw, 28px);
+
+        /* Se conserva el efecto de vidrio esmerilado */
+
+        background: rgba(255, 255, 255, 0.60);
+
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        border-radius: 19px;
+
+        box-shadow:
+            0 12px 35px rgba(23, 59, 101, 0.20),
+            0 3px 9px rgba(23, 59, 101, 0.10);
+
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+    }
+
+    /* El logotipo pasa al flujo normal para no tapar nada */
+
+    .login-university-logo {
+        position: relative;
+
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+
+        align-self: flex-start;
+
+        width: 105px;
+        min-height: 55px;
+
+        margin: 8px 0 0;
+
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .login-university-logo img {
+        max-height: 47px;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   22.3. AJUSTES PARA CELULARES
+   --------------------------------------------------------- */
+
+@media (max-width: 600px) {
+
+    .login-main {
+        gap: 18px;
+
+        padding: 22px 15px 25px;
+    }
+
+    .login-presentation {
+        width: 100%;
+        max-width: 340px;
+    }
+
+    .login-presentation__content {
+        padding: 15px 16px;
+    }
+
+    .login-presentation__title {
+        font-size: clamp(1.35rem, 6vw, 1.7rem);
+    }
+
+    .login-presentation__description {
+        font-size: 0.78rem;
+    }
+
+    .login-form-panel {
+        width: 100%;
+        max-width: 390px;
+    }
+
+    .login-form-panel__content {
+        padding: 23px 19px;
+
+        border-radius: 16px;
+    }
+
+    .login-university-logo {
+        width: 95px;
+        min-height: 49px;
+    }
+
+    .login-university-logo img {
+        max-height: 42px;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   22.4. AJUSTES PARA CELULARES PEQUEÑOS
+   --------------------------------------------------------- */
+
+@media (max-width: 380px) {
+
+    .login-main {
+        gap: 15px;
+
+        padding: 18px 12px 22px;
+    }
+
+    .login-presentation__content {
+        padding: 13px 12px;
+    }
+
+    .login-presentation__title {
+        font-size: 1.3rem;
+    }
+
+    .login-presentation__description {
+        font-size: 0.74rem;
+    }
+
+    .login-form-panel__content {
+        padding: 20px 15px;
+    }
+
+    .login-university-logo {
+        width: 85px;
+        min-height: 44px;
+    }
+
+    .login-university-logo img {
+        max-height: 38px;
+    }
+}
+
+
+/* ---------------------------------------------------------
+   22.5. AJUSTES PARA PANTALLAS MUY BAJAS
+   --------------------------------------------------------- */
+
+/*
+ * En ventanas con muy poca altura se reducen los espacios
+ * entre los elementos.
+ *
+ * No se utiliza posicionamiento absoluto para las tarjetas.
+ * Si el contenido supera la altura de la ventana, el usuario
+ * puede desplazarse para acceder al formulario completo.
+ */
+
+@media (max-height: 500px) {
+
+    .login-main {
+        gap: 14px;
+
+        padding-top: 12px;
+        padding-bottom: 20px;
+    }
+
+    .login-presentation__content {
+        padding: 11px 16px;
+    }
+
+    .login-presentation__title {
+        font-size: 1.25rem;
+    }
+
+    .login-presentation__description {
+        margin-top: 6px;
+
+        font-size: 0.73rem;
+    }
+
+    .login-form-panel__content {
+        padding: 18px 22px;
+    }
+
+    .login-form-header {
+        margin-bottom: 10px;
+    }
+
+    .login-form-header__brand {
+        margin-bottom: 6px;
+    }
+
+    .login-form-header__brand img {
+        max-height: 52px;
+    }
+
+    .login-form {
+        gap: 10px;
+    }
+
+    .login-form-footer {
+        margin-top: 10px;
+        padding-top: 8px;
+    }
+}
