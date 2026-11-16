@@ -85,4 +85,22 @@ public class VoluntarioService {
         return materiaRepository.findAll();
     }
 
+    /**
+     * Busca el perfil de voluntario de un estudiante, si ya se activó (RF-05).
+     * Deja cargadas sus materias y tipos de apoyo para mostrarlos en la vista.
+     *
+     * @param idEstudiante id del estudiante que inició sesión
+     * @return el perfil de voluntario, o vacío si todavía no es voluntario
+     */
+    @Transactional(readOnly = true)
+    public Optional<Voluntario> buscarPorEstudiante(Integer idEstudiante) {
+        return usuarioRepository.findById(idEstudiante)
+                .filter(Estudiante.class::isInstance)
+                .map(usuario -> ((Estudiante) usuario).getVoluntario())
+                .map(voluntario -> {
+                    voluntario.getMaterias().size();
+                    voluntario.getTiposApoyo().size();
+                    return voluntario;
+                });
+    }
 }
