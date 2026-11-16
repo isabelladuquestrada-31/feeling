@@ -19,12 +19,14 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.function.Executable;
 
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
- * Pruebas del caso de éxito y del caso de fallo de RF-12 (cancelar solicitud).
+ *  * Pruebas de RF-08 (registrar solicitud), RF-12 (cancelar solicitud) y RF-13 (próximos acompañamientos e historial).
  *
  * @author Daniel Blandón
  */
@@ -109,6 +111,76 @@ class SolicitudServiceTest {
         when(repositorio.findByEstudianteIdOrderByFechaCreacionDesc(3)).thenReturn(List.of());
 
         assertTrue(servicio.historialDelEstudiante(3).isEmpty());
+    }
+
+    /**
+     * Crea una solicitud completa y válida para probar RF-08 (estudiante 2, voluntario 5).
+     */
+    private Solicitud solicitudParaRegistrar() {
+        Solicitud solicitud = new Solicitud();
+        solicitud.setEstudianteId(2);
+        solicitud.setVoluntarioId(5);
+        solicitud.setMateriaCodigo("CAL101");
+        solicitud.setTema("Derivadas");
+        solicitud.setTipo("EXPLICACION");
+        solicitud.setModalidad("PRESENCIAL");
+        solicitud.setFechaProgramada(LocalDateTime.now().plusDays(1));
+        return solicitud;
+    }
+
+    /**
+     * Caso de éxito RF-08: una solicitud completa y con la franja libre se guarda en estado PENDIENTE.
+     */
+    @Test
+    void registraSolicitudPendiente() {
+        Solicitud solicitud = solicitudParaRegistrar();
+        when(repositorio.existsByVoluntarioIdAndFechaProgramadaAndEstadoIn(
+                eq(5), eq(solicitud.getFechaProgramada()), anyList())).thenReturn(false);
+        when(repositorio.save(solicitud)).thenReturn(solicitud);
+
+        Solicitud guardada = servicio.registrar(solicitud);
+
+        assertEquals(EstadoSolicitud.PENDIENTE, guardada.getEstado());
+        verify(repositorio).save(solicitud);
+    }
+
+    /**
+     * Caso de fallo RF-08: si falta un campo obligatorio no se guarda y se avisa el motivo.
+     */
+    @Test
+    void noRegistraSolicitudSinMateria() {
+        final Solicitud solicitud = solicitudParaRegistrar();
+        solicitud.setMateriaCodigo("");
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() {
+                servicio.registrar(solicitud);
+            }
+        });
+
+        assertEquals("Faltan campos obligatorios de la solicitud.", error.getMessage());
+        verify(repositorio, never()).save(any(Solicitud.class));
+    }
+
+    /**
+     * Caso de fallo RF-08: si el voluntario ya tiene una solicitud en esa fecha y hora no se guarda.
+     */
+    @Test
+    void noRegistraSolicitudConFranjaOcupada() {
+        final Solicitud solicitud = solicitudParaRegistrar();
+        when(repositorio.existsByVoluntarioIdAndFechaProgramadaAndEstadoIn(
+                eq(5), eq(solicitud.getFechaProgramada()), anyList())).thenReturn(true);
+
+        IllegalStateException error = assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                servicio.registrar(solicitud);
+            }
+        });
+
+        assertEquals("El voluntario ya tiene una solicitud en esa franja.", error.getMessage());
+        verify(repositorio, never()).save(any(Solicitud.class));
     }
 
     /**
