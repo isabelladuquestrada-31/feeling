@@ -29,9 +29,9 @@ class BusquedaVoluntariosServiceTest {
     void encuentraVoluntariosPorMateria() {
         VoluntarioResumen voluntario = new VoluntarioResumen(1, "Voluntario1", "Ingeniería de Sistemas",
                 List.of("Cálculo Diferencial"), List.of("TUTORIA"), List.of("VIERNES", "LUNES"));
-        when(repositorio.buscar("MAT101", null)).thenReturn(List.of(voluntario));
+        when(repositorio.buscar("MAT101", null, null)).thenReturn(List.of(voluntario));
 
-        List<VoluntarioResumen> resultado = servicio.buscar("MAT101", "");
+        List<VoluntarioResumen> resultado = servicio.buscar("MAT101", "", "");
 
         assertEquals(1, resultado.size());
         assertEquals(List.of("Tutoría"), resultado.get(0).getTiposApoyo());
@@ -43,9 +43,9 @@ class BusquedaVoluntariosServiceTest {
      */
     @Test
     void sinResultadosDevuelveListaVacia() {
-        when(repositorio.buscar("FIS101", "TUTORIA")).thenReturn(List.of());
+        when(repositorio.buscar("FIS101", "TUTORIA", null)).thenReturn(List.of());
 
-        assertTrue(servicio.buscar("FIS101", "TUTORIA").isEmpty());
+        assertTrue(servicio.buscar("FIS101", "TUTORIA", null).isEmpty());
     }
 
     /**
@@ -53,8 +53,28 @@ class BusquedaVoluntariosServiceTest {
      */
     @Test
     void filtrosVaciosNoSeAplican() {
-        servicio.buscar("  ", null);
+        servicio.buscar("  ", null, " ");
 
-        verify(repositorio).buscar(null, null);
+        verify(repositorio).buscar(null, null, null);
+    }
+
+    /**
+     * El filtro de programa llega como código y se consulta con el nombre oficial guardado en la base de datos.
+     */
+    @Test
+    void filtraPorProgramaConSuNombreOficial() {
+        servicio.buscar(null, null, "INGENIERIA_SISTEMAS");
+
+        verify(repositorio).buscar(null, null, "Ingeniería de Sistemas");
+    }
+
+    /**
+     * Un código de programa que no existe no se usa como filtro, en lugar de dejar la búsqueda vacía.
+     */
+    @Test
+    void programaInexistenteNoSeAplica() {
+        servicio.buscar(null, null, "INGENIERIA_EN_SISTEMAS");
+
+        verify(repositorio).buscar(null, null, null);
     }
 }

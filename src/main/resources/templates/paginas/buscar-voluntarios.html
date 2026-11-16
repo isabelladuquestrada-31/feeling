@@ -12,24 +12,29 @@
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/voluntarios.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/buscador-select.js}" defer></script>
 
     <!-- Encabezado -->
     <header class="solicitudes__encabezado">
         <span class="solicitudes__etiqueta">Red de apoyo</span>
         <h1 id="titulo-busqueda">Buscar voluntarios</h1>
-        <p>Encuentra estudiantes voluntarios que te pueden acompañar en la materia que necesitas.</p>
+        <p>Encuentra estudiantes voluntarios que te pueden acompañar en la materia que necesitas.
+            Escribe el nombre de la materia o del programa y elige una opción.</p>
     </header>
 
     <!-- Avisos para lectores de pantalla -->
     <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
 
-    <!-- Filtros: se aplican solos al cambiar una opción; el botón sirve si no hay JavaScript -->
+    <!-- Filtros: se aplican solos al cambiar una opción; el botón sirve si no hay JavaScript.
+         Los select con data-buscador se convierten en un campo con sugerencias (buscador-select.js);
+         sin JavaScript siguen funcionando como listas normales. -->
     <form class="busqueda__filtros" th:action="@{/voluntarios}" method="get"
           role="search" aria-label="Filtrar voluntarios" data-busqueda>
 
         <div class="busqueda__campo">
             <label for="filtro-materia">Materia</label>
-            <select id="filtro-materia" name="materia" data-autoenviar>
+            <select id="filtro-materia" name="materia" data-autoenviar
+                    data-buscador data-buscador-placeholder="Escribe una materia">
                 <option value="">Todas las materias</option>
                 <option th:each="m : ${materias}"
                         th:value="${m.valor}"
@@ -49,9 +54,23 @@
             </select>
         </div>
 
+        <div class="busqueda__campo">
+            <label for="filtro-programa">Programa del voluntario</label>
+            <select id="filtro-programa" name="programa" data-autoenviar
+                    data-buscador data-buscador-placeholder="Escribe un programa">
+                <option value="">Todos los programas</option>
+                <optgroup th:each="facultad : ${programas}" th:label="${facultad.key}">
+                    <option th:each="p : ${facultad.value}"
+                            th:value="${p.codigo}"
+                            th:text="${p.etiqueta}"
+                            th:selected="${p.codigo == programaSeleccionado}">Programa</option>
+                </optgroup>
+            </select>
+        </div>
+
         <div class="busqueda__acciones">
             <button type="submit" class="boton-accion boton-accion--buscar">Buscar</button>
-            <a th:if="${materiaSeleccionada != '' or tipoSeleccionado != ''}"
+            <a th:if="${materiaSeleccionada != '' or tipoSeleccionado != '' or programaSeleccionado != ''}"
                th:href="@{/voluntarios}" class="boton-accion boton-accion--limpiar">Limpiar</a>
         </div>
     </form>
@@ -67,8 +86,8 @@
         <!-- Sin resultados (caso de fallo) -->
         <div th:if="${#lists.isEmpty(voluntarios)}" class="busqueda__vacio" role="status">
             <h2>No encontramos voluntarios con esos filtros</h2>
-            <p>Prueba con otra materia u otro tipo de apoyo.</p>
-            <a th:if="${materiaSeleccionada != '' or tipoSeleccionado != ''}"
+            <p>Prueba con otra materia, otro tipo de apoyo u otro programa.</p>
+            <a th:if="${materiaSeleccionada != '' or tipoSeleccionado != '' or programaSeleccionado != ''}"
                th:href="@{/voluntarios}" class="boton-accion boton-accion--buscar">Ver todos los voluntarios</a>
         </div>
 

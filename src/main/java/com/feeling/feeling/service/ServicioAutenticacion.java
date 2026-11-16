@@ -3,6 +3,7 @@ package com.feeling.feeling.service;
 import com.feeling.feeling.model.Estudiante;
 import com.feeling.feeling.model.Perfil;
 import com.feeling.feeling.model.PreferenciasAccesibilidad;
+import com.feeling.feeling.model.ProgramaAcademico;
 import com.feeling.feeling.model.Usuario;
 import com.feeling.feeling.repository.IPerfilRepository;
 import com.feeling.feeling.repository.IPreferenciaAccesibilidadRepository;
@@ -71,10 +72,10 @@ public class ServicioAutenticacion implements IServicioAutenticacion {
      *
      * @param nombreUsuario     nombre con el que la persona se registra
      * @param contrasena        contraseña con la que la persona se registra
-     * @param programaAcademico programa académico que cursa
+     * @param programaAcademico nombre oficial del programa (una etiqueta de ProgramaAcademico)
      * @param whatsapp          número de WhatsApp de 10 dígitos
      * @return el estudiante registrado
-     * @throws IllegalArgumentException si faltan datos, el WhatsApp no es válido o el nombre de usuario ya existe
+     * @throws IllegalArgumentException si faltan datos, el programa o el WhatsApp no son válidos, o el nombre de usuario ya existe
      */
     @Override
     @Transactional
@@ -84,6 +85,10 @@ public class ServicioAutenticacion implements IServicioAutenticacion {
         if (estaVacio(nombreUsuario) || estaVacio(contrasena)
                 || estaVacio(programaAcademico) || estaVacio(whatsapp)) {
             throw new IllegalArgumentException("Se deben llenar todos los campos");
+        }
+
+        if (ProgramaAcademico.desdeEtiqueta(programaAcademico).isEmpty()) {
+            throw new IllegalArgumentException("El programa académico no es válido");
         }
 
         if (!whatsapp.matches("3\\d{9}")) {
@@ -122,4 +127,4 @@ public class ServicioAutenticacion implements IServicioAutenticacion {
     private boolean estaVacio(String texto) {
         return texto == null || texto.isBlank();
     }
-}
+}

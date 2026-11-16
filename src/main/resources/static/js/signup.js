@@ -364,19 +364,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const value = getValue(field);
 
+        // El programa se elige de una lista: solo hay que comprobar que eligió uno.
         if (!value) {
             return showError(
                 field,
                 error,
-                "Ingresa tu programa académico."
-            );
-        }
-
-        if (value.length > CONFIG.maxProgramLength) {
-            return showError(
-                field,
-                error,
-                "El programa académico no puede superar los 100 caracteres."
+                "Selecciona tu programa académico."
             );
         }
 
@@ -577,6 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (fields.programa) {
         fields.programa.addEventListener("blur", validateProgram);
+        fields.programa.addEventListener("change", validateProgram);
     }
 
     if (fields.contrasena) {
