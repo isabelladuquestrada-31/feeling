@@ -91,11 +91,13 @@ public class SolicitudService {
         Solicitud solicitud = solicitudRepository.findById(solicitudId)
                 .orElseThrow(() -> new IllegalArgumentException("La solicitud no existe."));
 
-        if (!voluntarioId.equals(solicitud.getVoluntarioId())) {
+        if (!solicitud.getVoluntarioId().equals(voluntarioId)) {
             throw new IllegalArgumentException("Solo el voluntario al que se le hizo la solicitud puede responderla.");
         }
-        if (solicitud.getEstado() != EstadoSolicitud.PENDIENTE) {
-            throw new IllegalStateException(motivoNoRespondible(solicitud.getEstado()));
+
+        EstadoSolicitud estado = solicitud.getEstado();
+        if (estado != EstadoSolicitud.PENDIENTE) {
+            throw new IllegalStateException(motivoNoRespondible(estado));
         }
 
         solicitud.setEstado(nuevoEstado);
