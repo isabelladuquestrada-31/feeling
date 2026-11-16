@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
  *
  * @author Daniel Blandón
  */
-class git add srcSolicitudServiceTest {
+class SolicitudServiceTest {
 
     private final SolicitudRepository repositorio = mock(SolicitudRepository.class);
     private final SolicitudService servicio = new SolicitudService(repositorio);
