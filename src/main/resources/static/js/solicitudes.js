@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 3. Efecto de presión al tocar una tarjeta en pantallas táctiles.
-    seccion.querySelectorAll(".tarjeta-solicitud, .tarjeta-proximo, .tarjeta-historial").forEach(tarjeta => {
+    seccion.querySelectorAll(".tarjeta-solicitud, .tarjeta-proximo, .tarjeta-historial, .tarjeta-voluntario").forEach(tarjeta => {
         tarjeta.addEventListener("pointerdown", evento => {
             if (evento.pointerType === "touch") {
                 tarjeta.classList.add("presionada");
@@ -172,8 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Si sale del botón sin confirmar, se cancela la confirmación.
+        // (No aplica cuando solo se cambia de ventana o de pestaña).
         boton.addEventListener("blur", () => {
-            if (esperandoConfirmacion) {
+            if (esperandoConfirmacion && document.hasFocus()) {
                 clearTimeout(temporizador);
                 cancelarConfirmacion();
             }
@@ -253,5 +254,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     botonesFiltro.forEach(boton => {
         boton.addEventListener("click", () => aplicarFiltro(boton.dataset.filtro));
+    });
+
+    // 8. Filtros de búsqueda que se aplican solos al cambiar una opción.
+    seccion.querySelectorAll("form[data-busqueda]").forEach(formulario => {
+        const resultados = seccion.querySelector("[data-resultados]");
+
+        function buscar() {
+            if (resultados) {
+                resultados.classList.add("buscando");
+                resultados.setAttribute("aria-busy", "true");
+            }
+
+            anunciar("Buscando voluntarios.");
+            formulario.submit();
+        }
+
+        formulario.querySelectorAll("[data-autoenviar]").forEach(campo => {
+            campo.addEventListener("change", buscar);
+        });
     });
 });
