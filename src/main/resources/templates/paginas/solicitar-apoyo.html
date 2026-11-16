@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Solicitar apoyo | Feeling', ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitar apoyo | Feeling</title>
+</head>
+<body>
+
+<!--
+    RF-08: formulario "Solicitar apoyo" (SCRUM-81).
+    El estudiante elige materia, tema, tipo de apoyo, un horario libre del voluntario y la modalidad.
+    Basado en el mockup "Solicitar Apoyo" (SCRUM-13): tarjeta del voluntario y lista de horarios.
+-->
+<section class="solicitudes solicitar sin-js" data-solicitudes data-solicitar aria-labelledby="titulo-solicitar">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/solicitar-apoyo.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/solicitar-apoyo.js}" defer></script>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <!-- Encabezado -->
+    <header class="solicitar__encabezado">
+        <a th:href="@{/voluntarios}" class="solicitar__volver" data-volver aria-label="Volver a la búsqueda">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        </a>
+        <div>
+            <span class="solicitudes__etiqueta">Red de apoyo</span>
+            <h1 id="titulo-solicitar">Solicitar apoyo</h1>
+            <p>Cuéntale al voluntario en qué necesitas ayuda y elige uno de sus horarios libres.</p>
+        </div>
+    </header>
+
+    <!-- Error del servidor (falta un campo o el horario ya se ocupó) -->
+    <div th:if="${error}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
+        <span th:text="${error}">El horario que elegiste ya no está disponible.</span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <div class="solicitar__grid">
+
+        <div class="solicitar__principal">
+
+            <!-- Voluntario elegido -->
+            <article class="voluntario-elegido" aria-labelledby="nombre-voluntario">
+                <span class="voluntario-elegido__avatar" aria-hidden="true"
+                      th:text="${#strings.toUpperCase(#strings.substring(nombreVoluntario, 0, 1))}">D</span>
+                <div class="voluntario-elegido__info">
+                    <p class="voluntario-elegido__rol">Voluntario</p>
+                    <h2 id="nombre-voluntario" th:text="${nombreVoluntario}">Daniel Blandón</h2>
+                    <p class="voluntario-elegido__programa"
+                       th:text="'Estudiante de ' + ${voluntario.estudiante.programaAcademico}">Estudiante de Ingeniería de Sistemas</p>
+                    <ul class="voluntario-elegido__chips" aria-label="Materias y tipos de apoyo del voluntario">
+                        <li th:each="m : ${voluntario.materias}" th:text="${m.nombre}">Cálculo</li>
+                        <li th:each="t : ${voluntario.tiposApoyo}" class="chip-apoyo"
+                            th:text="${etiquetasApoyo.get(t.name())}">Tutoría</li>
+                    </ul>
+                </div>
+            </article>
+
+            <form class="solicitar__formulario" th:action="@{/solicitudes/nueva}" method="post"
+                  novalidate data-formulario-solicitud>
+                <input type="hidden" name="voluntario" th:value="${voluntario.id}">
+
+                <!-- 1. Materia -->
+                <fieldset class="paso-solicitud" data-paso="materia">
+                    <legend class="paso-solicitud__titulo">
+                        <span class="paso-solicitud__numero" aria-hidden="true">
+                            <span class="paso-solicitud__numero-texto">1</span>
+                            <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span><strong>Materia</strong><small>¿En qué materia necesitas apoyo?</small></span>
+                    </legend>
+                    <div class="opciones-solicitud">
+                        <label class="opcion-solicitud" th:each="m : ${voluntario.materias}">
+                            <input type="radio" name="materia" th:value="${m.codigo}"
+                                   th:checked="${materiaElegida == m.codigo}" th:attr="data-texto=${m.nombre}">
+                            <span class="opcion-solicitud__marca" aria-hidden="true"></span>
+                            <span class="opcion-solicitud__texto">
+                                <strong th:text="${m.nombre}">Cálculo Diferencial</strong>
+                                <small th:text="${m.codigo}">MAT101</small>
+                            </span>
+                        </label>
+                    </div>
+                    <p class="paso-solicitud__error" data-error="materia" hidden>Elige una materia.</p>
+                </fieldset>
+
+                <!-- 2. Tema -->
+                <div class="paso-solicitud" data-paso="tema" role="group" aria-labelledby="titulo-tema">
+                    <p class="paso-solicitud__titulo" id="titulo-tema">
+                        <span class="paso-solicitud__numero" aria-hidden="true">
+                            <span class="paso-solicitud__numero-texto">2</span>
+                            <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span><strong>Tema</strong><small>Escribe el tema puntual que quieres trabajar.</small></span>
+                    </p>
+                    <label class="campo-tema">
+                        <span class="solicitudes__sr-only">Tema que quieres trabajar</span>
+                        <input type="text" name="tema" th:value="${temaEscrito}" th:attr="maxlength=${largoMaximoTema}"
+                               placeholder="Ej.: derivadas con la regla de la cadena" autocomplete="off"
+                               aria-describedby="contador-tema" data-campo-tema>
+                    </label>
+                    <p class="campo-tema__contador" id="contador-tema" data-contador-tema>
+                        <span data-caracteres>0</span> / <span th:text="${largoMaximoTema}">150</span>
+                    </p>
+                    <p class="paso-solicitud__error" data-error="tema" hidden>Escribe el tema que quieres trabajar.</p>
+                </div>
+
+                <!-- 3. Tipo de apoyo -->
+                <fieldset class="paso-solicitud" data-paso="tipo">
+                    <legend class="paso-solicitud__titulo">
+                        <span class="paso-solicitud__numero" aria-hidden="true">
+                            <span class="paso-solicitud__numero-texto">3</span>
+                            <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span><strong>Tipo de apoyo</strong><small>Solo aparecen los que ofrece este voluntario.</small></span>
+                    </legend>
+                    <div class="opciones-solicitud">
+                        <label class="opcion-solicitud" th:each="t : ${voluntario.tiposApoyo}">
+                            <input type="radio" name="tipo" th:value="${t.name()}"
+                                   th:checked="${tipoElegido == t.name()}" th:attr="data-texto=${etiquetasApoyo.get(t.name())}">
+                            <span class="opcion-solicitud__marca" aria-hidden="true"></span>
+                            <span class="opcion-solicitud__texto">
+                                <strong th:text="${etiquetasApoyo.get(t.name())}">Tutoría</strong>
+                            </span>
+                        </label>
+                    </div>
+                    <p class="paso-solicitud__error" data-error="tipo" hidden>Elige un tipo de apoyo.</p>
+                </fieldset>
+
+                <!-- 4. Horario (de la disponibilidad del voluntario) -->
+                <fieldset class="paso-solicitud" data-paso="horario">
+                    <legend class="paso-solicitud__titulo">
+                        <span class="paso-solicitud__numero" aria-hidden="true">
+                            <span class="paso-solicitud__numero-texto">4</span>
+                            <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span>
+                            <strong>Horarios disponibles</strong>
+                            <small th:text="'Horarios libres del voluntario en los próximos ' + ${diasDeHorarios} + ' días.'">Horarios libres</small>
+                        </span>
+                    </legend>
+
+                    <p th:if="${#maps.isEmpty(horariosPorDia)}" class="horarios__vacio">
+                        Este voluntario no tiene horarios libres en los próximos días. Prueba con otro voluntario.
+                    </p>
+
+                    <div class="horarios" th:unless="${#maps.isEmpty(horariosPorDia)}">
+                        <div class="horarios__dia" th:each="dia : ${horariosPorDia}">
+                            <p class="horarios__fecha"
+                               th:text="${#strings.capitalize(#temporals.format(dia.key, 'EEEE d ''de'' MMMM', idioma))}">Lunes 23 de noviembre</p>
+                            <div class="horarios__opciones">
+                                <label class="horario" th:each="h : ${dia.value}">
+                                    <input type="radio" name="horario"
+                                           th:value="${h.inicio.toString()}"
+                                           th:checked="${horarioElegido == h.inicio.toString()}"
+                                           th:attr="data-texto=${#strings.capitalize(#temporals.format(h.inicio, 'EEE d MMM', idioma))} + ', ' + ${#temporals.format(h.inicio, 'h:mm a', idioma)} + ' – ' + ${#temporals.format(h.fin, 'h:mm a', idioma)}">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                                    <span th:text="${#temporals.format(h.inicio, 'h:mm a', idioma)} + ' – ' + ${#temporals.format(h.fin, 'h:mm a', idioma)}">2:00 p. m. – 4:00 p. m.</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="paso-solicitud__error" data-error="horario" hidden>Elige uno de los horarios.</p>
+                </fieldset>
+
+                <!-- 5. Modalidad -->
+                <fieldset class="paso-solicitud" data-paso="modalidad">
+                    <legend class="paso-solicitud__titulo">
+                        <span class="paso-solicitud__numero" aria-hidden="true">
+                            <span class="paso-solicitud__numero-texto">5</span>
+                            <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span><strong>Modalidad</strong><small>¿Cómo prefieres el acompañamiento?</small></span>
+                    </legend>
+                    <div class="opciones-solicitud opciones-solicitud--modalidad">
+                        <label class="opcion-solicitud opcion-solicitud--grande">
+                            <input type="radio" name="modalidad" value="PRESENCIAL"
+                                   th:checked="${modalidadElegida == 'PRESENCIAL'}" data-texto="Presencial">
+                            <span class="opcion-solicitud__marca" aria-hidden="true"></span>
+                            <span class="opcion-solicitud__icono" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg>
+                            </span>
+                            <span class="opcion-solicitud__texto">
+                                <strong>Presencial</strong>
+                                <small>En la universidad.</small>
+                            </span>
+                        </label>
+                        <label class="opcion-solicitud opcion-solicitud--grande">
+                            <input type="radio" name="modalidad" value="VIRTUAL"
+                                   th:checked="${modalidadElegida == 'VIRTUAL'}" data-texto="Por WhatsApp">
+                            <span class="opcion-solicitud__marca" aria-hidden="true"></span>
+                            <span class="opcion-solicitud__icono" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12Z"/></svg>
+                            </span>
+                            <span class="opcion-solicitud__texto">
+                                <strong>Por WhatsApp</strong>
+                                <small>Virtual, por llamada o chat.</small>
+                            </span>
+                        </label>
+                    </div>
+                    <p class="paso-solicitud__error" data-error="modalidad" hidden>Elige la modalidad.</p>
+                </fieldset>
+
+                <div class="solicitar__envio">
+                    <button type="submit" class="boton-accion boton-accion--enviar"
+                            th:disabled="${#maps.isEmpty(horariosPorDia)}" data-enviar>
+                        <span data-enviar-texto>Enviar solicitud</span>
+                        <svg class="boton-accion__flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Columna lateral: resumen que se llena mientras se elige -->
+        <aside class="solicitar__lateral" aria-label="Resumen de tu solicitud">
+            <div class="resumen-solicitud">
+                <h2>Resumen de tu solicitud</h2>
+                <dl>
+                    <div><dt>Voluntario</dt><dd th:text="${nombreVoluntario}">Daniel</dd></div>
+                    <div><dt>Materia</dt><dd data-resumen="materia">Sin elegir</dd></div>
+                    <div><dt>Tema</dt><dd data-resumen="tema">Sin escribir</dd></div>
+                    <div><dt>Tipo de apoyo</dt><dd data-resumen="tipo">Sin elegir</dd></div>
+                    <div><dt>Horario</dt><dd data-resumen="horario">Sin elegir</dd></div>
+                    <div><dt>Modalidad</dt><dd data-resumen="modalidad">Sin elegir</dd></div>
+                </dl>
+                <div class="resumen-solicitud__progreso" aria-hidden="true">
+                    <span data-progreso></span>
+                </div>
+                <p class="resumen-solicitud__pasos"><span data-pasos-listos>0</span> de 5 pasos listos</p>
+            </div>
+
+            <div class="despues-solicitud">
+                <h2>¿Qué pasa después?</h2>
+                <ol>
+                    <li>Tu solicitud queda <strong>pendiente</strong>.</li>
+                    <li>El voluntario la acepta o la rechaza.</li>
+                    <li>Ves su respuesta en <strong>Mis acompañamientos</strong>.</li>
+                </ol>
+            </div>
+        </aside>
+    </div>
+</section>
+
+</body>
+</html>
