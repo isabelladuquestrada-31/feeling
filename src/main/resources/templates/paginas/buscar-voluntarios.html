@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Buscar voluntarios | Feeling', ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar voluntarios | Feeling</title>
+</head>
+<body>
+
+<section class="solicitudes busqueda sin-js" data-solicitudes aria-labelledby="titulo-busqueda">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/voluntarios.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+
+    <!-- Encabezado -->
+    <header class="solicitudes__encabezado">
+        <span class="solicitudes__etiqueta">Red de apoyo</span>
+        <h1 id="titulo-busqueda">Buscar voluntarios</h1>
+        <p>Encuentra estudiantes voluntarios que te pueden acompañar en la materia que necesitas.</p>
+    </header>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <!-- Filtros: se aplican solos al cambiar una opción; el botón sirve si no hay JavaScript -->
+    <form class="busqueda__filtros" th:action="@{/voluntarios}" method="get"
+          role="search" aria-label="Filtrar voluntarios" data-busqueda>
+
+        <div class="busqueda__campo">
+            <label for="filtro-materia">Materia</label>
+            <select id="filtro-materia" name="materia" data-autoenviar>
+                <option value="">Todas las materias</option>
+                <option th:each="m : ${materias}"
+                        th:value="${m.valor}"
+                        th:text="${m.etiqueta}"
+                        th:selected="${m.valor == materiaSeleccionada}">Materia</option>
+            </select>
+        </div>
+
+        <div class="busqueda__campo">
+            <label for="filtro-tipo">Tipo de apoyo</label>
+            <select id="filtro-tipo" name="tipo" data-autoenviar>
+                <option value="">Todos los tipos de apoyo</option>
+                <option th:each="t : ${tiposApoyo}"
+                        th:value="${t.valor}"
+                        th:text="${t.etiqueta}"
+                        th:selected="${t.valor == tipoSeleccionado}">Tipo</option>
+            </select>
+        </div>
+
+        <div class="busqueda__acciones">
+            <button type="submit" class="boton-accion boton-accion--buscar">Buscar</button>
+            <a th:if="${materiaSeleccionada != '' or tipoSeleccionado != ''}"
+               th:href="@{/voluntarios}" class="boton-accion boton-accion--limpiar">Limpiar</a>
+        </div>
+    </form>
+
+    <!-- Resultados -->
+    <div class="busqueda__resultados" data-resultados>
+
+        <p th:unless="${#lists.isEmpty(voluntarios)}" class="busqueda__resumen" role="status">
+            <strong th:text="${#lists.size(voluntarios)}">0</strong>
+            <span th:text="${#lists.size(voluntarios) == 1} ? 'voluntario disponible' : 'voluntarios disponibles'">voluntarios disponibles</span>
+        </p>
+
+        <!-- Sin resultados (caso de fallo) -->
+        <div th:if="${#lists.isEmpty(voluntarios)}" class="busqueda__vacio" role="status">
+            <h2>No encontramos voluntarios con esos filtros</h2>
+            <p>Prueba con otra materia u otro tipo de apoyo.</p>
+            <a th:if="${materiaSeleccionada != '' or tipoSeleccionado != ''}"
+               th:href="@{/voluntarios}" class="boton-accion boton-accion--buscar">Ver todos los voluntarios</a>
+        </div>
+
+        <!-- Tarjetas de voluntarios (sin WhatsApp, como pide RF-07) -->
+        <ul th:unless="${#lists.isEmpty(voluntarios)}" class="voluntarios__lista">
+            <li th:each="v : ${voluntarios}" class="solicitudes__item">
+                <article class="tarjeta-voluntario" th:attr="aria-labelledby='voluntario-' + ${v.id}">
+
+                    <div class="tarjeta-voluntario__cabecera">
+                        <span class="tarjeta-voluntario__avatar" aria-hidden="true"
+                              th:text="${#strings.toUpperCase(#strings.substring(v.nombre, 0, 1))}">V</span>
+                        <div>
+                            <h2 th:id="'voluntario-' + ${v.id}" th:text="${v.nombre}">Nombre</h2>
+                            <p class="tarjeta-voluntario__programa" th:text="${v.programa}">Programa</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-voluntario__grupo">
+                        <h3>Materias</h3>
+                        <ul class="etiquetas">
+                            <li th:each="materia : ${v.materias}" class="etiqueta etiqueta--materia"
+                                th:text="${materia}">Materia</li>
+                        </ul>
+                    </div>
+
+                    <div class="tarjeta-voluntario__grupo">
+                        <h3>Tipo de apoyo</h3>
+                        <ul class="etiquetas">
+                            <li th:each="apoyo : ${v.tiposApoyo}" class="etiqueta etiqueta--apoyo"
+                                th:text="${apoyo}">Tutoría</li>
+                        </ul>
+                    </div>
+
+                    <div class="tarjeta-voluntario__grupo">
+                        <h3>Días disponibles</h3>
+                        <ul class="etiquetas">
+                            <li th:each="dia : ${v.dias}" class="etiqueta etiqueta--dia"
+                                th:text="${dia}">Lunes</li>
+                            <li th:if="${#lists.isEmpty(v.dias)}" class="etiqueta etiqueta--vacia">
+                                Sin horarios registrados
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- RF-08: lleva al formulario de solicitud (lo hace Yeymi) -->
+                    <div class="tarjeta-voluntario__accion">
+                        <a th:href="@{/solicitudes/nueva(voluntario=${v.id})}"
+                           class="boton-accion boton-accion--solicitar"
+                           th:attr="aria-label='Solicitar acompañamiento a ' + ${v.nombre}">Solicitar acompañamiento</a>
+                    </div>
+
+                </article>
+            </li>
+        </ul>
+    </div>
+
+</section>
+
+</body>
+</html>
