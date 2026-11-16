@@ -215,8 +215,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const field = fields.correo;
         const error = errorElements.correo;
 
+        // El formulario de registro no pide correo: si el campo no existe,
+        // esta validación no debe bloquear el envío.
         if (!field) {
-            return false;
+            return true;
         }
 
         const email = getValue(field);
