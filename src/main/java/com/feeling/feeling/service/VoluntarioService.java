@@ -4,6 +4,7 @@ import com.feeling.feeling.repository.IMateriaRepository;
 import com.feeling.feeling.repository.IVoluntarioRepository;
 import com.feeling.feeling.repository.UsuarioRepository;
 import com.feeling.feeling.service.VoluntarioService;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * @author Isabella Duque
  * @version 1.0
  */
+@Service
 public class VoluntarioService {
     private final UsuarioRepository usuarioRepository;
     private final IMateriaRepository materiaRepository;
