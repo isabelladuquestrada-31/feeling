@@ -4,6 +4,7 @@ import com.feeling.feeling.model.Administrador;
 import com.feeling.feeling.model.Estudiante;
 import com.feeling.feeling.model.Solicitud;
 import com.feeling.feeling.model.Voluntario;
+import com.feeling.feeling.service.ContactoSolicitudService;
 import com.feeling.feeling.service.PanelService;
 import com.feeling.feeling.service.SolicitudService;
 import com.feeling.feeling.service.VoluntarioService;
@@ -13,8 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -51,18 +54,26 @@ public class SolicitudController {
     private final PanelService panelService;
 
     /**
+     * Servicio que entrega el WhatsApp de la otra parte (RNF-01, SCRUM-84).
+     */
+    private final ContactoSolicitudService contactoSolicitudService;
+
+    /**
      * Crea el controlador con los servicios que le entrega Spring.
      *
-     * @param solicitudService  servicio de solicitudes
-     * @param voluntarioService servicio de voluntarios
-     * @param panelService      nombres de estudiantes y materias
+     * @param solicitudService         servicio de solicitudes
+     * @param voluntarioService        servicio de voluntarios
+     * @param panelService             nombres de estudiantes y materias
+     * @param contactoSolicitudService contacto de WhatsApp de la otra parte
      */
     public SolicitudController(SolicitudService solicitudService,
                                VoluntarioService voluntarioService,
-                               PanelService panelService) {
+                               PanelService panelService,
+                               ContactoSolicitudService contactoSolicitudService) {
         this.solicitudService = solicitudService;
         this.voluntarioService = voluntarioService;
         this.panelService = panelService;
+        this.contactoSolicitudService = contactoSolicitudService;
     }
 
     /**
@@ -154,11 +165,16 @@ public class SolicitudController {
         List<Solicitud> recibidas = voluntario
                 .map(v -> solicitudService.solicitudesRecibidas(v.getId()))
                 .orElse(List.of());
+        List<Solicitud> aceptadas = voluntario
+                .map(v -> solicitudService.proximosAceptadosDelVoluntario(v.getId()))
+                .orElse(List.of());
+        List<Integer> estudiantes = new ArrayList<>(recibidas.stream().map(Solicitud::getEstudianteId).toList());
+        aceptadas.forEach(s -> estudiantes.add(s.getEstudianteId()));
 
         model.addAttribute("esVoluntario", voluntario.isPresent());
         model.addAttribute("solicitudesRecibidas", recibidas);
-        model.addAttribute("nombresEstudiantes",
-                panelService.nombresDeEstudiantes(recibidas.stream().map(Solicitud::getEstudianteId).toList()));
+        model.addAttribute("aceptadas", aceptadas);
+        model.addAttribute("nombresEstudiantes", panelService.nombresDeEstudiantes(estudiantes));
         model.addAttribute("nombresMaterias", panelService.nombresDeMaterias());
         model.addAttribute("etiquetasApoyo", SerVoluntarioController.etiquetasDeApoyo());
         model.addAttribute("idioma", ESPANOL);
@@ -220,5 +236,35 @@ public class SolicitudController {
             redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
         }
         return REDIRECCION_RECIBIDAS;
+    }
+
+    /**
+     * RF-11: abre el chat de WhatsApp con la otra parte de una solicitud aceptada.
+     * El número no se escribe en la página: solo se entrega aquí, después de revisar
+     * que la solicitud esté aceptada y que la pida una de las dos partes (RNF-01).
+     *
+     * @param id                 id de la solicitud
+     * @param volver             página a la que se vuelve si no se puede: recibidas, inicio o acompanamientos
+     * @param sesion             sesión con el estudiante o el voluntario
+     * @param redirectAttributes motivo si no se puede ver el contacto
+     * @return redirección a https://wa.me/57NUMERO, o a la página de origen con el motivo
+     */
+    @GetMapping("/solicitudes/{id}/whatsapp")
+    public String whatsapp(@PathVariable Integer id,
+                           @RequestParam(name = "volver", required = false) String volver,
+                           HttpSession sesion, RedirectAttributes redirectAttributes) {
+        Optional<Estudiante> estudiante = estudianteDeLaSesion(sesion);
+        if (estudiante.isEmpty()) {
+            return redireccionSinEstudiante(sesion);
+        }
+        try {
+            return "redirect:" + contactoSolicitudService.enlaceWhatsapp(id, estudiante.get().getId());
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
+            if ("recibidas".equals(volver)) {
+                return REDIRECCION_RECIBIDAS;
+            }
+            return "inicio".equals(volver) ? "redirect:/inicio" : "redirect:/mis-acompanamientos";
+        }
     }
 }

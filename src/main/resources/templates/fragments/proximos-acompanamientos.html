@@ -44,6 +44,15 @@
                         <span th:text="${#temporals.format(s.fechaProgramada, 'hh:mm a')}">02:00 p. m.</span>
                         <span th:text="${#strings.capitalize(#strings.toLowerCase(s.modalidad))}">Virtual</span>
                     </p>
+                    <!-- RF-11: contacto con el voluntario (la solicitud está aceptada) -->
+                    <div class="tarjeta-proximo__contacto">
+                        <a th:href="@{/solicitudes/{id}/whatsapp(id=${s.id}, volver='acompanamientos')}" target="_blank" rel="noopener"
+                                   class="boton-whatsapp"
+                                   th:attr="aria-label='Contactar por WhatsApp (se abre en otra pestaña): ' + ${s.tema}">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12Z"/><path d="M9 9.5c.4 2.2 2.3 4.1 4.5 4.5"/></svg>
+                                    Contactar por WhatsApp
+                                </a>
+                    </div>
                 </div>
 
             </article>

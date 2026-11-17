@@ -33,6 +33,13 @@
                 aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
 
+    <!-- Mensaje si no se pudo abrir el contacto de WhatsApp (RF-11) -->
+    <div th:if="${mensajeError}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
     <div class="panel__grid">
 
         <div class="panel__principal">
@@ -175,7 +182,14 @@
                                   th:classappend="${s.estado.name() == 'ACEPTADA'} ? ' estado--aceptada' : ' estado--pendiente'"
                                   th:text="${s.estado.name() == 'ACEPTADA'} ? 'Aceptada' : 'Pendiente'">Pendiente</span>
 
-                            <a th:href="@{/mis-acompanamientos}" class="proxima__detalle">
+                            <a th:if="${s.estado.name() == 'ACEPTADA'}"
+                               th:href="@{/solicitudes/{id}/whatsapp(id=${s.id}, volver='inicio')}" target="_blank" rel="noopener"
+                               class="boton-whatsapp boton-whatsapp--pequeno proxima__whatsapp"
+                               th:attr="aria-label='Contactar por WhatsApp (se abre en otra pestaña): ' + ${s.tema}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12Z"/><path d="M9 9.5c.4 2.2 2.3 4.1 4.5 4.5"/></svg>
+                                WhatsApp
+                            </a>
+                            <a th:unless="${s.estado.name() == 'ACEPTADA'}" th:href="@{/mis-acompanamientos}" class="proxima__detalle">
                                 Ver detalle
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
                             </a>

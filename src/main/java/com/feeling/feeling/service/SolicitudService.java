@@ -163,6 +163,21 @@ public class SolicitudService {
     }
 
     /**
+     * RF-11: devuelve los próximos acompañamientos que el voluntario aceptó,
+     * del más cercano al más lejano, para mostrarle el botón de WhatsApp.
+     *
+     * @param voluntarioId id del voluntario (tabla voluntario)
+     * @return solicitudes aceptadas que todavía no han pasado
+     */
+    public List<Solicitud> proximosAceptadosDelVoluntario(Integer voluntarioId) {
+        return solicitudRepository.findByVoluntarioIdAndEstadoInAndFechaProgramadaAfter(
+                        voluntarioId, List.of(EstadoSolicitud.ACEPTADA), LocalDateTime.now())
+                .stream()
+                .sorted(Comparator.comparing(Solicitud::getFechaProgramada))
+                .toList();
+    }
+
+    /**
      * Inicio del estudiante (SCRUM-53): devuelve sus próximas solicitudes
      * pendientes o aceptadas, de la más cercana a la más lejana.
      *
