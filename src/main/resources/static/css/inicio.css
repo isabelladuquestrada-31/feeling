@@ -1,11 +1,71 @@
+/**
+ * PROYECTO: FEELING
+ * MÓDULO: Página pública
+ * ARCHIVO: inicio.css
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 3.0.0
+ * FECHA DE DOCUMENTACIÓN: 16 de noviembre de 2026
+ * ESTADO: En desarrollo
+ *
+ * DESCRIPCIÓN:
+ * Hoja de estilos encargada de definir la presentación visual, distribución
+ * de componentes y comportamiento adaptable de la página pública de Feeling.
+ *
+ * OBJETIVO:
+ * Proporcionar una interfaz visual coherente, organizada, accesible y
+ * adaptable a diferentes tamaños de pantalla, manteniendo la identidad
+ * gráfica de la plataforma.
+ *
+ * ESTRUCTURA Y FUNCIONALIDADES:
+ * - Configuración general y presentación de la página.
+ * - Estilos para encabezados, etiquetas y botones.
+ * - Diseño del encabezado y navegación principal.
+ * - Presentación del banner principal y sus recursos gráficos.
+ * - Diseño de las secciones informativas de la plataforma.
+ * - Presentación de los tipos de apoyo ofrecidos.
+ * - Visualización de beneficios y llamada a la acción.
+ * - Animaciones y transiciones visuales.
+ * - Adaptación responsive para escritorio, tabletas y celulares.
+ * - Compatibilidad con la preferencia de movimiento reducido.
+ *
+ * TECNOLOGÍAS:
+ * - CSS3.
+ * - Variables personalizadas de CSS.
+ * - Flexbox.
+ * - CSS Grid.
+ * - Media Queries.
+ * - Animaciones y transiciones CSS.
+ *
+ * DEPENDENCIAS:
+ * - global.css: definición de variables y estilos generales del proyecto.
+ * - Elementos HTML de la página de inicio.
+ * - Recursos gráficos ubicados en el directorio público de imágenes.
+ *
+ * OBSERVACIONES:
+ * Los nombres de las clases CSS deben coincidir con los utilizados
+ * en el documento HTML y los puntos de interrupción responsive deben
+ * mantenerse sincronizados con la lógica del menú implementada en inicio.js.
+ *
+ */
 
-/* Estilos de la página pública de Feeling. */
 
-/* Configuración general de la página */
+/* 1. CONFIGURACIÓN GENERAL DE LA PÁGINA
+   
+   Establece las reglas generales de desplazamiento, tipografía, colores,
+   imágenes y dimensiones del contenedor principal.
+
+   Las variables utilizadas se encuentran definidas en las hojas de estilos
+   generales del proyecto.
+   */
+/* Configuración del desplazamiento vertical y separación de anclas. */
 
 html {
-    scroll-padding-top: 110px;
+    scroll-behavior: smooth;
+    scroll-padding-top: 120px;
 }
+
+/* Estilos base aplicados exclusivamente a la página pública de Feeling. */
 
 .pagina-inicio {
     font-family: var(--font-main);
@@ -13,6 +73,8 @@ html {
     background-color: var(--color-text-light);
     line-height: 1.5;
 }
+
+/* Elimina el subrayado predeterminado de los enlaces de la página. */
 
 .pagina-inicio a {
     text-decoration: none;
@@ -22,17 +84,28 @@ html {
     text-decoration: none;
 }
 
+/* Garantiza que las imágenes se adapten al ancho de sus contenedores. */
+
 .pagina-inicio img {
     max-width: 100%;
     height: auto;
 }
+
+/* Contenedor reutilizable para mantener el contenido centrado
+   y limitar su ancho máximo en pantallas grandes. */
 
 .contenedor {
     width: min(1160px, calc(100% - 48px));
     margin: 0 auto;
 }
 
-/* Encabezados de sección */
+
+/* 2. ENCABEZADOS DE SECCIÓN
+  
+   Define la presentación de las etiquetas identificadoras, títulos
+   y descripciones que introducen las diferentes secciones informativas.
+   */
+/* Etiqueta visual utilizada para identificar el tema de cada sección. */
 
 .etiqueta-seccion {
     display: inline-flex;
@@ -47,16 +120,22 @@ html {
     letter-spacing: 0.3px;
 }
 
+/* Contenedor general del encabezado de cada sección. */
+
 .encabezado-seccion {
     max-width: 760px;
     margin-bottom: 45px;
 }
+
+/* Variante que centra horizontalmente el encabezado y su contenido. */
 
 .encabezado-seccion--centrado {
     margin-right: auto;
     margin-left: auto;
     text-align: center;
 }
+
+/* Estilos de los títulos principales de las secciones. */
 
 .encabezado-seccion h2 {
     margin: 18px 0 15px;
@@ -66,9 +145,13 @@ html {
     line-height: 1.15;
 }
 
+/* Permite destacar una parte del título mediante el color principal. */
+
 .encabezado-seccion h2 span {
     color: var(--color-primary);
 }
+
+/* Estilos para los textos descriptivos de las secciones. */
 
 .encabezado-seccion p {
     margin: 0;
@@ -77,7 +160,13 @@ html {
     line-height: 1.8;
 }
 
-/* Botones */
+
+/* 3. SISTEMA DE BOTONES
+   
+   Define los estilos compartidos de los botones de la página y sus variantes
+   visuales, incluyendo estados de interacción y transiciones.
+    */
+/* Estilos base de los botones de la página pública. */
 
 .pagina-inicio .boton {
     display: inline-flex;
@@ -92,12 +181,16 @@ html {
     font-weight: 800;
     text-align: center;
     transition: transform 0.25s ease, box-shadow 0.25s ease,
-                background-color 0.25s ease;
+        background-color 0.25s ease;
 }
+
+/* Efecto de elevación al pasar el cursor sobre un botón. */
 
 .pagina-inicio .boton:hover {
     transform: translateY(-3px);
 }
+
+/* Variante principal: utiliza el color de identidad de Feeling. */
 
 .pagina-inicio .boton--principal {
     color: var(--color-text-light);
@@ -105,9 +198,13 @@ html {
     box-shadow: var(--shadow-soft);
 }
 
+/* Estado hover del botón principal. */
+
 .pagina-inicio .boton--principal:hover {
     background-color: var(--color-primary-dark);
 }
+
+/* Variante secundaria: utiliza un fondo claro y un borde discreto. */
 
 .pagina-inicio .boton--secundario {
     color: var(--color-navy);
@@ -115,15 +212,21 @@ html {
     background-color: var(--color-text-light);
 }
 
+/* Estado hover del botón secundario. */
+
 .pagina-inicio .boton--secundario:hover {
     color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
+/* Variante de mayor tamaño para acciones destacadas. */
+
 .pagina-inicio .boton--grande {
     padding: 15px 26px;
     font-size: 1rem;
 }
+
+/* Variante con fondo blanco para secciones de colores intensos. */
 
 .pagina-inicio .boton--blanco {
     color: var(--color-primary);
@@ -131,15 +234,23 @@ html {
     box-shadow: var(--shadow-soft);
 }
 
+/* Estado hover de la variante blanca. */
+
 .pagina-inicio .boton--blanco:hover {
     background-color: var(--color-surface);
 }
 
-/* Encabezado y navegación */
+
+/* 4. ENCABEZADO Y NAVEGACIÓN PRINCIPAL
+  
+   Establece la estructura visual del encabezado de la página, la ubicación
+   del logotipo, los enlaces de navegación y las acciones de acceso.
+    */
+/* Encabezado fijo en la parte superior de la ventana del navegador. */
 
 .inicio-header {
-    position: absolute;
-    top: 24px;
+    position: fixed;
+    top: 25px;
     left: 50%;
     z-index: 1000;
     width: calc(100% - 52px);
@@ -150,6 +261,8 @@ html {
     box-shadow: var(--shadow-soft);
     transform: translateX(-50%);
 }
+
+/* Distribución horizontal de los elementos internos del encabezado. */
 
 .inicio-header__contenedor {
     display: flex;
@@ -162,11 +275,15 @@ html {
     padding: 10px 30px;
 }
 
+/* Contenedor del logotipo. */
+
 .inicio-logo {
     display: flex;
     align-items: center;
     flex-shrink: 0;
 }
+
+/* Control de dimensiones y ajuste del logotipo. */
 
 .inicio-logo img {
     width: 175px;
@@ -174,12 +291,16 @@ html {
     object-fit: contain;
 }
 
+/* Distribución de los enlaces de navegación. */
+
 .inicio-nav {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: clamp(18px, 3.5vw, 55px);
 }
+
+/* Estilos individuales de los enlaces de navegación. */
 
 .inicio-nav__enlace {
     position: relative;
@@ -189,6 +310,9 @@ html {
     font-weight: 700;
     transition: color 0.2s ease;
 }
+
+/* Elemento decorativo inferior utilizado como indicador visual
+   del enlace activo o del enlace sobre el que se encuentra el cursor. */
 
 .inicio-nav__enlace::after {
     position: absolute;
@@ -203,15 +327,21 @@ html {
     transition: width 0.25s ease;
 }
 
+/* Cambio de color para los enlaces activos o en estado hover. */
+
 .inicio-nav__enlace:hover,
 .inicio-nav__enlace.activo {
     color: var(--color-primary);
 }
 
+/* Expansión del indicador inferior de los enlaces. */
+
 .inicio-nav__enlace:hover::after,
 .inicio-nav__enlace.activo::after {
     width: 100%;
 }
+
+/* Contenedor de botones de acceso y registro. */
 
 .inicio-nav__acciones {
     display: flex;
@@ -219,6 +349,8 @@ html {
     flex-shrink: 0;
     gap: 12px;
 }
+
+/* Evita que el texto de los botones de navegación se divida en varias líneas. */
 
 .inicio-nav__acciones .boton {
     white-space: nowrap;
@@ -230,7 +362,13 @@ html {
     display: none;
 }
 
-/* Banner principal */
+
+/* 5. BANNER PRINCIPAL
+   
+   Define la sección inicial de presentación de Feeling. Incluye la imagen
+   de fondo, el contenedor del contenido, el título principal y la descripción.
+    */
+/* Contenedor principal del banner de bienvenida. */
 
 .banner-inicio {
     position: relative;
@@ -247,6 +385,8 @@ html {
     background-size: cover;
 }
 
+/* Panel semitransparente que contiene el texto y la acción principal. */
+
 .banner-inicio__contenedor {
     position: relative;
     width: min(500px, calc(100% - 52px));
@@ -254,18 +394,22 @@ html {
     margin-right: auto;
     margin-left: max(26px, calc((100% - 1540px) / 2));
     padding: 38px 42px;
-    background: rgba(255, 255, 255, 0.365);
+    background: rgba(255, 255, 255, 0.619);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-large);
     box-shadow: var(--shadow-soft);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     animation: inicio-aparecer 0.7s ease both;
 }
+
+/* Contenedor interno del contenido del banner. */
 
 .banner-inicio__contenido {
     width: 100%;
 }
+
+/* Título principal del banner, con dimensiones adaptables. */
 
 .banner-inicio__contenido h1 {
     margin: 18px 0;
@@ -275,10 +419,14 @@ html {
     line-height: 1.0;
 }
 
+/* Destaca la parte del título envuelta en un elemento span. */
+
 .banner-inicio__contenido h1 span {
     display: block;
     color: var(--color-primary);
 }
+
+/* Texto descriptivo que acompaña al título principal. */
 
 .banner-inicio__descripcion {
     max-width: 510px;
@@ -289,30 +437,44 @@ html {
     color: #1a2638;
 }
 
-/* Banner inferior */
+
+/* 6. BANNER INFERIOR DE CARACTERÍSTICAS
+   
+   Controla la presentación de la imagen informativa ubicada debajo
+   del banner principal.
+   */
+/* Contenedor centrado y limitado al ancho disponible. */
 
 .banner-caracteristicas {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 500px;
-    padding: 28px 35px;
-    overflow: hidden;
-    background-color: var(--color-background);
-    background-image: url("/img/Banner.jpeg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+    width: min(100%, calc(100% - 48px));
+    margin: 0 auto;
 }
 
-/* Presentación de Feeling */
+/* Mantiene la proporción de la imagen y evita desbordamientos. */
+
+.banner-caracteristicas img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 14px;
+}
+
+
+/* 7. SECCIÓN DE PRESENTACIÓN DE FEELING
+   
+   Define la distribución de la sección introductoria de la plataforma,
+   el bloque destacado y las tarjetas que describen sus principios.
+   */
+/* Contenedor general de la presentación. */
 
 .seccion-presentacion {
     padding: 100px 0;
     background-color: var(--color-text-light);
 }
+
+/* Bloque destacado que presenta el mensaje principal de la sección. */
 
 .presentacion-destacada {
     display: flex;
@@ -323,6 +485,8 @@ html {
     border-radius: var(--radius-large);
     background-color: var(--color-soft);
 }
+
+/* Contenedor visual del icono de presentación. */
 
 .presentacion-destacada__icono {
     display: flex;
@@ -338,11 +502,15 @@ html {
     box-shadow: var(--shadow-soft);
 }
 
+/* Título del bloque destacado. */
+
 .presentacion-destacada__texto h3 {
     margin: 0 0 10px;
     color: var(--color-navy);
     font-size: 1.5rem;
 }
+
+/* Descripción del bloque destacado. */
 
 .presentacion-destacada__texto p {
     margin: 0;
@@ -350,11 +518,15 @@ html {
     line-height: 1.8;
 }
 
+/* Distribución de las tarjetas en tres columnas. */
+
 .presentacion-tarjetas {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 22px;
 }
+
+/* Estilo general de las tarjetas informativas. */
 
 .tarjeta-presentacion {
     padding: 28px;
@@ -365,10 +537,14 @@ html {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Efecto de elevación al interactuar con una tarjeta. */
+
 .tarjeta-presentacion:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-soft);
 }
+
+/* Contenedor base de los iconos de las tarjetas. */
 
 .tarjeta-icono {
     display: flex;
@@ -382,26 +558,36 @@ html {
     font-weight: 800;
 }
 
+/* Variante cromática cian. */
+
 .tarjeta-icono--cian {
     color: var(--color-primary);
     background-color: var(--color-soft);
 }
+
+/* Variante cromática menta. */
 
 .tarjeta-icono--menta {
     color: var(--color-primary-dark);
     background-color: var(--color-surface);
 }
 
+/* Variante cromática azul. */
+
 .tarjeta-icono--azul {
     color: var(--color-navy);
     background-color: var(--color-background);
 }
+
+/* Títulos de las tarjetas de presentación. */
 
 .tarjeta-presentacion h3 {
     margin: 0 0 10px;
     color: var(--color-navy);
     font-size: 1.17rem;
 }
+
+/* Textos descriptivos de las tarjetas de presentación. */
 
 .tarjeta-presentacion p {
     margin: 0;
@@ -410,12 +596,20 @@ html {
     line-height: 1.7;
 }
 
-/* Funcionamiento de la plataforma */
+
+/* 8. SECCIÓN DE FUNCIONAMIENTO DE LA PLATAFORMA
+   
+   Presenta los pasos necesarios para utilizar Feeling mediante tarjetas
+   conectadas visualmente en una secuencia de tres etapas.
+    */
+/* Contenedor general de la sección. */
 
 .seccion-funcionamiento {
     padding: 100px 0;
     background-color: var(--color-background);
 }
+
+/* Distribución horizontal de las tarjetas y sus conectores. */
 
 .pasos-contenedor {
     display: grid;
@@ -423,6 +617,8 @@ html {
     align-items: center;
     gap: 18px;
 }
+
+/* Tarjeta individual correspondiente a cada paso. */
 
 .tarjeta-paso {
     position: relative;
@@ -437,9 +633,13 @@ html {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Efecto de elevación de las tarjetas de pasos. */
+
 .tarjeta-paso:hover {
     transform: translateY(-5px);
 }
+
+/* Numeración ubicada en la esquina superior de cada tarjeta. */
 
 .paso-numero {
     position: absolute;
@@ -450,6 +650,8 @@ html {
     font-size: 1.5rem;
     font-weight: 800;
 }
+
+/* Contenedor visual del icono de cada paso. */
 
 .paso-icono {
     display: flex;
@@ -464,21 +666,29 @@ html {
     font-size: 3rem;
 }
 
+/* Variante menta del icono. */
+
 .paso-icono--menta {
     color: var(--color-primary-dark);
     background-color: var(--color-surface);
 }
+
+/* Variante azul del icono. */
 
 .paso-icono--azul {
     color: var(--color-navy);
     background-color: var(--color-background);
 }
 
+/* Títulos de las tarjetas de pasos. */
+
 .tarjeta-paso h3 {
     margin: 0 0 12px;
     color: var(--color-navy);
     font-size: 1.25rem;
 }
+
+/* Descripciones de los pasos. */
 
 .tarjeta-paso p {
     margin: 0;
@@ -487,24 +697,36 @@ html {
     line-height: 1.7;
 }
 
+/* Elementos visuales que conectan los pasos de la secuencia. */
+
 .pasos-conector {
     color: var(--color-primary-light);
     font-size: 2rem;
     font-weight: 800;
 }
 
-/* Tipos de apoyo */
+
+/* 9. SECCIÓN DE TIPOS DE APOYO
+   
+   Define la presentación de las modalidades de acompañamiento ofrecidas
+   por Feeling, organizadas en tarjetas informativas.
+   */
+/* Contenedor general de la sección de apoyo. */
 
 .seccion-apoyo {
     padding: 100px 0;
     background-color: var(--color-text-light);
 }
 
+/* Distribución de las tarjetas en dos columnas. */
+
 .apoyo-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 26px;
 }
+
+/* Estilo general de las tarjetas de apoyo. */
 
 .tarjeta-apoyo {
     position: relative;
@@ -517,18 +739,26 @@ html {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Efecto de elevación al interactuar con una tarjeta de apoyo. */
+
 .tarjeta-apoyo:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-soft);
 }
 
+/* Fondo de la tarjeta correspondiente al apoyo académico. */
+
 .tarjeta-apoyo--academico {
     background-color: var(--color-surface);
 }
 
+/* Fondo de la tarjeta correspondiente a la orientación entre pares. */
+
 .tarjeta-apoyo--emocional {
     background-color: var(--color-soft);
 }
+
+/* Elemento decorativo circular ubicado detrás del contenido. */
 
 .tarjeta-apoyo__decoracion {
     position: absolute;
@@ -541,6 +771,8 @@ html {
     opacity: 0.12;
     pointer-events: none;
 }
+
+/* Icono identificador de cada modalidad de apoyo. */
 
 .tarjeta-apoyo__icono {
     position: relative;
@@ -558,6 +790,8 @@ html {
     box-shadow: var(--shadow-soft);
 }
 
+/* Etiqueta que identifica la categoría del contenido. */
+
 .tarjeta-apoyo__categoria {
     display: block;
     margin-bottom: 8px;
@@ -568,17 +802,23 @@ html {
     text-transform: uppercase;
 }
 
+/* Títulos principales de las tarjetas de apoyo. */
+
 .tarjeta-apoyo h3 {
     margin: 0 0 13px;
     color: var(--color-navy);
     font-size: 1.8rem;
 }
 
+/* Descripciones de las modalidades de apoyo. */
+
 .tarjeta-apoyo p {
     margin: 0 0 20px;
     color: var(--color-text-secondary);
     line-height: 1.8;
 }
+
+/* Distribución de los elementos de las listas en dos columnas. */
 
 .tarjeta-apoyo ul {
     display: grid;
@@ -589,11 +829,15 @@ html {
     list-style: none;
 }
 
+/* Presentación de cada elemento de las listas. */
+
 .tarjeta-apoyo li {
     color: var(--color-navy);
     font-size: 0.91rem;
     font-weight: 700;
 }
+
+/* Indicador visual de verificación antes de cada elemento. */
 
 .tarjeta-apoyo li::before {
     margin-right: 8px;
@@ -602,18 +846,29 @@ html {
     content: "✓";
 }
 
-/* Beneficios */
+
+/* 
+   10. SECCIÓN DE BENEFICIOS
+   
+   Organiza las ventajas principales de la plataforma mediante tarjetas
+   distribuidas en una cuadrícula de cuatro columnas.
+    */
+/* Contenedor general de la sección de beneficios. */
 
 .seccion-beneficios {
     padding: 100px 0;
     background-color: var(--color-background);
 }
 
+/* Cuadrícula de tarjetas de beneficios. */
+
 .beneficios-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
 }
+
+/* Estilo general de cada tarjeta de beneficios. */
 
 .tarjeta-beneficio {
     padding: 28px 23px;
@@ -623,10 +878,14 @@ html {
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Efecto de elevación al pasar el cursor sobre una tarjeta. */
+
 .tarjeta-beneficio:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-soft);
 }
+
+/* Contenedor visual de los iconos de beneficios. */
 
 .beneficio-icono {
     display: flex;
@@ -641,26 +900,36 @@ html {
     font-size: 2rem;
 }
 
+/* Variante cromática menta. */
+
 .beneficio-icono--menta {
     color: var(--color-primary-dark);
     background-color: var(--color-surface);
 }
 
-.beneficio-icono--azul {
+/* Variante de color azul claro. */
+
+.beneficio-icono {
     color: var(--color-navy);
-    background-color: var(--color-background);
+    background-color: #ddf5f7;
 }
+
+/* Variante cromática lila. */
 
 .beneficio-icono--lila {
     color: var(--color-primary);
     background-color: var(--color-surface);
 }
 
+/* Títulos de las tarjetas de beneficios. */
+
 .tarjeta-beneficio h3 {
     margin: 0 0 12px;
     color: var(--color-navy);
     font-size: 1.08rem;
 }
+
+/* Descripciones de los beneficios. */
 
 .tarjeta-beneficio p {
     margin: 0;
@@ -669,20 +938,27 @@ html {
     line-height: 1.7;
 }
 
-/* Invitación final */
+
+/* 
+   11. SECCIÓN DE INVITACIÓN FINAL
+   
+   Define el bloque de cierre de la página pública, diseñado para destacar
+   el mensaje de invitación y dirigir al usuario hacia la acción principal.
+    */
+/* Fondo degradado y distribución general de la sección. */
 
 .seccion-invitacion {
     position: relative;
     padding: 85px 24px;
     overflow: hidden;
     isolation: isolate;
-    background: linear-gradient(
-        120deg,
-        var(--color-primary-dark),
-        var(--color-primary)
-    );
+    background: linear-gradient(120deg,
+            var(--color-primary-dark),
+            var(--color-primary));
     text-align: center;
 }
+
+/* Elementos decorativos de fondo de la sección de invitación. */
 
 .invitacion-decoracion {
     position: absolute;
@@ -693,12 +969,16 @@ html {
     pointer-events: none;
 }
 
+/* Posicionamiento y dimensiones de la primera decoración. */
+
 .invitacion-decoracion--uno {
     top: -150px;
     left: -60px;
     width: 300px;
     height: 300px;
 }
+
+/* Posicionamiento y dimensiones de la segunda decoración. */
 
 .invitacion-decoracion--dos {
     right: -50px;
@@ -707,10 +987,14 @@ html {
     height: 260px;
 }
 
+/* Contenedor central del contenido de invitación. */
+
 .invitacion-contenido {
     max-width: 720px;
     margin: 0 auto;
 }
+
+/* Icono principal de la sección de invitación. */
 
 .invitacion-icono {
     display: flex;
@@ -725,12 +1009,16 @@ html {
     font-size: 2.7rem;
 }
 
+/* Título de cierre de la página. */
+
 .invitacion-contenido h2 {
     margin: 0 0 15px;
     color: var(--color-text-light);
     font-size: clamp(2rem, 4vw, 2.8rem);
     font-weight: 800;
 }
+
+/* Texto descriptivo que acompaña a la invitación. */
 
 .invitacion-contenido p {
     max-width: 600px;
@@ -740,7 +1028,13 @@ html {
     line-height: 1.8;
 }
 
-/* Animación de entrada */
+
+/* 12. ANIMACIONES
+   
+   Define la animación de entrada utilizada en el contenido del banner
+   principal para generar una aparición progresiva del elemento.
+    */
+/* Animación que combina transparencia y desplazamiento vertical. */
 
 @keyframes inicio-aparecer {
     from {
@@ -754,56 +1048,93 @@ html {
     }
 }
 
-/* Menú adaptable para tabletas y celulares */
+
+/* 13. ADAPTACIÓN PARA TABLETAS Y PANTALLAS MEDIANAS
+   
+   Ajusta las dimensiones, separaciones y distribución de los componentes
+   cuando el ancho de pantalla es igual o inferior a 1100 px.
+*/
 
 @media (max-width: 1100px) {
+
+    /* Reduce el espacio interno del encabezado. */
+
     .inicio-header__contenedor {
         gap: 18px;
         padding: 10px 20px;
     }
 
+    /* Reduce las dimensiones del logotipo. */
+
     .inicio-logo img {
         width: 145px;
     }
+
+    /* Ajusta la separación entre los enlaces de navegación. */
 
     .inicio-nav {
         gap: 20px;
     }
 
+    /* Reduce el tamaño de los textos de navegación. */
+
     .inicio-nav__enlace {
         font-size: 0.87rem;
     }
 
+    /* Reduce la separación entre las acciones del encabezado. */
+
     .inicio-nav__acciones {
         gap: 8px;
     }
+
+    /* Ajusta las dimensiones de los botones del encabezado. */
 
     .inicio-nav__acciones .boton {
         padding: 11px 15px;
         font-size: 0.85rem;
     }
 
+    /* Distribuye los beneficios en dos columnas. */
+
     .beneficios-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Reduce la separación entre los pasos del funcionamiento. */
+
     .pasos-contenedor {
         gap: 10px;
     }
+
+    /* Ajusta el espacio interno de las tarjetas de pasos. */
 
     .tarjeta-paso {
         padding: 30px 18px;
     }
 }
 
-/* Navegación móvil */
+
+/* 14. NAVEGACIÓN PARA DISPOSITIVOS MÓVILES
+   
+   Define la presentación del encabezado y el menú desplegable en pantallas
+   con un ancho máximo de 800 px.
+
+   Este breakpoint debe coincidir con el utilizado en inicio.js para
+   mantener sincronizados el comportamiento y la presentación del menú.
+*/
 
 @media (max-width: 800px) {
+
+    /* Ajusta la posición y dimensiones del encabezado móvil. */
+
     .inicio-header {
         top: 15px;
         width: calc(100% - 30px);
         border-radius: var(--radius-large);
     }
+
+    /* Reduce la altura del encabezado y adapta su contenido. */
 
     .inicio-header__contenedor {
         position: relative;
@@ -811,10 +1142,17 @@ html {
         padding: 10px 18px;
     }
 
+    /* Ajusta el tamaño del logotipo en dispositivos móviles. */
+
     .inicio-logo img {
         width: 135px;
         max-height: 55px;
     }
+
+    /*
+     * Presentación del botón hamburguesa.
+     * Este botón permite controlar la apertura y el cierre del menú móvil.
+     */
 
     .inicio-menu-boton {
         display: flex;
@@ -833,6 +1171,8 @@ html {
         cursor: pointer;
     }
 
+    /* Estilos de las tres líneas que componen el icono hamburguesa. */
+
     .inicio-menu-boton span,
     .inicio-menu-boton::before,
     .inicio-menu-boton::after {
@@ -845,17 +1185,25 @@ html {
         content: "";
     }
 
+    /* Oculta la línea central cuando el menú está abierto. */
+
     .inicio-menu-boton[aria-expanded="true"] span {
         opacity: 0;
     }
+
+    /* Transforma la línea superior para formar la primera parte de una X. */
 
     .inicio-menu-boton[aria-expanded="true"]::before {
         transform: translateY(8px) rotate(45deg);
     }
 
+    /* Transforma la línea inferior para completar la X. */
+
     .inicio-menu-boton[aria-expanded="true"]::after {
         transform: translateY(-8px) rotate(-45deg);
     }
+
+    /* Configuración inicial del menú desplegable móvil. */
 
     .inicio-nav {
         position: absolute;
@@ -873,25 +1221,36 @@ html {
         box-shadow: var(--shadow-soft);
     }
 
+    /* Muestra el menú cuando JavaScript agrega la clase "abierto"
+       o la clase alternativa "menu-abierto". */
+
     .inicio-nav.abierto,
     .inicio-nav.menu-abierto {
         display: flex;
     }
+
+    /* Ajusta el tamaño y espaciado de los enlaces móviles. */
 
     .inicio-nav__enlace {
         padding: 5px 0;
         font-size: 0.98rem;
     }
 
+    /* Organiza verticalmente las acciones de acceso y registro. */
+
     .inicio-nav__acciones {
         flex-direction: column;
         align-items: stretch;
     }
 
+    /* Permite que los botones ocupen todo el ancho del menú. */
+
     .inicio-nav__acciones .boton {
         width: 100%;
         justify-content: center;
     }
+
+    /* Ajusta las dimensiones y la posición del banner principal. */
 
     .banner-inicio {
         min-height: 690px;
@@ -899,15 +1258,21 @@ html {
         background-position: 58% center;
     }
 
+    /* Centra y adapta el panel de contenido del banner. */
+
     .banner-inicio__contenedor {
         width: calc(100% - 45px);
         margin: 0 auto;
         padding: 32px;
     }
 
+    /* Ajusta el tamaño del título principal. */
+
     .banner-inicio__contenido h1 {
         font-size: clamp(2.5rem, 7vw, 3.5rem);
     }
+
+    /* Organiza los pasos en una sola columna. */
 
     .pasos-contenedor {
         grid-template-columns: minmax(0, 1fr);
@@ -916,26 +1281,36 @@ html {
         margin: 0 auto;
     }
 
+    /* Elimina las restricciones de altura de las tarjetas de pasos. */
+
     .tarjeta-paso {
         min-height: auto;
     }
+
+    /* Rota los conectores para adaptarlos a la distribución vertical. */
 
     .pasos-conector {
         transform: rotate(90deg);
         text-align: center;
     }
-
-    .banner-caracteristicas {
-        padding: 30px 22px;
-    }
 }
 
-/* Ajustes para celulares */
+
+/* 15. AJUSTES PARA CELULARES
+   
+   Reduce espacios, tamaños tipográficos y dimensiones de componentes
+   para pantallas con un ancho máximo de 600 px.
+ */
 
 @media (max-width: 600px) {
+
+    /* Reduce el ancho del contenedor general en dispositivos pequeños. */
+
     .contenedor {
         width: min(calc(100% - 36px), 480px);
     }
+
+    /* Ajusta la posición y el ancho del encabezado. */
 
     .inicio-header {
         top: 12px;
@@ -943,20 +1318,28 @@ html {
         border-radius: var(--radius-medium);
     }
 
+    /* Reduce las dimensiones del contenedor de navegación. */
+
     .inicio-header__contenedor {
         min-height: 65px;
         padding: 8px 13px;
     }
+
+    /* Reduce el tamaño del logotipo. */
 
     .inicio-logo img {
         width: 120px;
         max-height: 48px;
     }
 
+    /* Ajusta las dimensiones del botón hamburguesa. */
+
     .inicio-menu-boton {
         width: 42px;
         height: 42px;
     }
+
+    /* Adapta el banner principal a la altura y ancho del dispositivo. */
 
     .banner-inicio {
         min-height: 680px;
@@ -964,18 +1347,26 @@ html {
         background-position: 58% center;
     }
 
+    /* Ajusta el panel de contenido del banner. */
+
     .banner-inicio__contenedor {
         width: calc(100% - 36px);
         padding: 26px 23px;
     }
 
+    /* Reduce el tamaño del título principal. */
+
     .banner-inicio__contenido h1 {
         font-size: clamp(2.2rem, 9vw, 2.8rem);
     }
 
+    /* Ajusta el tamaño del texto descriptivo del banner. */
+
     .banner-inicio__descripcion {
         font-size: 0.98rem;
     }
+
+    /* Reduce el espacio vertical de las principales secciones. */
 
     .seccion-presentacion,
     .seccion-funcionamiento,
@@ -984,17 +1375,25 @@ html {
         padding: 70px 0;
     }
 
+    /* Reduce la separación inferior de los encabezados. */
+
     .encabezado-seccion {
         margin-bottom: 30px;
     }
+
+    /* Adapta el tamaño de los títulos de sección. */
 
     .encabezado-seccion h2 {
         font-size: clamp(1.7rem, 7vw, 2rem);
     }
 
+    /* Ajusta el tamaño de las descripciones de sección. */
+
     .encabezado-seccion p {
         font-size: 0.98rem;
     }
+
+    /* Organiza verticalmente el bloque destacado de presentación. */
 
     .presentacion-destacada {
         flex-direction: column;
@@ -1003,6 +1402,8 @@ html {
         padding: 25px;
     }
 
+    /* Reduce el tamaño del icono destacado. */
+
     .presentacion-destacada__icono {
         width: 70px;
         height: 70px;
@@ -1010,9 +1411,13 @@ html {
         font-size: 3rem;
     }
 
+    /* Ajusta el tamaño del título del bloque destacado. */
+
     .presentacion-destacada__texto h3 {
         font-size: 1.25rem;
     }
+
+    /* Organiza las tarjetas en una sola columna. */
 
     .presentacion-tarjetas,
     .apoyo-grid,
@@ -1020,90 +1425,155 @@ html {
         grid-template-columns: minmax(0, 1fr);
     }
 
+    /* Ajusta el espacio interno de las tarjetas de presentación. */
+
     .tarjeta-presentacion {
         padding: 25px;
     }
+
+    /* Reduce las dimensiones y el espacio interno de las tarjetas de apoyo. */
 
     .tarjeta-apoyo {
         min-height: auto;
         padding: 28px 24px;
     }
 
+    /* Ajusta el tamaño de los títulos de las tarjetas de apoyo. */
+
     .tarjeta-apoyo h3 {
         font-size: 1.55rem;
     }
+
+    /* Organiza los elementos de las listas en una sola columna. */
 
     .tarjeta-apoyo ul {
         grid-template-columns: minmax(0, 1fr);
     }
 
+    /* Ajusta el espacio interno de las tarjetas de beneficios. */
+
     .tarjeta-beneficio {
         padding: 25px;
     }
+
+    /* Reduce el espacio de la sección de invitación. */
 
     .seccion-invitacion {
         padding: 70px 22px;
     }
 
+    /* Ajusta el tamaño del título de invitación. */
+
     .invitacion-contenido h2 {
         font-size: 2rem;
     }
 
+    /* Ajusta el tamaño del texto descriptivo de invitación. */
+
     .invitacion-contenido p {
         font-size: 0.98rem;
     }
-
-    .banner-caracteristicas {
-        min-height: 0;
-        padding: 25px 22px;
-        background-position: center;
-    }
 }
 
-/* Ajustes para celulares pequeños */
+
+/* 16. AJUSTES PARA CELULARES PEQUEÑOS
+   
+   Realiza reducciones adicionales en los elementos de navegación y
+   presentación para dispositivos con un ancho máximo de 380 px.
+    */
 
 @media (max-width: 380px) {
+
+    /* Reduce el espacio interno del encabezado. */
+
     .inicio-header__contenedor {
         padding: 8px 10px;
     }
 
+    /* Reduce el ancho del logotipo. */
+
     .inicio-logo img {
         width: 105px;
     }
+
+    /* Ajusta las dimensiones del botón de navegación. */
 
     .inicio-menu-boton {
         width: 39px;
         height: 39px;
     }
 
+    /* Ajusta la altura y el espacio superior del banner. */
+
     .banner-inicio {
         min-height: 650px;
         padding-top: 110px;
     }
 
+    /* Reduce el espacio interno del panel del banner. */
+
     .banner-inicio__contenedor {
         padding: 23px 19px;
     }
+
+    /* Ajusta el tamaño del título principal. */
 
     .banner-inicio__contenido h1 {
         font-size: 2.1rem;
     }
 
+    /* Reduce el tamaño del texto descriptivo. */
+
     .banner-inicio__descripcion {
         font-size: 0.91rem;
     }
+}
 
-    .banner-caracteristicas {
-        padding: 22px 16px;
+
+/* 17. AJUSTES PARA ANCHOS EXTREMADAMENTE REDUCIDOS
+   
+   Adapta el encabezado cuando el espacio horizontal disponible es igual
+   o inferior a 220 px.
+*/
+
+@media (max-width: 220px) {
+
+    /* Alinea el botón de navegación hacia el extremo derecho. */
+
+    .inicio-header__contenedor {
+        justify-content: flex-end;
+    }
+
+    /* Oculta el logotipo para liberar espacio horizontal. */
+
+    .inicio-logo {
+        display: none;
+    }
+
+    /* Mantiene visible el botón de navegación. */
+
+    .inicio-menu-boton {
+        display: flex;
+        flex-shrink: 0;
     }
 }
 
-/* Ajustes para pantallas muy anchas */
+
+/* 18. AJUSTES PARA PANTALLAS MUY ANCHAS
+   
+   Incrementa las dimensiones del banner principal y adapta su contenedor
+   para aprovechar el espacio disponible en pantallas de gran tamaño.
+ */
 
 @media (min-width: 1600px) {
+
+    /* Aumenta la altura mínima del banner en pantallas grandes. */
+
     .banner-inicio {
         min-height: 850px;
     }
+
+    /* Ajusta el ancho y la alineación del panel de contenido. */
 
     .banner-inicio__contenedor {
         width: min(600px, calc(100% - 100px));
@@ -1111,12 +1581,39 @@ html {
     }
 }
 
-/* Respeta la preferencia del usuario de reducir animaciones. */
+
+/* 19. VISIBILIDAD DEL BANNER DE CARACTERÍSTICAS EN CELULARES
+   
+   Oculta el banner inferior de características en dispositivos con un ancho
+   máximo de 500 px para adaptar la extensión del contenido a pantallas
+   pequeñas.
+ */
+
+@media (max-width: 500px) {
+
+    .banner-caracteristicas {
+        display: none;
+    }
+}
+
+
+/* 20. ACCESIBILIDAD: PREFERENCIA DE MOVIMIENTO REDUCIDO
+
+   Respeta la configuración de accesibilidad del sistema operativo o navegador.
+   Cuando el usuario solicita reducir las animaciones, se minimizan los
+   desplazamientos y las transiciones visuales de los elementos de la página.
+*/
 
 @media (prefers-reduced-motion: reduce) {
+
+    /* Desactiva el desplazamiento suave de la página. */
+
     html {
         scroll-behavior: auto;
     }
+
+    /* Reduce la duración de las animaciones y transiciones para evitar
+       movimientos visuales innecesarios. */
 
     .pagina-inicio *,
     .pagina-inicio *::before,
@@ -1124,5 +1621,34 @@ html {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+}
+/* ==========================================================
+   LOGOTIPO INSTITUCIONAL
+   Ubicación: esquina inferior derecha.
+   Comportamiento: se oculta en pantallas pequeñas.
+   ========================================================== */
+
+.signup-logo-universidad {
+    position: absolute;
+    right: 30px;
+    bottom: 20px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-logo-universidad img {
+    display: block;
+    width: 120px;
+    max-height: 65px;
+    object-fit: contain;
+}
+
+/* Ocultar el logotipo en dispositivos pequeños. */
+@media (max-width: 600px) {
+    .signup-logo-universidad {
+        display: none;
     }
 }

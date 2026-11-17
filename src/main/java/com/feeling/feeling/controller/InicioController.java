@@ -1,3 +1,4 @@
+
 package com.feeling.feeling.controller;
 
 import org.springframework.stereotype.Controller;
@@ -22,5 +23,15 @@ public class InicioController {
     @GetMapping("/")
     public String inicio() {
         return "paginas/index";
+    }
+
+    /**
+     * Muestra el formulario de registro de estudiantes.
+     *
+     * @return nombre de la vista de registro.
+     */
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "paginas/signup";
     }
 }
