@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Feeling</title>
+</head>
+<body>
+<h1>Registro de estudiante</h1>
+
+<p th:if="${error}" th:text="${error}" style="color: red;"></p>
+
+<form th:action="@{/registro}" method="post">
+    <p>
+        <label>Nombre de usuario</label><br>
+        <input type="text" name="nombreUsuario" th:value="${nombreUsuario}">
+    </p>
+    <p>
+        <label>Contraseña</label><br>
+        <input type="password" name="contrasena">
+    </p>
+    <p>
+        <label>Programa académico</label><br>
+        <input type="text" name="programaAcademico" th:value="${programaAcademico}">
+    </p>
+    <p>
+        <label>WhatsApp</label><br>
+        <input type="text" name="whatsapp" th:value="${whatsapp}">
+    </p>
+    <p>
+        <input type="checkbox" name="aceptaAviso" value="true">
+        <label>Acepto el aviso de tratamiento de datos</label>
+    </p>
+    <button type="submit">Registrarme</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,883 @@
+/* ==========================================================
+   Ser voluntario (RF-05) - Panel del estudiante
+   Se apoya en solicitudes.css (encabezado, alertas, botones,
+   animaciones) y en las variables de global.css.
+   Basado en el mockup "Activarme como voluntario".
+   ========================================================== */
+
+/* 1. Distribución: formulario a la izquierda y columna lateral */
+
+.voluntariado__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.voluntariado__principal {
+    min-width: 0;
+}
+
+/* 2. Encabezado con botón para volver */
+
+.voluntariado__encabezado {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.voluntariado__encabezado h1 {
+    margin-bottom: 8px;
+    font-size: var(--text-title);
+}
+
+.voluntariado__encabezado p {
+    max-width: 620px;
+    color: var(--color-text-secondary);
+}
+
+.voluntariado__volver {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-top: 2px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s ease, background-color 0.25s ease;
+}
+
+.voluntariado__volver svg,
+.paso__buscar svg,
+.opcion__icono svg,
+.opcion__caja svg,
+.paso__numero svg,
+.perfil-voluntario__insignia svg,
+.voluntariado__aporte-icono svg,
+.lateral-lista__icono svg,
+.lateral-tarjeta__icono-grande svg,
+.boton-accion__flecha {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.voluntariado__volver svg {
+    width: 22px;
+    height: 22px;
+}
+
+.voluntariado__volver:hover {
+    background-color: var(--color-surface);
+    transform: translateX(-3px);
+}
+
+.voluntariado__volver:active {
+    transform: scale(0.92);
+}
+
+/* 3. Pasos del formulario (materias y tipos de apoyo) */
+
+.voluntariado__formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.paso {
+    min-width: 0;
+    margin: 0;
+    padding: 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease both;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.paso[data-paso="tipos"] {
+    animation-delay: 0.1s;
+}
+
+.paso.con-error {
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 3px #FBECEC;
+    animation: voluntariado-sacudir 0.4s ease;
+}
+
+/* El legend flota para quedar dentro de la tarjeta y no encima del borde */
+.paso__titulo {
+    float: left;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 0;
+}
+
+.paso__titulo + * {
+    clear: both;
+}
+
+.paso__titulo strong {
+    display: block;
+    color: var(--color-navy);
+    font-size: 1.08rem;
+    font-weight: 800;
+}
+
+.paso__titulo small {
+    display: block;
+    color: var(--color-text);
+    font-size: var(--text-small);
+}
+
+/* Número del paso: se convierte en un check cuando el paso está completo */
+.paso__numero {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    font-weight: 800;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.paso__numero-check {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.25s ease, transform 0.3s ease;
+}
+
+.paso.completo .paso__numero {
+    background-color: var(--color-success);
+    transform: scale(1.06);
+}
+
+.paso.completo .paso__numero-texto {
+    opacity: 0;
+}
+
+.paso.completo .paso__numero-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.paso__herramientas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.paso__herramientas--solo-contador {
+    justify-content: flex-start;
+}
+
+.paso__buscar {
+    position: relative;
+    flex: 1 1 260px;
+    max-width: 380px;
+}
+
+.paso__buscar svg {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--color-primary);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.paso__buscar input {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px 10px 42px;
+    border: 1px solid var(--color-border);
+    border-radius: 50px;
+    background-color: var(--color-background);
+    color: var(--color-text-secondary);
+    font: inherit;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.paso__buscar input:focus-visible {
+    border-color: var(--color-primary);
+    background-color: var(--color-text-light);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-soft);
+}
+
+.paso__contador {
+    padding: 6px 12px;
+    border-radius: 50px;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+    font-size: var(--text-small);
+    font-weight: 800;
+    white-space: nowrap;
+    transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+.paso__contador.cambio {
+    transform: scale(1.12);
+}
+
+.paso.completo .paso__contador {
+    background-color: #E5F5EE;
+    color: var(--color-success);
+}
+
+.paso__error {
+    margin-top: 14px;
+    color: var(--color-danger);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+/* 4. Opciones con casilla (materias y tipos de apoyo) */
+
+.opciones {
+    display: grid;
+    gap: 12px;
+}
+
+.opciones--materias {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+}
+
+.opciones--tipos {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+}
+
+.opciones__vacio {
+    padding: 16px;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-medium);
+    color: var(--color-text);
+    text-align: center;
+}
+
+.opcion {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    transition: border-color 0.25s ease, background-color 0.25s ease,
+                box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.opcion--detalle {
+    align-items: flex-start;
+    min-height: 78px;
+}
+
+.opcion[hidden] {
+    display: none;
+}
+
+.opcion:hover {
+    border-color: var(--color-primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-soft);
+}
+
+/* Respuesta inmediata al toque */
+.opcion:active {
+    transform: scale(0.97);
+}
+
+/* La casilla real queda invisible pero sigue funcionando con teclado y lectores */
+.opcion input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.opcion__caja {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--color-border);
+    border-radius: 6px;
+    background-color: var(--color-text-light);
+    color: var(--color-text-light);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.opcion__caja svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 3;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 0.25s ease 0.05s;
+}
+
+.opcion__icono {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.3s ease;
+}
+
+.opcion__icono svg {
+    width: 21px;
+    height: 21px;
+}
+
+.opcion__texto {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.opcion__texto strong {
+    color: var(--color-navy);
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.opcion__texto small {
+    color: var(--color-text);
+    font-size: 0.8rem;
+    line-height: 1.35;
+}
+
+/* Opción elegida */
+.opcion:has(input:checked),
+.opcion.elegida {
+    border-color: var(--color-primary);
+    background-color: #F1FAFC;
+    box-shadow: 0 0 0 1px var(--color-primary) inset;
+}
+
+.opcion input:checked ~ .opcion__caja {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+}
+
+.opcion input:checked ~ .opcion__caja svg {
+    stroke-dashoffset: 0;
+}
+
+.opcion input:checked ~ .opcion__icono {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    transform: rotate(-6deg) scale(1.05);
+}
+
+.opcion.recien-elegida {
+    animation: voluntariado-pop 0.35s ease;
+}
+
+/* Foco con teclado */
+.opcion:has(input:focus-visible) {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+/* 5. Barra de envío */
+
+.voluntariado__envio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: rgba(241, 250, 252, 0.94);
+    box-shadow: 0 8px 24px rgba(23, 59, 101, 0.12);
+    backdrop-filter: blur(6px);
+    animation: solicitudes-aparecer 0.6s ease 0.2s both;
+}
+
+.voluntariado__aporte {
+    display: flex;
+    flex: 1 1 260px;
+    align-items: center;
+    gap: 12px;
+}
+
+.voluntariado__aporte-icono {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--color-text-light);
+    color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+}
+
+.voluntariado__aporte-icono svg {
+    width: 22px;
+    height: 22px;
+}
+
+.voluntariado__aporte p {
+    display: flex;
+    flex-direction: column;
+    color: var(--color-text);
+    font-size: var(--text-small);
+}
+
+.voluntariado__aporte strong {
+    color: var(--color-navy);
+}
+
+.boton-accion--principal {
+    display: inline-flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 26px;
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+    text-decoration: none;
+}
+
+.boton-accion--principal:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.boton-accion__flecha {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.25s ease;
+}
+
+.boton-accion--principal:hover .boton-accion__flecha {
+    transform: translateX(4px);
+}
+
+/* 6. Perfil del voluntario (cuando ya se activó) */
+
+.perfil-voluntario {
+    padding: 26px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.perfil-voluntario__cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.perfil-voluntario__insignia {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--color-success);
+    color: var(--color-text-light);
+    animation: voluntariado-insignia 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+.perfil-voluntario__insignia svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 3;
+}
+
+.perfil-voluntario__titulo {
+    flex: 1 1 220px;
+}
+
+.perfil-voluntario__titulo h2 {
+    margin-bottom: 4px;
+    font-size: 1.3rem;
+}
+
+.perfil-voluntario__titulo p {
+    color: var(--color-text);
+}
+
+.perfil-voluntario__grupo {
+    margin-bottom: 18px;
+}
+
+.perfil-voluntario__grupo h3 {
+    margin-bottom: 10px;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.perfil-voluntario__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+/* Botón con borde para la acción secundaria del perfil */
+.boton-accion--secundario {
+    display: inline-flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 26px;
+    border-color: var(--color-primary);
+    background-color: var(--color-text-light);
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.boton-accion--secundario:hover {
+    background-color: var(--color-soft);
+    text-decoration: none;
+}
+
+.estado--activo {
+    color: var(--color-success);
+    background-color: #E5F5EE;
+}
+
+.estado--suspendido {
+    color: var(--color-danger);
+    background-color: #FBECEC;
+}
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+}
+
+.chip {
+    padding: 7px 14px;
+    border-radius: 50px;
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.chip--materia {
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+}
+
+.chip--apoyo {
+    background-color: #EEF2FA;
+    color: var(--color-navy);
+}
+
+/* 7. Columna lateral */
+
+.voluntariado__lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.lateral-tarjeta {
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease 0.15s both;
+}
+
+.lateral-tarjeta--destacada {
+    position: relative;
+    overflow: hidden;
+    min-height: 170px;
+    background: linear-gradient(145deg, var(--color-soft), var(--color-surface));
+    animation-delay: 0.05s;
+}
+
+.lateral-tarjeta__frase {
+    position: relative;
+    z-index: 1;
+    max-width: 170px;
+    color: var(--color-primary-dark);
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.2;
+    transform: rotate(-4deg);
+}
+
+.lateral-tarjeta__ilustracion {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    width: 140px;
+    height: 94px;
+    fill: none;
+    stroke: var(--color-primary);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.85;
+    animation: voluntariado-flotar 4s ease-in-out infinite;
+}
+
+.lateral-tarjeta__titulo {
+    margin-bottom: 12px;
+    color: var(--color-navy);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.lateral-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    list-style: none;
+}
+
+.lateral-lista li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.lateral-lista__icono {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.lateral-lista__icono svg {
+    width: 20px;
+    height: 20px;
+}
+
+.lateral-tarjeta--inclusion {
+    display: flex;
+    gap: 12px;
+    background-color: #F4F1FB;
+    border-color: #E4DDF5;
+    animation-delay: 0.25s;
+}
+
+.lateral-tarjeta--inclusion p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.lateral-tarjeta__icono-grande {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #E4DDF5;
+    color: #6A4FB3;
+}
+
+.lateral-tarjeta__icono-grande svg {
+    width: 22px;
+    height: 22px;
+}
+
+.voluntariado__lema {
+    color: var(--color-primary);
+    font-weight: 800;
+    text-align: center;
+    transform: rotate(-3deg);
+}
+
+/* 8. Animaciones propias */
+
+@keyframes voluntariado-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+}
+
+@keyframes voluntariado-sacudir {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+@keyframes voluntariado-insignia {
+    from { opacity: 0; transform: scale(0.3) rotate(-30deg); }
+    to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes voluntariado-flotar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* 9. Tabletas: la columna lateral pasa abajo */
+
+@media (max-width: 1100px) {
+    .voluntariado__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .voluntariado__lateral {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .voluntariado__lema {
+        grid-column: 1 / -1;
+    }
+}
+
+/* 10. Celulares */
+
+@media (max-width: 600px) {
+    .voluntariado__encabezado {
+        gap: 12px;
+    }
+
+    .voluntariado__volver {
+        width: 40px;
+        height: 40px;
+    }
+
+    .paso {
+        padding: 16px;
+    }
+
+    .paso__buscar {
+        max-width: none;
+    }
+
+    /* En celular el botón queda fijo abajo para no tener que bajar hasta el final */
+    .voluntariado__envio {
+        position: sticky;
+        bottom: 10px;
+        z-index: 3;
+        padding: 10px;
+    }
+
+    .voluntariado__aporte {
+        display: none;
+    }
+
+    .voluntariado__envio .boton-accion--principal {
+        width: 100%;
+    }
+
+    .voluntariado__lateral {
+        grid-template-columns: 1fr;
+    }
+
+    .perfil-voluntario {
+        padding: 20px;
+    }
+
+    .perfil-voluntario__acciones .boton-accion {
+        width: 100%;
+    }
+}
+
+/* 11. Celulares muy pequeños */
+
+@media (max-width: 380px) {
+    .opcion {
+        padding: 10px 12px;
+    }
+
+    .opcion__icono {
+        width: 34px;
+        height: 34px;
+    }
+
+    .voluntariado__aporte-icono {
+        display: none;
+    }
+}
+
+/* 12. Pantallas táctiles: sin efectos de "pasar el cursor" */
+
+@media (hover: none) {
+    .opcion:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* 13. Movimiento reducido */
+
+@media (prefers-reduced-motion: reduce) {
+    .voluntariado__encabezado,
+    .paso,
+    .voluntariado__envio,
+    .perfil-voluntario,
+    .perfil-voluntario__insignia,
+    .lateral-tarjeta,
+    .lateral-tarjeta__ilustracion,
+    .opcion,
+    .opcion.recien-elegida,
+    .paso.con-error {
+        animation: none;
+        transition: none;
+    }
+}

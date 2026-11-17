@@ -1,0 +1,811 @@
+/* ==========================================================
+   Mi disponibilidad (RF-06, SCRUM-77) - Panel del voluntario
+   Se apoya en solicitudes.css (alertas, botones, entrada de
+   tarjetas) y en las variables de global.css.
+   Basado en el bloque "Mi disponibilidad" del mockup.
+   ========================================================== */
+
+/* 1. Distribución */
+
+.disponibilidad__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.disponibilidad__principal {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 2. Encabezado */
+
+.disponibilidad__encabezado {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.disponibilidad__titulos h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: var(--text-title);
+}
+
+.disponibilidad__titulos p {
+    max-width: 620px;
+    color: var(--color-text-secondary);
+}
+
+.disponibilidad__volver {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-top: 2px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s ease, background-color 0.25s ease;
+}
+
+.disponibilidad__volver:hover {
+    background-color: var(--color-surface);
+    transform: translateX(-3px);
+}
+
+.disponibilidad__volver:active {
+    transform: scale(0.92);
+}
+
+/* Íconos de línea */
+.disponibilidad__volver svg,
+.disponibilidad__icono-titulo svg,
+.disponibilidad__aviso-icono svg,
+.boton-accion--franja svg,
+.franjas__vacio-icono svg,
+.franja__icono svg,
+.franja__boton svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.disponibilidad__volver svg {
+    width: 22px;
+    height: 22px;
+}
+
+.disponibilidad__icono-titulo {
+    display: inline-flex;
+    color: var(--color-primary);
+}
+
+.disponibilidad__icono-titulo svg {
+    width: 30px;
+    height: 30px;
+}
+
+/* 3. Formulario para agregar una franja */
+
+.franja-nueva {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background: linear-gradient(135deg, #FFFFFF 0%, #F2FBFC 100%);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.franja-nueva.con-error {
+    animation: disponibilidad-sacudir 0.4s ease;
+}
+
+.franja-nueva__cabecera h2 {
+    margin-bottom: 4px;
+    font-size: 1.15rem;
+}
+
+.franja-nueva__cabecera p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.franja-nueva__dias {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.franja-nueva__dias legend {
+    width: 100%;
+    margin-bottom: 8px;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.dia-opcion {
+    position: relative;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dia-opcion input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dia-opcion span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 56px;
+    min-height: 44px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 50px;
+    background-color: var(--color-text-light);
+    color: var(--color-navy);
+    font-weight: 800;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.dia-opcion:hover span {
+    border-color: var(--color-primary);
+}
+
+.dia-opcion:active span {
+    transform: scale(0.94);
+}
+
+.dia-opcion input:checked + span {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: disponibilidad-pop 0.3s ease;
+}
+
+.dia-opcion input:focus-visible + span {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+.franja-nueva__horas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.campo-hora {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.campo-hora input,
+.campo-hora select {
+    min-width: 140px;
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    color: var(--color-navy);
+    font-weight: 700;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-hora input:focus,
+.campo-hora select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
+    outline: none;
+}
+
+.campo-hora input.invalida {
+    border-color: var(--color-danger);
+}
+
+.franja-nueva__guion {
+    padding-bottom: 12px;
+    color: var(--color-text);
+    font-weight: 800;
+}
+
+.franja-nueva__duracion {
+    padding: 6px 12px;
+    border-radius: 50px;
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+    font-size: 0.8rem;
+    font-weight: 800;
+    align-self: center;
+}
+
+.franja-nueva__duracion:empty {
+    display: none;
+}
+
+.franja-nueva__error {
+    color: var(--color-danger);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.boton-accion--franja {
+    display: inline-flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 12px 24px;
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+    text-decoration: none;
+}
+
+.boton-accion--franja:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-text-light);
+    text-decoration: none;
+}
+
+.boton-accion--franja svg {
+    width: 18px;
+    height: 18px;
+}
+
+.boton-accion--secundaria {
+    display: inline-flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-color: var(--color-border);
+    background-color: var(--color-text-light);
+    color: var(--color-navy);
+}
+
+.boton-accion--secundaria:hover {
+    border-color: var(--color-primary);
+}
+
+/* 4. Lista de franjas (filas como en el mockup) */
+
+.franjas {
+    container-type: inline-size;
+    padding: 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease 0.1s both;
+}
+
+.franjas__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.franjas__cabecera h2 {
+    font-size: 1.15rem;
+}
+
+.franjas__contador {
+    padding: 4px 12px;
+    border-radius: 50px;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.franjas__lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    list-style: none;
+}
+
+.franja {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: #FBFEFE;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.franja:hover {
+    border-color: rgba(8, 126, 150, 0.4);
+}
+
+.franja--nueva {
+    animation: disponibilidad-resaltar 2s ease 0.6s;
+}
+
+.franja__fila {
+    display: grid;
+    grid-template-columns: auto minmax(90px, auto) minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+}
+
+.franja__icono {
+    display: inline-flex;
+    color: var(--color-primary);
+}
+
+.franja__icono svg {
+    width: 22px;
+    height: 22px;
+}
+
+.franja__dia {
+    color: var(--color-navy);
+}
+
+.franja__horas {
+    white-space: nowrap;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.franja__estado {
+    padding: 4px 12px;
+    border-radius: 50px;
+    background-color: #E3F4EA;
+    color: var(--color-success);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.franja__acciones {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.franja__acciones form {
+    margin: 0;
+}
+
+.franja__boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 50px;
+    background-color: transparent;
+    color: var(--color-primary);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.franja__boton:hover,
+.franja__boton[aria-expanded="true"] {
+    background-color: var(--color-soft);
+}
+
+.franja__boton:active {
+    transform: scale(0.92);
+}
+
+.franja__boton svg {
+    width: 20px;
+    height: 20px;
+}
+
+.franja__boton--eliminar {
+    color: var(--color-danger);
+}
+
+.franja__boton--eliminar:hover {
+    background-color: #FBECEC;
+}
+
+.franja__confirmar {
+    display: none;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+/* Segundo toque para confirmar que se elimina */
+.franja__boton--eliminar.confirmando {
+    background-color: var(--color-danger);
+    color: var(--color-text-light);
+    animation: solicitudes-latido 0.9s ease infinite;
+}
+
+.franja__boton--eliminar.confirmando .franja__confirmar {
+    display: inline;
+}
+
+/* Edición de una franja */
+.franja__edicion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    margin: 0 14px 14px;
+    padding: 14px;
+    border-radius: var(--radius-medium);
+    background-color: #F2FBFC;
+    animation: disponibilidad-abrir 0.3s ease both;
+}
+
+.franja__edicion[hidden] {
+    display: none;
+}
+
+.franja__edicion .franja-nueva__error {
+    width: 100%;
+}
+
+.franja__edicion-botones {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.franja.saliendo {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* Sin franjas */
+.franjas__vacio {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border: 1px dashed rgba(8, 126, 150, 0.35);
+    border-radius: var(--radius-medium);
+    background-color: #F7FCFD;
+}
+
+.franjas__vacio h3 {
+    margin-bottom: 4px;
+    font-size: 1rem;
+}
+
+.franjas__vacio p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.franjas__vacio-icono {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.franjas__vacio-icono svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* 5. Columna lateral: tu semana */
+
+.disponibilidad__lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.semana,
+.disponibilidad__consejo {
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease 0.15s both;
+}
+
+.semana {
+    background: linear-gradient(160deg, #FFFFFF 0%, var(--color-soft) 100%);
+}
+
+.semana h2,
+.disponibilidad__consejo h2 {
+    margin-bottom: 4px;
+    font-size: 1rem;
+}
+
+.semana > p {
+    margin-bottom: 12px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.semana__dias {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+}
+
+.semana__dia {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+}
+
+.semana__nombre {
+    color: var(--color-navy);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.semana__bloques {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.semana__bloque {
+    padding: 3px 8px;
+    border-radius: 6px;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    font-size: 0.72rem;
+    font-weight: 700;
+    animation: disponibilidad-crecer 0.4s ease both;
+}
+
+.semana__sin {
+    color: var(--color-text);
+    font-size: 0.75rem;
+    font-style: italic;
+}
+
+.semana__dia--libre .semana__nombre {
+    color: var(--color-text);
+}
+
+.disponibilidad__consejo ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    padding-left: 18px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+/* 6. Aviso para quien todavía no es voluntario */
+
+.disponibilidad__aviso {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+    padding: 24px;
+    border: 1px dashed rgba(8, 126, 150, 0.35);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+}
+
+.disponibilidad__aviso > div {
+    flex: 1 1 260px;
+}
+
+.disponibilidad__aviso h2 {
+    margin-bottom: 4px;
+    font-size: var(--text-subtitle);
+}
+
+.disponibilidad__aviso p {
+    color: var(--color-text-secondary);
+}
+
+.disponibilidad__aviso-icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.disponibilidad__aviso-icono svg {
+    width: 26px;
+    height: 26px;
+    fill: var(--color-primary);
+}
+
+/* 7. Animaciones propias */
+
+@keyframes disponibilidad-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+@keyframes disponibilidad-sacudir {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+@keyframes disponibilidad-resaltar {
+    0%, 100% { box-shadow: none; }
+    30% { box-shadow: 0 0 0 4px rgba(35, 134, 91, 0.25); border-color: var(--color-success); }
+}
+
+@keyframes disponibilidad-abrir {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes disponibilidad-crecer {
+    from { opacity: 0; transform: scaleX(0.6); }
+    to { opacity: 1; transform: scaleX(1); }
+}
+
+/* 8. Tabletas: la columna lateral pasa abajo */
+
+@media (max-width: 1100px) {
+    .disponibilidad__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .disponibilidad__lateral {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container (max-width: 620px) {
+    /* Si la lista es angosta, la fila pasa a dos líneas: día y botones arriba, horas y estado abajo */
+    .franja__fila {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-areas:
+            "icono dia acciones"
+            "icono horas estado";
+        row-gap: 4px;
+    }
+
+    .franja__icono { grid-area: icono; }
+    .franja__dia { grid-area: dia; }
+    .franja__horas { grid-area: horas; min-width: 0; white-space: normal; }
+    .franja__estado { grid-area: estado; justify-self: end; }
+    .franja__acciones { grid-area: acciones; justify-self: end; }
+}
+
+/* 9. Celulares */
+
+@media (max-width: 600px) {
+    .disponibilidad__titulos h1 {
+        font-size: 1.5rem;
+    }
+
+    .franja-nueva,
+    .franjas {
+        padding: 18px 16px;
+    }
+
+    .dia-opcion {
+        flex: 1 1 calc(25% - 8px);
+    }
+
+    .dia-opcion span {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .franja-nueva__horas {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .franja-nueva__guion {
+        display: none;
+    }
+
+    .campo-hora input,
+    .campo-hora select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .franja-nueva__duracion {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .boton-accion--franja {
+        width: 100%;
+        align-self: stretch;
+    }
+
+    .franja__edicion {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        margin: 0 10px 10px;
+    }
+
+    .franja__edicion .campo-hora--dia,
+    .franja__edicion-botones {
+        grid-column: 1 / -1;
+    }
+
+    .franja__edicion-botones {
+        margin-left: 0;
+    }
+
+    .franja__edicion-botones .boton-accion {
+        flex: 1;
+    }
+
+    .disponibilidad__lateral {
+        display: flex;
+    }
+}
+
+/* 10. Pantallas táctiles y menos movimiento */
+
+@media (hover: none) {
+    .franja:hover {
+        border-color: var(--color-border);
+    }
+
+    .dia-opcion:hover span {
+        border-color: var(--color-border);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .disponibilidad *,
+    .disponibilidad *::before,
+    .disponibilidad *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

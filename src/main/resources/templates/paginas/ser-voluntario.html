@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Ser voluntario | Feeling', ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Ser voluntario | Feeling</title>
+</head>
+<body>
+
+<!--
+    RF-05: Activarse como voluntario (SCRUM-75).
+    - Si el estudiante todavía no es voluntario: formulario con materias y tipos de apoyo.
+    - Si ya es voluntario: tarjeta con su perfil de voluntario.
+    Basada en el mockup "Activarme como voluntario" (SCRUM-13).
+-->
+<section class="solicitudes voluntariado sin-js" data-solicitudes aria-labelledby="titulo-voluntariado">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/ser-voluntario.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/ser-voluntario.js}" defer></script>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <div class="voluntariado__grid">
+
+        <div class="voluntariado__principal">
+
+            <!-- Encabezado -->
+            <header class="voluntariado__encabezado">
+                <a th:href="@{/voluntarios}" class="voluntariado__volver" data-volver aria-label="Volver a la página anterior">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+                </a>
+                <div>
+                    <span class="solicitudes__etiqueta">Red de apoyo</span>
+                    <h1 id="titulo-voluntariado"
+                        th:text="${voluntario != null} ? 'Mi perfil de voluntario' : 'Activarme como voluntario'">
+                        Activarme como voluntario
+                    </h1>
+                    <p th:if="${voluntario == null}">
+                        Comparte tus conocimientos y habilidades. Indica las materias que dominas y el tipo de
+                        apoyo que ofreces para que otros estudiantes puedan encontrarte.
+                    </p>
+                    <p th:unless="${voluntario == null}">
+                        Estas son las materias y los tipos de apoyo con los que apareces en la búsqueda de voluntarios.
+                    </p>
+                </div>
+            </header>
+
+            <!-- Mensajes del servidor -->
+            <div th:if="${mensaje}" class="solicitudes__alerta solicitudes__alerta--exito" role="status" data-alerta>
+                <span th:text="${mensaje}">¡Ya eres voluntario!</span>
+                <button type="button" class="solicitudes__alerta-cerrar"
+                        aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+            </div>
+
+            <div th:if="${error}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
+                <span th:text="${error}">Debes elegir al menos una materia.</span>
+                <button type="button" class="solicitudes__alerta-cerrar"
+                        aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+            </div>
+
+            <!-- Ya es voluntario: muestra su perfil -->
+            <article th:if="${voluntario != null}" class="perfil-voluntario" aria-labelledby="titulo-perfil">
+
+                <div class="perfil-voluntario__cabecera">
+                    <span class="perfil-voluntario__insignia" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                    <div class="perfil-voluntario__titulo">
+                        <h2 id="titulo-perfil">¡Ya eres voluntario!</h2>
+                        <p>Los estudiantes pueden encontrarte en "Buscar voluntarios" y enviarte solicitudes.</p>
+                    </div>
+                    <span class="estado"
+                          th:classappend="${voluntario.estado.name() == 'ACTIVO'} ? 'estado--activo' : 'estado--suspendido'"
+                          th:text="${voluntario.estado.name() == 'ACTIVO'} ? 'Activo' : 'Suspendido'">Activo</span>
+                </div>
+
+                <div class="perfil-voluntario__grupo">
+                    <h3>Materias que dominas</h3>
+                    <ul class="chips">
+                        <li th:each="m : ${voluntario.materias}" class="chip chip--materia" th:text="${m.nombre}">Materia</li>
+                    </ul>
+                </div>
+
+                <div class="perfil-voluntario__grupo">
+                    <h3>Tipo de apoyo que ofreces</h3>
+                    <ul class="chips">
+                        <li th:each="t : ${voluntario.tiposApoyo}" class="chip chip--apoyo"
+                            th:text="${tiposApoyo.get(t.name()) != null} ? ${tiposApoyo.get(t.name())[0]} : ${t.name()}">Tutoría</li>
+                    </ul>
+                </div>
+
+                <div class="perfil-voluntario__acciones">
+                    <a th:href="@{/solicitudes-recibidas}" class="boton-accion boton-accion--principal">Ver solicitudes recibidas</a>
+                    <a th:href="@{/disponibilidad}" class="boton-accion boton-accion--secundario">Mi disponibilidad</a>
+                    <a th:href="@{/voluntarios}" class="boton-accion boton-accion--secundario">Verme en la búsqueda</a>
+                </div>
+            </article>
+
+            <!-- Todavía no es voluntario: formulario (RF-05) -->
+            <form th:if="${voluntario == null}" class="voluntariado__formulario"
+                  th:action="@{/ser-voluntario}" method="post" novalidate data-formulario-voluntario>
+
+                <!-- Paso 1: materias -->
+                <fieldset class="paso" data-paso="materias">
+                    <legend class="paso__titulo">
+                        <span class="paso__numero" aria-hidden="true">
+                            <span class="paso__numero-texto">1</span>
+                            <svg class="paso__numero-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span>
+                            <strong>Materias que domino</strong>
+                            <small>Selecciona al menos una materia.</small>
+                        </span>
+                    </legend>
+
+                    <div class="paso__herramientas">
+                        <label class="paso__buscar">
+                            <span class="solicitudes__sr-only">Buscar una materia</span>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                            <input type="search" placeholder="Busca una materia" autocomplete="off" data-filtro-materias>
+                        </label>
+                        <span class="paso__contador" data-contador="materias">0 seleccionadas</span>
+                    </div>
+
+                    <div class="opciones opciones--materias">
+                        <label class="opcion" th:each="m : ${materias}"
+                               th:attr="data-texto=${m.nombre + ' ' + m.codigo}">
+                            <input type="checkbox" name="materias" th:value="${m.codigo}"
+                                   th:checked="${materiasElegidas != null and #lists.contains(materiasElegidas, m.codigo)}">
+                            <span class="opcion__caja" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                            </span>
+                            <span class="opcion__icono" aria-hidden="true"
+                                  th:switch="${#strings.length(m.codigo) >= 3 ? #strings.toUpperCase(#strings.substring(m.codigo, 0, 3)) : ''}">
+                                <svg th:case="'MAT'" viewBox="0 0 24 24"><path d="M18 5H7l6 7-6 7h11"/></svg>
+                                <svg th:case="'ISW'" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
+                                <svg th:case="'FIS'" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg>
+                                <svg th:case="*" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14ZM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>
+                            </span>
+                            <span class="opcion__texto">
+                                <strong th:text="${m.nombre}">Materia</strong>
+                                <small th:text="${m.codigo}">MAT101</small>
+                            </span>
+                        </label>
+                    </div>
+
+                    <p class="opciones__vacio" hidden data-sin-materias>
+                        No hay materias con ese nombre. Prueba con otra palabra.
+                    </p>
+                    <p class="paso__error" role="alert" hidden data-error="materias">
+                        Debes elegir al menos una materia.
+                    </p>
+                </fieldset>
+
+                <!-- Paso 2: tipos de apoyo -->
+                <fieldset class="paso" data-paso="tipos">
+                    <legend class="paso__titulo">
+                        <span class="paso__numero" aria-hidden="true">
+                            <span class="paso__numero-texto">2</span>
+                            <svg class="paso__numero-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span>
+                            <strong>Tipo de apoyo que ofrezco</strong>
+                            <small>Selecciona al menos una opción.</small>
+                        </span>
+                    </legend>
+
+                    <div class="paso__herramientas paso__herramientas--solo-contador">
+                        <span class="paso__contador" data-contador="tipos">0 seleccionados</span>
+                    </div>
+
+                    <div class="opciones opciones--tipos">
+                        <label class="opcion opcion--detalle" th:each="t : ${tiposApoyo}">
+                            <input type="checkbox" name="tiposApoyo" th:value="${t.key}"
+                                   th:checked="${tiposElegidos != null and #lists.contains(tiposElegidos, t.key)}">
+                            <span class="opcion__caja" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                            </span>
+                            <span class="opcion__icono" aria-hidden="true" th:switch="${t.key}">
+                                <svg th:case="'EXPLICACION_CONCEPTOS'" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2Z"/></svg>
+                                <svg th:case="'TUTORIA'" viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a5 5 0 0 1 5-5h2M15 11h6v6h-6zM18 17v4"/></svg>
+                                <svg th:case="'PREPARACION_EXAMENES'" viewBox="0 0 24 24"><path d="M9 4h6v3H9zM8 5H6v16h12V5h-2M9 14l2 2 4-4"/></svg>
+                                <svg th:case="*" viewBox="0 0 24 24"><path d="M2 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H2zM22 4h-7a3 3 0 0 0-3 3v14a2 2 0 0 1 2-2h8z"/></svg>
+                            </span>
+                            <span class="opcion__texto">
+                                <strong th:text="${t.value[0]}">Tutoría</strong>
+                                <small th:text="${t.value[1]}">Descripción</small>
+                            </span>
+                        </label>
+                    </div>
+
+                    <p class="paso__error" role="alert" hidden data-error="tipos">
+                        Debes elegir al menos un tipo de apoyo.
+                    </p>
+                </fieldset>
+
+                <!-- Envío -->
+                <div class="voluntariado__envio">
+                    <div class="voluntariado__aporte">
+                        <span class="voluntariado__aporte-icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1ZM15 9a3 3 0 0 1 0 6M18 6a7 7 0 0 1 0 12"/></svg>
+                        </span>
+                        <p>
+                            <strong>¡Todos los aportes suman!</strong>
+                            <span>Después podrás registrar los horarios en los que puedes ayudar.</span>
+                        </p>
+                    </div>
+                    <button type="submit" class="boton-accion boton-accion--principal" data-enviar>
+                        <span data-enviar-texto>Activar perfil de voluntario</span>
+                        <svg class="boton-accion__flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Columna lateral: por qué ser voluntario -->
+        <aside class="voluntariado__lateral" aria-label="Por qué ser voluntario">
+
+            <div class="lateral-tarjeta lateral-tarjeta--destacada">
+                <p class="lateral-tarjeta__frase">Tu apoyo también importa <span aria-hidden="true">♥</span></p>
+                <svg class="lateral-tarjeta__ilustracion" viewBox="0 0 120 80" aria-hidden="true">
+                    <circle cx="40" cy="22" r="10"/>
+                    <circle cx="80" cy="22" r="10"/>
+                    <path d="M22 72V56a18 18 0 0 1 18-18h0a18 18 0 0 1 14 7"/>
+                    <path d="M98 72V56a18 18 0 0 0-18-18h0a18 18 0 0 0-14 7"/>
+                    <path d="M48 52l12-12 12 12"/>
+                </svg>
+            </div>
+
+            <div class="lateral-tarjeta">
+                <h2 class="lateral-tarjeta__titulo">Como voluntario podrás:</h2>
+                <ul class="lateral-lista">
+                    <li>
+                        <span class="lateral-lista__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-1a5 5 0 0 1 5-5h2a5 5 0 0 1 5 5v1M15 14h1a4 4 0 0 1 4 4v2"/></svg>
+                        </span>
+                        Compartir tus conocimientos y habilidades.
+                    </li>
+                    <li>
+                        <span class="lateral-lista__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z"/></svg>
+                        </span>
+                        Conectar con estudiantes que necesitan tu apoyo.
+                    </li>
+                    <li>
+                        <span class="lateral-lista__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11M10 21v-6h4v6"/></svg>
+                        </span>
+                        Construir una comunidad más unida e inclusiva.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="lateral-tarjeta lateral-tarjeta--inclusion">
+                <span class="lateral-tarjeta__icono-grande" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M4 8l8 2 8-2M12 10v5M12 15l-4 6M12 15l4 6"/></svg>
+                </span>
+                <div>
+                    <h2 class="lateral-tarjeta__titulo">Accesibilidad e inclusión</h2>
+                    <p>Si necesitas un ajuste razonable para acompañar a otros, podrás indicarlo en tu perfil.</p>
+                </div>
+            </div>
+
+            <p class="voluntariado__lema">Juntos aprendemos, crecemos y avanzamos <span aria-hidden="true">♥</span></p>
+        </aside>
+    </div>
+</section>
+
+</body>
+</html>

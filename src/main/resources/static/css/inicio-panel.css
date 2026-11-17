@@ -1,0 +1,1131 @@
+/* ==========================================================
+   Pantallas de inicio por rol (SCRUM-53, RF-02)
+   Inicio del estudiante y del administrador.
+   Se apoya en solicitudes.css (alertas, botones, entrada de
+   tarjetas) y en las variables de global.css.
+   Basado en los mockups de SCRUM-13.
+   ========================================================== */
+
+/* 1. Distribución: contenido a la izquierda y columna lateral */
+
+.panel__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.panel__principal {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.panel__alerta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.panel__alerta-icono {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+/* Íconos de línea de toda la página */
+.panel__alerta-icono svg,
+.panel-hero__pastilla svg,
+.acceso__icono svg,
+.acceso__flecha svg,
+.panel-bloque__enlace svg,
+.panel-vacio__icono svg,
+.proxima__icono svg,
+.proxima__fecha svg,
+.proxima__detalle svg,
+.panel-tarjeta__pronto svg,
+.panel-tarjeta__icono svg,
+.cifra__icono svg,
+.gestion__icono svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.panel__alerta-icono svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* 2. Saludo */
+
+.panel-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(150px, 1fr);
+    align-items: center;
+    gap: 16px;
+    overflow: hidden;
+    padding: 28px 32px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background:
+        radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.7), transparent 45%),
+        linear-gradient(135deg, #E9F8FA 0%, var(--color-soft) 55%, var(--color-surface) 100%);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.panel-hero h1 {
+    margin-bottom: 10px;
+    font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2.05rem);
+}
+
+.panel-hero__texto p {
+    max-width: 440px;
+    margin-bottom: 16px;
+    color: var(--color-text-secondary);
+}
+
+.panel-hero__texto .solicitudes__etiqueta {
+    margin-bottom: 10px;
+}
+
+.panel-hero__mano {
+    display: inline-block;
+    transform-origin: 70% 80%;
+    animation: panel-saludar 2.4s ease-in-out 0.8s 2;
+}
+
+.panel-hero__pastilla {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid rgba(8, 126, 150, 0.18);
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.75);
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.panel-hero__pastilla svg {
+    width: 18px;
+    height: 18px;
+    color: var(--color-primary);
+    fill: var(--color-primary);
+    animation: panel-latir 2.2s ease-in-out infinite;
+}
+
+.panel-hero__arte {
+    position: relative;
+    min-height: 150px;
+}
+
+.panel-hero__nota {
+    position: absolute;
+    top: -14px;
+    right: 0;
+    z-index: 1;
+    max-width: 130px;
+    color: var(--color-primary-dark);
+    font-size: 0.85rem;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    transform: rotate(-6deg);
+}
+
+.panel-hero__nota span {
+    color: var(--color-primary);
+}
+
+.panel-hero__ilustracion {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin: 18px auto 0;
+    fill: none;
+    stroke: var(--color-primary-dark);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Piezas de la ilustración */
+.ilus-hoja {
+    fill: #7CCFB0;
+    stroke: #2E8F6F;
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    animation: panel-mecer 4s ease-in-out infinite;
+}
+
+.ilus-hoja--2 {
+    animation-delay: 0.6s;
+}
+
+.ilus-hoja--3 {
+    animation-delay: 1.2s;
+}
+
+.ilus-maceta,
+.ilus-vaso {
+    fill: #FFFFFF;
+}
+
+.ilus-libro {
+    fill: #4F7BD8;
+}
+
+.ilus-libro--2 {
+    fill: #9BC7F0;
+}
+
+.ilus-libro--3 {
+    fill: var(--color-primary);
+}
+
+.ilus-pantalla {
+    fill: #FFFFFF;
+}
+
+.ilus-base {
+    fill: #C9E3EC;
+}
+
+.ilus-suelo {
+    stroke: rgba(8, 126, 150, 0.25);
+}
+
+.ilus-punto {
+    fill: var(--color-primary);
+    stroke: none;
+}
+
+.ilus-barra {
+    fill: var(--color-primary);
+    stroke: none;
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    animation: panel-crecer 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.3s both;
+}
+
+.ilus-barra--2 {
+    fill: #4F7BD8;
+    animation-delay: 0.4s;
+}
+
+.ilus-barra--3 {
+    fill: #7CCFB0;
+    animation-delay: 0.5s;
+}
+
+.ilus-barra--4 {
+    fill: #F2B544;
+    animation-delay: 0.6s;
+}
+
+.panel-hero__ilustracion .ilus-pantalla,
+.panel-hero__ilustracion .ilus-base {
+    animation: panel-flotar 5s ease-in-out infinite;
+}
+
+/* 3. Accesos a las funciones */
+
+.panel-accesos__lista {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    list-style: none;
+}
+
+.acceso {
+    --acceso-color: var(--color-primary);
+    --acceso-fondo: #E6F6F8;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    height: 100%;
+    min-height: 190px;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-large);
+    background-color: var(--acceso-fondo);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.acceso:hover {
+    border-color: var(--acceso-color);
+    box-shadow: 0 10px 24px rgba(23, 59, 101, 0.12);
+    text-decoration: none;
+    transform: translateY(-4px);
+}
+
+.acceso.presionada,
+.acceso:active {
+    transform: scale(0.97);
+}
+
+.acceso--acompanamientos {
+    --acceso-color: #4F7BD8;
+    --acceso-fondo: #EAF0FC;
+}
+
+.acceso--voluntario {
+    --acceso-color: var(--color-success);
+    --acceso-fondo: #E6F5EC;
+}
+
+.acceso__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 6px;
+    border-radius: 50%;
+    background-color: var(--acceso-color);
+    color: var(--color-text-light);
+    box-shadow: 0 6px 14px rgba(23, 59, 101, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.acceso:hover .acceso__icono {
+    transform: rotate(-8deg) scale(1.06);
+}
+
+.acceso__icono svg {
+    width: 26px;
+    height: 26px;
+}
+
+.acceso__titulo {
+    color: var(--color-navy);
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.acceso__texto {
+    font-size: var(--text-small);
+}
+
+.acceso__flecha {
+    display: inline-flex;
+    align-self: flex-end;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-top: auto;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.85);
+    color: var(--acceso-color);
+    transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+.acceso:hover .acceso__flecha {
+    background-color: var(--acceso-color);
+    color: var(--color-text-light);
+    transform: translateX(4px);
+}
+
+.acceso__flecha svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Onda al tocar una tarjeta de acceso */
+.acceso .onda {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* 4. Bloques (próximos acompañamientos, gestión de usuarios) */
+
+.panel-bloque {
+    padding: 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease 0.2s both;
+}
+
+.panel-bloque__cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.panel-bloque__cabecera h2 {
+    font-size: 1.15rem;
+}
+
+.panel-bloque__enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 4px;
+    color: var(--color-primary);
+    font-size: var(--text-small);
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.panel-bloque__enlace svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.2s ease;
+}
+
+.panel-bloque__enlace:hover svg {
+    transform: translateX(3px);
+}
+
+/* Lista de próximas solicitudes */
+.proximas {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.proximas > li + li {
+    border-top: 1px solid var(--color-border);
+}
+
+.proxima {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 4px;
+}
+
+.proxima__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.proxima__icono svg {
+    width: 22px;
+    height: 22px;
+}
+
+.proxima__info h3 {
+    margin-bottom: 2px;
+    font-size: 1rem;
+}
+
+.proxima__tema {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    overflow-wrap: anywhere;
+}
+
+.proxima__fecha {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    color: var(--color-text);
+    font-size: 0.8rem;
+}
+
+.proxima__fecha svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+.estado--aceptada {
+    color: var(--color-success);
+    background-color: #E3F4EA;
+}
+
+.estado--activo {
+    color: var(--color-success);
+    background-color: #E3F4EA;
+}
+
+.estado--suspendido {
+    color: var(--color-danger);
+    background-color: #FBEAEA;
+}
+
+.proxima__detalle {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 50px;
+    color: var(--color-primary);
+    font-size: var(--text-small);
+    font-weight: 800;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.proxima__detalle:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-soft);
+    text-decoration: none;
+}
+
+.proxima__detalle:active {
+    transform: scale(0.95);
+}
+
+.proxima__detalle svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Sin solicitudes próximas */
+.panel-vacio {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    border: 1px dashed rgba(8, 126, 150, 0.35);
+    border-radius: var(--radius-medium);
+    background-color: #F7FCFD;
+}
+
+.panel-vacio > div {
+    flex: 1 1 220px;
+}
+
+.panel-vacio h3 {
+    margin-bottom: 4px;
+    font-size: 1rem;
+}
+
+.panel-vacio p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.panel-vacio__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.panel-vacio__icono svg {
+    width: 24px;
+    height: 24px;
+}
+
+.boton-accion--panel {
+    display: inline-flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 22px;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    text-decoration: none;
+    box-shadow: var(--shadow-soft);
+}
+
+.boton-accion--panel:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-text-light);
+    text-decoration: none;
+}
+
+/* 5. Columna lateral */
+
+.panel__lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.panel-tarjeta {
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease 0.15s both;
+}
+
+.panel-tarjeta p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.panel-tarjeta--destacada {
+    position: relative;
+    overflow: hidden;
+    min-height: 150px;
+    background: linear-gradient(145deg, var(--color-soft), var(--color-surface));
+    animation-delay: 0.05s;
+}
+
+.panel-tarjeta__frase {
+    position: relative;
+    z-index: 1;
+    max-width: 170px;
+    color: var(--color-primary-dark) !important;
+    font-size: 1.35rem !important;
+    font-weight: 800;
+    line-height: 1.2;
+    transform: rotate(-4deg);
+}
+
+.panel-tarjeta__hoja {
+    position: absolute;
+    right: 14px;
+    bottom: 8px;
+    width: 64px;
+    height: 96px;
+    fill: #7CCFB0;
+    stroke: #2E8F6F;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform-origin: bottom center;
+    animation: panel-mecer 4.5s ease-in-out infinite;
+}
+
+.panel-tarjeta__titulo {
+    margin-bottom: 8px;
+    color: var(--color-navy);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.panel-tarjeta__fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.panel-tarjeta__fila .panel-tarjeta__titulo {
+    margin-bottom: 0;
+}
+
+.panel-tarjeta__pronto {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 6px 12px;
+    border: 1px dashed rgba(8, 126, 150, 0.45);
+    border-radius: 50px;
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.panel-tarjeta__pronto svg {
+    width: 16px;
+    height: 16px;
+}
+
+.panel-tarjeta--ajustes {
+    animation-delay: 0.2s;
+}
+
+.panel-tarjeta--voluntariado {
+    animation-delay: 0.3s;
+}
+
+.panel-tarjeta--voluntariado .boton-accion--panel {
+    width: 100%;
+    margin-top: 14px;
+}
+
+.panel-tarjeta__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+}
+
+.panel-tarjeta__icono svg {
+    width: 22px;
+    height: 22px;
+}
+
+.panel-tarjeta--voluntariado .panel-tarjeta__icono svg {
+    fill: var(--color-primary);
+    animation: panel-latir 2.2s ease-in-out infinite;
+}
+
+.panel-tarjeta__dato {
+    margin-bottom: 6px;
+    color: var(--color-navy) !important;
+    font-weight: 800;
+}
+
+.panel-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+    list-style: none;
+}
+
+.panel-chips li {
+    padding: 4px 10px;
+    border-radius: 50px;
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Acceso a las solicitudes recibidas del voluntario, con su contador */
+.panel-recibidas {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: #F7FCFD;
+    color: var(--color-navy);
+    font-weight: 800;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.panel-recibidas:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-soft);
+    text-decoration: none;
+}
+
+.panel-recibidas:active {
+    transform: scale(0.97);
+}
+
+.panel-recibidas__icono {
+    display: inline-flex;
+    color: var(--color-primary);
+}
+
+.panel-recibidas__icono svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.panel-recibidas__numero--nuevas ~ .panel-recibidas__icono,
+.panel-recibidas:has(.panel-recibidas__numero--nuevas) .panel-recibidas__icono {
+    animation: panel-campana 2.4s ease-in-out 1s 2;
+    transform-origin: top center;
+}
+
+.panel-recibidas__texto {
+    flex: 1;
+    font-size: var(--text-small);
+}
+
+.panel-recibidas__numero {
+    min-width: 26px;
+    padding: 2px 8px;
+    border-radius: 50px;
+    background-color: var(--color-border);
+    color: var(--color-navy);
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.panel-recibidas__numero--nuevas {
+    background-color: var(--color-danger);
+    color: var(--color-text-light);
+}
+
+.panel-tarjeta--exito {
+    border-color: #CDEBDA;
+    background-color: #EEF8F2;
+}
+
+.panel-tarjeta--exito .panel-tarjeta__icono {
+    background-color: var(--color-success);
+    color: var(--color-text-light);
+}
+
+.panel-tarjeta--privado {
+    border-color: #F3D6D6;
+    background-color: #FDF3F3;
+    animation-delay: 0.25s;
+}
+
+.panel-tarjeta--privado .panel-tarjeta__icono {
+    background-color: #E58C8C;
+    color: var(--color-text-light);
+}
+
+.panel__lema {
+    color: var(--color-primary);
+    font-weight: 800;
+    text-align: center;
+    transform: rotate(-3deg);
+}
+
+/* 6. Administrador: cifras y gestión de usuarios */
+
+.panel-cifras {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    list-style: none;
+}
+
+.cifra {
+    --cifra-color: var(--color-primary);
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    gap: 4px;
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.cifra:hover {
+    box-shadow: 0 10px 24px rgba(23, 59, 101, 0.12);
+    transform: translateY(-3px);
+}
+
+.cifra--activos {
+    --cifra-color: var(--color-success);
+}
+
+.cifra--suspendidos {
+    --cifra-color: var(--color-danger);
+}
+
+.cifra__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 8px;
+    border-radius: 50%;
+    background-color: var(--cifra-color);
+    color: var(--color-text-light);
+}
+
+.cifra__icono svg {
+    width: 22px;
+    height: 22px;
+}
+
+.cifra__numero {
+    color: var(--color-navy);
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.cifra__texto {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.gestion {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    scroll-margin-top: 24px;
+}
+
+.gestion:target {
+    border-color: var(--color-primary);
+    animation: panel-resaltar 1.4s ease 2;
+}
+
+.gestion__icono {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+}
+
+.gestion__icono svg {
+    width: 28px;
+    height: 28px;
+}
+
+.gestion__texto {
+    flex: 1 1 260px;
+}
+
+.gestion__texto h2 {
+    margin-bottom: 4px;
+    font-size: 1.15rem;
+}
+
+.gestion__texto p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.gestion .panel-tarjeta__pronto {
+    margin-top: 0;
+}
+
+/* 7. Animaciones propias */
+
+@keyframes panel-saludar {
+    0%, 60%, 100% { transform: rotate(0); }
+    10%, 30% { transform: rotate(16deg); }
+    20%, 40% { transform: rotate(-10deg); }
+}
+
+@keyframes panel-latir {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+@keyframes panel-mecer {
+    0%, 100% { transform: rotate(0); }
+    50% { transform: rotate(-4deg); }
+}
+
+@keyframes panel-flotar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+@keyframes panel-crecer {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+}
+
+@keyframes panel-campana {
+    0%, 50%, 100% { transform: rotate(0); }
+    10%, 30% { transform: rotate(14deg); }
+    20%, 40% { transform: rotate(-14deg); }
+}
+
+@keyframes panel-resaltar {
+    0%, 100% { box-shadow: var(--shadow-soft); }
+    50% { box-shadow: 0 0 0 6px rgba(8, 126, 150, 0.18); }
+}
+
+/* 8. Tabletas: la columna lateral pasa abajo */
+
+@media (max-width: 1100px) {
+    .panel__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .panel__lateral {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel__lema {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 860px) {
+    .panel-accesos__lista {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* En pantallas angostas el acceso es una fila: ícono, texto y flecha */
+    .acceso {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        align-items: center;
+        column-gap: 14px;
+        row-gap: 2px;
+        min-height: 0;
+        padding: 16px;
+    }
+
+    .acceso__icono {
+        grid-row: 1 / 3;
+        margin-bottom: 0;
+    }
+
+    .acceso__flecha {
+        grid-row: 1 / 3;
+        grid-column: 3;
+        align-self: center;
+        margin-top: 0;
+    }
+}
+
+/* 9. Celulares */
+
+@media (max-width: 600px) {
+    .panel-hero {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 22px 20px;
+    }
+
+    .panel-hero__arte {
+        min-height: 0;
+    }
+
+    .panel-hero__nota {
+        display: none;
+    }
+
+    .panel-hero__ilustracion {
+        max-width: 180px;
+        margin-top: 0;
+    }
+
+    .panel__lateral {
+        display: flex;
+    }
+
+    .panel-cifras {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    /* Las cifras pasan a una fila compacta: ícono, número y texto */
+    .cifra {
+        display: grid;
+        grid-template-columns: auto auto minmax(0, 1fr);
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+    }
+
+    .cifra__icono {
+        margin-bottom: 0;
+    }
+
+    .panel-bloque {
+        padding: 18px 16px;
+    }
+
+    .proxima {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-areas:
+            "icono info estado"
+            "icono detalle detalle";
+        row-gap: 10px;
+    }
+
+    .proxima__icono {
+        grid-area: icono;
+        align-self: start;
+    }
+
+    .proxima__info {
+        grid-area: info;
+    }
+
+    .proxima .estado {
+        grid-area: estado;
+        align-self: start;
+    }
+
+    .proxima__detalle {
+        grid-area: detalle;
+        justify-self: start;
+    }
+
+    .panel-vacio .boton-accion--panel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    .panel-hero h1 {
+        font-size: 1.45rem;
+    }
+
+    .acceso {
+        column-gap: 12px;
+        padding: 14px;
+    }
+
+    .acceso__icono {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* 10. Pantallas táctiles: sin efectos de hover que se quedan pegados */
+
+@media (hover: none) {
+    .acceso:hover,
+    .cifra:hover {
+        box-shadow: none;
+        transform: none;
+    }
+
+    .acceso:hover .acceso__icono,
+    .acceso:hover .acceso__flecha {
+        transform: none;
+    }
+}
+
+/* 11. Menos movimiento */
+
+@media (prefers-reduced-motion: reduce) {
+    .panel *,
+    .panel *::before,
+    .panel *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

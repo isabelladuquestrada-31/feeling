@@ -1,0 +1,503 @@
+/* ==========================================================
+   Buscar voluntarios (RF-07) - Panel del estudiante
+   Se apoya en solicitudes.css (encabezado, botones y
+   animaciones) y en las variables de global.css
+   ========================================================== */
+
+/* 1. Panel de filtros */
+
+.busqueda__filtros {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: end;
+    position: relative;
+    z-index: 5; /* la lista de sugerencias queda por encima de las tarjetas */
+    gap: 16px;
+    margin-bottom: 28px;
+    padding: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.busqueda__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.busqueda__campo label {
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.busqueda__campo select {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 40px 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231A3B5D' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-position: right 14px center;
+    background-repeat: no-repeat;
+    color: var(--color-text);
+    font: inherit;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.busqueda__campo select:hover {
+    border-color: var(--color-primary-light);
+}
+
+.busqueda__campo select:focus-visible {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-soft);
+}
+
+.busqueda__acciones {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.busqueda__acciones .boton-accion {
+    width: auto;
+    padding: 12px 24px;
+}
+
+.boton-accion--buscar {
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+}
+
+.boton-accion--buscar:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.boton-accion--limpiar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-navy);
+    background-color: var(--color-text-light);
+    border-color: var(--color-border);
+    text-decoration: none;
+}
+
+.boton-accion--limpiar:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* 2. Resumen de resultados */
+
+.busqueda__resumen {
+    margin-bottom: 18px;
+    color: var(--color-text-secondary);
+    font-weight: 700;
+}
+
+.busqueda__resumen strong {
+    color: var(--color-navy);
+}
+
+/* Mientras se busca, los resultados se atenúan */
+.busqueda__resultados {
+    transition: opacity 0.25s ease;
+}
+
+.busqueda__resultados.buscando {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+/* 3. Tarjetas de voluntarios */
+
+.voluntarios__lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 22px;
+    list-style: none;
+}
+
+.tarjeta-voluntario {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.tarjeta-voluntario:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary-light);
+}
+
+.tarjeta-voluntario.presionada {
+    transform: scale(0.985);
+}
+
+.tarjeta-voluntario__cabecera {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.tarjeta-voluntario__avatar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+    color: var(--color-text-light);
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.tarjeta-voluntario__cabecera > div {
+    min-width: 0;
+}
+
+.tarjeta-voluntario h2 {
+    font-size: 1.17rem;
+    overflow-wrap: anywhere;
+}
+
+.tarjeta-voluntario__programa {
+    color: var(--color-text-secondary);
+    font-size: 0.92rem;
+}
+
+.tarjeta-voluntario__grupo h3 {
+    margin-bottom: 8px;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+/* Etiquetas de materias, apoyos y días */
+.etiquetas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+}
+
+.etiqueta {
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.etiqueta--materia {
+    color: var(--color-primary);
+    background-color: var(--color-soft);
+}
+
+.etiqueta--apoyo {
+    color: var(--color-navy);
+    background-color: var(--color-surface);
+}
+
+.etiqueta--dia {
+    color: var(--color-success);
+    background-color: #E5F5EE;
+}
+
+.etiqueta--vacia {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.tarjeta-voluntario__accion {
+    margin-top: auto;
+}
+
+.boton-accion--solicitar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+    text-decoration: none;
+}
+
+.boton-accion--solicitar:hover {
+    color: var(--color-text-light);
+    background-color: var(--color-primary-dark);
+    text-decoration: none;
+}
+
+/* 4. Sin resultados */
+
+.busqueda__vacio {
+    padding: 48px 24px;
+    text-align: center;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    animation: solicitudes-aparecer 0.6s ease both;
+}
+
+.busqueda__vacio h2 {
+    margin-bottom: 8px;
+    font-size: var(--text-subtitle);
+}
+
+.busqueda__vacio p {
+    color: var(--color-text-secondary);
+}
+
+.busqueda__vacio .boton-accion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    margin-top: 18px;
+    padding: 12px 24px;
+    text-decoration: none;
+}
+
+.busqueda__vacio .boton-accion:hover {
+    color: var(--color-text-light);
+    text-decoration: none;
+}
+
+/* 4b. Buscador con sugerencias (buscador-select.js)
+   Reemplaza visualmente a los select con data-buscador. */
+
+/* Más específico que ".busqueda__campo select" para que el select
+   oculto no conserve su ancho y no genere scroll horizontal. */
+.busqueda__campo select.buscador__select-oculto {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.busqueda__campo {
+    position: relative;
+}
+
+.buscador {
+    position: relative;
+}
+
+.buscador__campo {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 40px 10px 40px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23087E96' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E");
+    background-position: left 14px center;
+    background-repeat: no-repeat;
+    color: var(--color-text-secondary);
+    font: inherit;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.buscador__campo::placeholder {
+    color: var(--color-text);
+    opacity: 0.8;
+}
+
+.buscador__campo:hover {
+    border-color: var(--color-primary-light);
+}
+
+.buscador__campo:focus-visible,
+.buscador--abierto .buscador__campo {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-soft);
+}
+
+.buscador__limpiar {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    display: none;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.buscador--con-valor .buscador__limpiar {
+    display: block;
+}
+
+.buscador__limpiar:hover,
+.buscador__limpiar:focus-visible {
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+}
+
+.buscador__lista {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 280px;
+    margin: 0;
+    padding: 6px;
+    overflow-y: auto;
+    list-style: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    box-shadow: 0 12px 28px rgba(23, 59, 101, 0.16);
+    animation: buscador-abrir 0.18s ease both;
+}
+
+.buscador__grupo {
+    padding: 10px 10px 4px;
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.buscador__opcion {
+    padding: 10px 12px;
+    border-radius: var(--radius-small);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.buscador__opcion--todas {
+    color: var(--color-text);
+    font-style: italic;
+}
+
+.buscador__opcion:hover,
+.buscador__opcion--activa {
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+}
+
+.buscador__opcion[aria-selected="true"] {
+    font-weight: 800;
+}
+
+.buscador__vacio {
+    padding: 12px;
+    color: var(--color-text);
+    font-size: var(--text-small);
+    text-align: center;
+}
+
+@keyframes buscador-abrir {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 5. Tabletas */
+
+@media (max-width: 900px) {
+    .busqueda__filtros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .busqueda__acciones .boton-accion {
+        flex: 1;
+    }
+}
+
+/* 6. Celulares */
+
+@media (max-width: 600px) {
+    .busqueda__filtros {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+
+    .tarjeta-voluntario {
+        padding: 20px;
+    }
+
+    .tarjeta-voluntario__avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 1.15rem;
+    }
+}
+
+/* 7. Celulares muy pequeños */
+
+@media (max-width: 380px) {
+    .busqueda__acciones {
+        flex-direction: column;
+    }
+
+    .tarjeta-voluntario {
+        padding: 16px;
+    }
+}
+
+/* 8. Pantallas táctiles */
+
+@media (hover: none) {
+    .tarjeta-voluntario:hover {
+        transform: none;
+        border-color: var(--color-border);
+    }
+}
+
+/* 9. Movimiento reducido */
+
+@media (prefers-reduced-motion: reduce) {
+    .busqueda__filtros,
+    .buscador__lista,
+    .busqueda__vacio,
+    .busqueda__resultados,
+    .tarjeta-voluntario {
+        animation: none;
+        transition: none;
+    }
+}

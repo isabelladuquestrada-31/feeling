@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Inicio | Feeling', ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Inicio | Feeling</title>
+</head>
+<body>
+
+<!--
+    RF-02: pantalla de inicio del estudiante (SCRUM-53).
+    Saludo, accesos a sus funciones y próximas solicitudes.
+    Basada en el mockup de inicio del estudiante (SCRUM-13).
+-->
+<section class="solicitudes panel sin-js" data-solicitudes data-panel aria-labelledby="titulo-panel">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/inicio-panel.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/inicio-panel.js}" defer></script>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <!-- Llegó aquí porque intentó entrar al panel del administrador -->
+    <div th:if="${accesoDenegado}" class="solicitudes__alerta solicitudes__alerta--error panel__alerta"
+         role="alert" data-alerta>
+        <span class="panel__alerta-icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+        </span>
+        <span><strong>Acceso denegado.</strong> Solo los administradores pueden entrar a esa página.</span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <!-- Mensaje si no se pudo abrir el contacto de WhatsApp (RF-11) -->
+    <div th:if="${mensajeError}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <div class="panel__grid">
+
+        <div class="panel__principal">
+
+            <!-- Saludo -->
+            <div class="panel-hero">
+                <div class="panel-hero__texto">
+                    <h1 id="titulo-panel">
+                        ¡Hola, <span th:text="${nombre}">Yuli</span>!
+                        <span class="panel-hero__mano" aria-hidden="true">👋</span>
+                    </h1>
+                    <p>
+                        Aquí puedes encontrar estudiantes voluntarios que te apoyen en lo que necesitas.
+                        Recuerda que también puedes ser voluntario y ayudar a otros.
+                    </p>
+                    <span class="panel-hero__pastilla">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z"/></svg>
+                        La universidad también se construye en equipo
+                    </span>
+                </div>
+
+                <div class="panel-hero__arte" aria-hidden="true">
+                    <p class="panel-hero__nota">Un poco de apoyo hace grandes diferencias <span>♥</span></p>
+                    <svg class="panel-hero__ilustracion" viewBox="0 0 220 140">
+                        <!-- Planta -->
+                        <path class="ilus-hoja" d="M44 92c-10-14-8-30 4-40 6 14 6 28-4 40Z"/>
+                        <path class="ilus-hoja ilus-hoja--2" d="M48 94c4-16 16-26 32-26-4 14-16 24-32 26Z"/>
+                        <path class="ilus-hoja ilus-hoja--3" d="M44 96c-14-6-22-18-20-32 12 6 20 18 20 32Z"/>
+                        <path class="ilus-trazo" d="M46 96V70"/>
+                        <rect class="ilus-maceta" x="34" y="96" width="24" height="22" rx="4"/>
+                        <!-- Libros -->
+                        <rect class="ilus-libro" x="70" y="104" width="64" height="12" rx="3"/>
+                        <rect class="ilus-libro ilus-libro--2" x="74" y="92" width="58" height="12" rx="3"/>
+                        <rect class="ilus-libro ilus-libro--3" x="68" y="80" width="62" height="12" rx="3"/>
+                        <!-- Portátil -->
+                        <rect class="ilus-pantalla" x="104" y="38" width="76" height="50" rx="6"/>
+                        <path class="ilus-trazo" d="M124 60h36M124 70h22"/>
+                        <path class="ilus-base" d="M94 92h96l-8 10h-80Z"/>
+                        <!-- Lápices -->
+                        <rect class="ilus-vaso" x="186" y="82" width="18" height="34" rx="4"/>
+                        <path class="ilus-trazo" d="M190 82l-4-18M196 82v-20M202 82l4-16"/>
+                        <path class="ilus-suelo" d="M20 118h190"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Accesos a las funciones del estudiante -->
+            <nav class="panel-accesos" aria-label="Accesos rápidos">
+                <ul class="panel-accesos__lista">
+                    <li class="solicitudes__item">
+                        <a th:href="@{/voluntarios}" class="acceso acceso--buscar">
+                            <span class="acceso__icono" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                            </span>
+                            <strong class="acceso__titulo">Buscar voluntarios</strong>
+                            <span class="acceso__texto">Encuentra el apoyo que necesitas según la materia y el tipo de ayuda.</span>
+                            <span class="acceso__flecha" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="solicitudes__item">
+                        <a th:href="@{/mis-acompanamientos}" class="acceso acceso--acompanamientos">
+                            <span class="acceso__icono" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M8 14h3M8 17h6"/></svg>
+                            </span>
+                            <strong class="acceso__titulo">Mis acompañamientos</strong>
+                            <span class="acceso__texto">Consulta tus próximos acompañamientos y revisa tu historial.</span>
+                            <span class="acceso__flecha" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="solicitudes__item">
+                        <a th:href="@{/ser-voluntario}" class="acceso acceso--voluntario">
+                            <span class="acceso__icono" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                            </span>
+                            <strong class="acceso__titulo"
+                                    th:text="${voluntario != null} ? 'Mi perfil de voluntario' : 'Ser voluntario'">Ser voluntario</strong>
+                            <span class="acceso__texto" th:if="${voluntario == null}">Comparte lo que sabes y ayuda a otros estudiantes.</span>
+                            <span class="acceso__texto" th:unless="${voluntario == null}">Revisa las materias y el apoyo con los que apareces en la búsqueda.</span>
+                            <span class="acceso__flecha" aria-hidden="true">
+                                <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Próximas solicitudes (pendientes y aceptadas) -->
+            <div class="panel-bloque" role="region" aria-labelledby="titulo-proximas">
+
+                <div class="panel-bloque__cabecera">
+                    <h2 id="titulo-proximas">Próximos acompañamientos</h2>
+                    <a th:href="@{/mis-acompanamientos}" class="panel-bloque__enlace">
+                        Ver todos
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                    </a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(proximas)}" class="panel-vacio">
+                    <span class="panel-vacio__icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+                    </span>
+                    <div>
+                        <h3>No tienes acompañamientos próximos</h3>
+                        <p>Busca un voluntario y envíale una solicitud. Aquí verás las que estén pendientes o aceptadas.</p>
+                    </div>
+                    <a th:href="@{/voluntarios}" class="boton-accion boton-accion--panel">Buscar voluntarios</a>
+                </div>
+
+                <ul th:unless="${#lists.isEmpty(proximas)}" class="proximas">
+                    <li th:each="s : ${proximas}" class="solicitudes__item">
+                        <article class="proxima" th:attr="aria-labelledby='proxima-' + ${s.id}">
+
+                            <span class="proxima__icono" aria-hidden="true"
+                                  th:switch="${s.materiaCodigo != null and #strings.length(s.materiaCodigo) >= 3 ? #strings.toUpperCase(#strings.substring(s.materiaCodigo, 0, 3)) : ''}">
+                                <svg th:case="'MAT'" viewBox="0 0 24 24"><path d="M18 5H7l6 7-6 7h11"/></svg>
+                                <svg th:case="'ISW'" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
+                                <svg th:case="'FIS'" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></svg>
+                                <svg th:case="*" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14ZM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>
+                            </span>
+
+                            <div class="proxima__info">
+                                <h3 th:id="'proxima-' + ${s.id}"
+                                    th:text="${nombresMaterias.get(s.materiaCodigo) != null} ? ${nombresMaterias.get(s.materiaCodigo)} : ${s.materiaCodigo}">
+                                    Cálculo Diferencial
+                                </h3>
+                                <p class="proxima__tema">Tema: <span th:text="${s.tema}">Límites</span></p>
+                                <p class="proxima__fecha">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+                                    <span th:text="${#strings.capitalize(#temporals.format(s.fechaProgramada, 'EEE, d MMM yyyy', idioma))} + ' · ' + ${#temporals.format(s.fechaProgramada, 'h:mm a', idioma)}">
+                                        Jue, 23 oct 2026 · 10:00 a. m.
+                                    </span>
+                                </p>
+                            </div>
+
+                            <span class="estado"
+                                  th:classappend="${s.estado.name() == 'ACEPTADA'} ? ' estado--aceptada' : ' estado--pendiente'"
+                                  th:text="${s.estado.name() == 'ACEPTADA'} ? 'Aceptada' : 'Pendiente'">Pendiente</span>
+
+                            <a th:if="${s.estado.name() == 'ACEPTADA'}"
+                               th:href="@{/solicitudes/{id}/whatsapp(id=${s.id}, volver='inicio')}" target="_blank" rel="noopener"
+                               class="boton-whatsapp boton-whatsapp--pequeno proxima__whatsapp"
+                               th:attr="aria-label='Contactar por WhatsApp (se abre en otra pestaña): ' + ${s.tema}">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12Z"/><path d="M9 9.5c.4 2.2 2.3 4.1 4.5 4.5"/></svg>
+                                WhatsApp
+                            </a>
+                            <a th:unless="${s.estado.name() == 'ACEPTADA'}" th:href="@{/mis-acompanamientos}" class="proxima__detalle">
+                                Ver detalle
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                            </a>
+                        </article>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Columna lateral -->
+        <aside class="panel__lateral" aria-label="Información para ti">
+
+            <div class="panel-tarjeta panel-tarjeta--destacada">
+                <p class="panel-tarjeta__frase">Tu apoyo también importa <span aria-hidden="true">♥</span></p>
+                <svg class="panel-tarjeta__hoja" viewBox="0 0 60 90" aria-hidden="true">
+                    <path d="M30 88V30"/>
+                    <path d="M30 50c-14-4-20-16-18-28 12 4 18 14 18 28ZM30 40c12-6 18-18 16-30-12 6-16 18-16 30ZM30 66c12-4 18-14 18-24-12 2-18 12-18 24Z"/>
+                </svg>
+            </div>
+
+            <div class="panel-tarjeta panel-tarjeta--ajustes">
+                <h2 class="panel-tarjeta__titulo">Ajustes razonables</h2>
+                <p>Si necesitas algún ajuste para tu acompañamiento, podrás indicarlo en tu perfil.</p>
+                <span class="panel-tarjeta__pronto">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    Muy pronto
+                </span>
+            </div>
+
+            <!-- Su voluntariado -->
+            <div class="panel-tarjeta panel-tarjeta--voluntariado">
+                <th:block th:if="${voluntario != null}">
+                    <div class="panel-tarjeta__fila">
+                        <h2 class="panel-tarjeta__titulo">Tu perfil de voluntario</h2>
+                        <span class="estado"
+                              th:classappend="${voluntario.estado.name() == 'ACTIVO'} ? ' estado--activo' : ' estado--suspendido'"
+                              th:text="${voluntario.estado.name() == 'ACTIVO'} ? 'Activo' : 'Suspendido'">Activo</span>
+                    </div>
+                    <p class="panel-tarjeta__dato">Materias</p>
+                    <ul class="panel-chips">
+                        <li th:each="m : ${voluntario.materias}" th:text="${m.nombre}">Cálculo</li>
+                    </ul>
+                    <a th:href="@{/solicitudes-recibidas}" class="panel-recibidas">
+                        <span class="panel-recibidas__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                        </span>
+                        <span class="panel-recibidas__texto">Solicitudes recibidas</span>
+                        <span class="panel-recibidas__numero"
+                              th:classappend="${pendientesRecibidas > 0} ? ' panel-recibidas__numero--nuevas' : ''"
+                              th:text="${pendientesRecibidas}"
+                              th:attr="aria-label=${pendientesRecibidas == 1} ? '1 pendiente' : ${pendientesRecibidas} + ' pendientes'">0</span>
+                    </a>
+                    <a th:href="@{/disponibilidad}" class="panel-recibidas">
+                        <span class="panel-recibidas__icono" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+                        </span>
+                        <span class="panel-recibidas__texto">Mi disponibilidad</span>
+                    </a>
+                    <a th:href="@{/ser-voluntario}" class="panel-bloque__enlace">
+                        Ver mi perfil
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+                    </a>
+                </th:block>
+
+                <th:block th:if="${voluntario == null}">
+                    <span class="panel-tarjeta__icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z"/></svg>
+                    </span>
+                    <h2 class="panel-tarjeta__titulo">¿Te animas a ser voluntario?</h2>
+                    <p>Cada hora que compartes ayuda a que otro estudiante avance.</p>
+                    <a th:href="@{/ser-voluntario}" class="boton-accion boton-accion--panel">Quiero ser voluntario</a>
+                </th:block>
+            </div>
+
+            <p class="panel__lema">Tu talento también es parte de la comunidad <span aria-hidden="true">♥</span></p>
+        </aside>
+    </div>
+</section>
+
+</body>
+</html>
