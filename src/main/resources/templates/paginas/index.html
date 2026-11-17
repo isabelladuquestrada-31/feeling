@@ -1,33 +1,101 @@
-
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
+
 <head>
+
+    <!--
+    PROYECTO: FEELING
+    ARCHIVO: index.html
+    MÓDULO: Página de inicio
+    
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 2.0.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-16
+    ESTADO: En desarrollo
+
+    DESCRIPCIÓN:
+    Documento HTML correspondiente a la página principal de la
+    plataforma Feeling. Presenta la identidad de la aplicación,
+    su propósito, las modalidades de acompañamiento, el funcionamiento
+    general de la plataforma y sus principales beneficios.
+
+    OBJETIVO:
+    Proporcionar a los visitantes una introducción clara a Feeling
+    y facilitar el acceso a los procesos de registro e inicio de sesión.
+
+    FUNCIONALIDADES:
+    - Presentación institucional de la plataforma.
+    - Navegación entre las secciones informativas.
+    - Presentación de los tipos de acompañamiento.
+    - Descripción del proceso de utilización de Feeling.
+    - Acceso al registro de nuevos usuarios.
+    - Acceso al inicio de sesión.
+    - Navegación adaptable a dispositivos móviles.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura y organización del contenido.
+    - Thymeleaf: resolución de rutas y recursos de la aplicación.
+    - CSS3: presentación visual y diseño adaptable.
+    - JavaScript: interacciones y comportamiento del menú.
+
+    DEPENDENCIAS:
+    - /css/global.css
+    - /css/interno.css
+    - /css/inicio.css
+    - /js/inicio.js
+    - fragments/footer
+
+    RECURSOS GRÁFICOS:
+    - /img/favicon-32x32.png
+    - /img/Logosímbolo_Sin_Fondo.png
+    - /img/Banner.jpeg
+
+    OBSERVACIONES:
+    Los recursos estáticos se resuelven mediante las expresiones
+    de Thymeleaf y deben encontrarse dentro de la carpeta static
+    del proyecto Spring Boot.
+
+   -->
+
+    <!-- Configuración básica del documento y compatibilidad con dispositivos -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Descripción de la plataforma para motores de búsqueda -->
     <meta name="description"
           content="Feeling conecta estudiantes universitarios para compartir conocimientos, resolver dudas y encontrar apoyo académico entre pares.">
 
+    <!-- Icono de la plataforma mostrado en la pestaña del navegador.
+         El archivo debe estar ubicado en src/main/resources/static/img/. -->
     <link rel="icon"
           type="image/png"
           th:href="@{/img/favicon-32x32.png}">
 
+    <!-- Título de la página -->
     <title>Inicio | Feeling</title>
 
+    <!-- Hojas de estilo generales y específicas de la página de inicio -->
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/interno.css}">
     <link rel="stylesheet" th:href="@{/css/inicio.css}">
 
+    <!-- Archivo JavaScript encargado de las interacciones de la página -->
     <script th:src="@{/js/inicio.js}" defer></script>
 </head>
 
 <body class="pagina-inicio">
+        <!--
+            ENCABEZADO Y NAVEGACIÓN PRINCIPAL
+            Contiene el logotipo, el menú de navegación y los accesos
+            a las páginas de inicio de sesión y registro.
+        -->
+        
+         <header class="inicio-header">
 
-    <!-- Encabezado con el logotipo y los enlaces principales de navegación -->
-    <header class="inicio-header">
         <div class="inicio-header__contenedor">
 
+            <!-- Logotipo de Feeling con acceso a la sección inicial -->
             <a href="#inicio"
                class="inicio-logo"
                aria-label="Feeling, ir al inicio">
@@ -36,6 +104,9 @@
                      alt="Logo de Feeling">
             </a>
 
+            <!-- Botón de navegación adaptable para dispositivos móviles.
+                 Los atributos ARIA permiten comunicar su estado y
+                 su relación con el menú a las tecnologías de asistencia. -->
             <button class="inicio-menu-boton"
                     type="button"
                     aria-label="Abrir menú de navegación"
@@ -47,6 +118,8 @@
 
             </button>
 
+            <!-- Menú principal con enlaces a las diferentes secciones
+                 informativas de la página y opciones de autenticación. -->
             <nav class="inicio-nav"
                  id="inicio-navegacion"
                  data-menu
@@ -68,6 +141,8 @@
                     Beneficios
                 </a>
 
+                <!-- Acciones de acceso para usuarios registrados
+                     y estudiantes que desean crear una cuenta. -->
                 <div class="inicio-nav__acciones">
 
                     <a th:href="@{/login}"
@@ -85,11 +160,20 @@
             </nav>
 
         </div>
+
     </header>
 
+    <!-- CONTENIDO PRINCIPAL
+         Agrupa las secciones informativas y de presentación
+         de la plataforma Feeling.
+         -->
     <main>
 
-        <!-- Presentación principal de la plataforma y acceso al registro -->
+        <!--
+             BANNER PRINCIPAL
+             Presenta el propósito general de Feeling mediante
+             un mensaje introductorio y un acceso al registro.
+             -->
         <section class="banner-inicio" id="inicio">
 
             <div class="banner-inicio__contenedor">
@@ -108,6 +192,8 @@
                         Porque aprender en compañía también hace la diferencia.
                     </p>
 
+                    <!-- Llamado principal a la acción para comenzar
+                         el proceso de registro en la plataforma. -->
                     <div class="banner-inicio__acciones">
 
                         <a th:href="@{/registro}"
@@ -121,21 +207,41 @@
                     </div>
 
                 </div>
+                
 
             </div>
-
+                    <!--
+                        LOGOTIPO INSTITUCIONAL
+                        Identifica la universidad a la que pertenece la plataforma.
+                        Se muestra en la esquina inferior derecha de la página.
+                    -->
+                    <div class="signup-logo-universidad">
+                        <img th:src="@{/img/Logo_UAM.png}"
+                            alt="Logo de la Universidad Autónoma de Manizales">
+                    </div>
         </section>
 
-        <!-- Espacio destinado al banner informativo complementario -->
+        <!--  BANNER INFORMATIVO COMPLEMENTARIO
+             Muestra una imagen promocional relacionada con
+             la propuesta de valor y los servicios de Feeling.
+            -->
         <section class="banner-caracteristicas"
-                 aria-label="Características principales de Feeling">
+                 aria-label="Banner informativo de Feeling">
+
+            <img th:src="@{/img/Banner.jpeg}"
+                 alt="Información sobre el apoyo académico entre estudiantes de Feeling">
+
         </section>
 
-        <!-- Explicación del propósito de Feeling y de su comunidad universitaria -->
+        <!--  PRESENTACIÓN DE FEELING
+             Explica el propósito de la plataforma, su enfoque
+             colaborativo y la importancia del apoyo entre pares.
+             -->
         <section class="seccion-presentacion" id="que-es">
 
             <div class="contenedor">
 
+                <!-- Encabezado descriptivo de la sección -->
                 <div class="encabezado-seccion">
 
                     <span class="etiqueta-seccion">
@@ -155,6 +261,8 @@
 
                 </div>
 
+                <!-- Mensaje destacado que resume el enfoque humano
+                     y colaborativo de la plataforma. -->
                 <div class="presentacion-destacada">
 
                     <div class="presentacion-destacada__icono">
@@ -178,8 +286,11 @@
 
                 </div>
 
+                <!-- Tarjetas que presentan los principios
+                     fundamentales de la comunidad Feeling. -->
                 <div class="presentacion-tarjetas">
 
+                    <!-- Primera tarjeta: intercambio de conocimientos -->
                     <article class="tarjeta-presentacion">
 
                         <div class="tarjeta-icono tarjeta-icono--cian">
@@ -208,6 +319,7 @@
 
                     </article>
 
+                    <!-- Segunda tarjeta: acompañamiento y aprendizaje mutuo -->
                     <article class="tarjeta-presentacion">
 
                         <div class="tarjeta-icono tarjeta-icono--menta">
@@ -237,9 +349,10 @@
 
                     </article>
 
+                    <!-- Tercera tarjeta: construcción de una comunidad colaborativa -->
                     <article class="tarjeta-presentacion">
 
-                        <div class="tarjeta-icono tarjeta-icono--azul">
+                        <div class="tarjeta-icono tarjeta-icono">
                             <span aria-hidden="true">
                                 <svg viewBox="0 0 24 24"
                                      width="24" height="24"
@@ -273,11 +386,16 @@
 
         </section>
 
-        <!-- Descripción de los pasos para acceder al acompañamiento académico -->
+        <!-- 
+             FUNCIONAMIENTO DE LA PLATAFORMA
+             Describe el proceso general que sigue un estudiante
+             para registrarse, encontrar apoyo y conectarse.
+             -->
         <section class="seccion-funcionamiento" id="como-funciona">
 
             <div class="contenedor">
 
+                <!-- Introducción a los pasos de utilización de Feeling -->
                 <div class="encabezado-seccion encabezado-seccion--centrado">
 
                     <span class="etiqueta-seccion">
@@ -295,8 +413,11 @@
 
                 </div>
 
+                <!-- Secuencia visual de los tres pasos principales
+                     para utilizar los servicios de la plataforma. -->
                 <div class="pasos-contenedor">
 
+                    <!-- Paso 1: creación de una cuenta -->
                     <article class="tarjeta-paso">
 
                         <span class="paso-numero">01</span>
@@ -327,8 +448,11 @@
 
                     </article>
 
+                    <!-- Elemento visual que conecta el primer paso
+                         con el segundo dentro de la secuencia. -->
                     <div class="pasos-conector" aria-hidden="true">→</div>
 
+                    <!-- Paso 2: búsqueda de estudiantes voluntarios -->
                     <article class="tarjeta-paso">
 
                         <span class="paso-numero">02</span>
@@ -359,8 +483,11 @@
 
                     </article>
 
+                    <!-- Elemento visual que conecta el segundo paso
+                         con el tercero dentro de la secuencia. -->
                     <div class="pasos-conector" aria-hidden="true">→</div>
 
+                    <!-- Paso 3: envío de la solicitud y conexión entre estudiantes -->
                     <article class="tarjeta-paso">
 
                         <span class="paso-numero">03</span>
@@ -397,11 +524,15 @@
 
         </section>
 
-        <!-- Presentación de las opciones de acompañamiento ofrecidas por la plataforma -->
+        <!-- TIPOS DE APOYO
+             Presenta las alternativas de acompañamiento disponibles
+             y describe las necesidades que busca atender Feeling.
+             -->
         <section class="seccion-apoyo" id="tipos-apoyo">
 
             <div class="contenedor">
 
+                <!-- Encabezado introductorio de las modalidades de apoyo -->
                 <div class="encabezado-seccion">
 
                     <span class="etiqueta-seccion">
@@ -420,13 +551,19 @@
 
                 </div>
 
+                <!-- Contenedor de tarjetas que describen las modalidades
+                     de acompañamiento ofrecidas por la plataforma. -->
                 <div class="apoyo-grid">
 
+                    <!-- Tarjeta de apoyo académico -->
                     <article class="tarjeta-apoyo tarjeta-apoyo--academico">
 
+                        <!-- Elemento decorativo utilizado exclusivamente
+                             para complementar la presentación visual. -->
                         <div class="tarjeta-apoyo__decoracion"
                              aria-hidden="true"></div>
 
+                        <!-- Icono representativo del acompañamiento académico -->
                         <div class="tarjeta-apoyo__icono">
                             <span aria-hidden="true">
                                 <svg viewBox="0 0 24 24"
@@ -456,6 +593,8 @@
                             y orientarte en tus actividades académicas.
                         </p>
 
+                        <!-- Listado de actividades relacionadas con
+                             el acompañamiento académico entre estudiantes. -->
                         <ul>
                             <li>Apoyo por materias</li>
                             <li>Explicación de conceptos</li>
@@ -465,11 +604,15 @@
 
                     </article>
 
+                    <!-- Tarjeta de orientación y colaboración entre pares -->
                     <article class="tarjeta-apoyo tarjeta-apoyo--emocional">
 
+                        <!-- Elemento decorativo utilizado exclusivamente
+                             para complementar la presentación visual. -->
                         <div class="tarjeta-apoyo__decoracion"
                              aria-hidden="true"></div>
 
+                        <!-- Icono representativo de la colaboración entre estudiantes -->
                         <div class="tarjeta-apoyo__icono">
                             <span aria-hidden="true">
                                 <svg viewBox="0 0 24 24"
@@ -500,6 +643,8 @@
                             para afrontar tus desafíos universitarios.
                         </p>
 
+                        <!-- Listado de actividades que representan
+                             el intercambio de experiencias y conocimientos. -->
                         <ul>
                             <li>Intercambio de experiencias</li>
                             <li>Orientación entre estudiantes</li>
@@ -515,11 +660,14 @@
 
         </section>
 
-        <!-- Beneficios de participar en la comunidad de apoyo académico -->
+        <!-- BENEFICIOS DE FEELING
+             Destaca las características que diferencian la plataforma
+             y los beneficios de participar en su comunidad.-->
         <section class="seccion-beneficios" id="beneficios">
 
             <div class="contenedor">
 
+                <!-- Introducción a los beneficios de la plataforma -->
                 <div class="encabezado-seccion encabezado-seccion--centrado">
 
                     <span class="etiqueta-seccion">
@@ -538,8 +686,11 @@
 
                 </div>
 
+                <!-- Tarjetas informativas de los principales beneficios
+                     y características de la comunidad Feeling. -->
                 <div class="beneficios-grid">
 
+                    <!-- Beneficio 1: colaboración académica -->
                     <article class="tarjeta-beneficio">
 
                         <div class="beneficio-icono" aria-hidden="true">
@@ -566,6 +717,7 @@
 
                     </article>
 
+                    <!-- Beneficio 2: coordinación de horarios -->
                     <article class="tarjeta-beneficio">
 
                         <div class="beneficio-icono beneficio-icono--menta"
@@ -594,22 +746,34 @@
 
                     </article>
 
+                    <!-- Beneficio 3: inclusión y accesibilidad.
+                         El SVG representa gráficamente la participación
+                         y la interacción entre personas. -->
                     <article class="tarjeta-beneficio">
 
-                        <div class="beneficio-icono beneficio-icono--azul"
-                             aria-hidden="true">
+                        <div class="beneficio-icono" aria-hidden="true">
                             <svg viewBox="0 0 24 24"
-                                 width="26" height="26"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="1.8"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="9"/>
+                                width="26"
+                                height="26"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round">
+
+                                <!-- Círculo exterior del icono -->
+                                <circle cx="12" cy="15" r="9"/>
+
+                                <!-- Cabeza -->
                                 <circle cx="12" cy="7" r="1.5"/>
-                                <path d="M12 9v7"/>
-                                <path d="M9 12h6"/>
-                                <path d="M8 21l4-5 4 5"/>
+
+                                <!-- Cuerpo y brazos -->
+                                <path d="M12 10v5"/>
+                                <path d="M8 12h8"/>
+
+                                <!-- Piernas -->
+                                <path d="M9 19l3-4 3 4"/>
+
                             </svg>
                         </div>
 
@@ -623,6 +787,7 @@
 
                     </article>
 
+                    <!-- Beneficio 4: comunicación entre los participantes -->
                     <article class="tarjeta-beneficio">
 
                         <div class="beneficio-icono beneficio-icono--lila"
@@ -655,15 +820,22 @@
 
         </section>
 
-        <!-- Invitación final para formar parte de Feeling -->
+        <!-- INVITACIÓN FINAL
+             Cierra el contenido principal con un mensaje de motivación
+             y un enlace directo al proceso de registro. -->
         <section class="seccion-invitacion">
 
+            <!-- Elementos gráficos decorativos de la sección.
+                 Se excluyen de la interpretación de tecnologías
+                 de asistencia mediante aria-hidden. -->
             <div class="invitacion-decoracion invitacion-decoracion--uno"
                  aria-hidden="true"></div>
 
             <div class="invitacion-decoracion invitacion-decoracion--dos"
                  aria-hidden="true"></div>
 
+            <!-- Mensaje de cierre y llamado a formar parte
+                 de la comunidad universitaria de Feeling. -->
             <div class="invitacion-contenido">
 
                 <span class="invitacion-icono" aria-hidden="true">♡</span>
@@ -690,7 +862,10 @@
 
     </main>
 
-    <!-- Incorpora el pie de página compartido para mantener la estructura común del sitio -->
+    <!-- PIE DE PÁGINA
+         Incorpora el fragmento compartido del footer mediante
+         Thymeleaf para mantener una estructura consistente
+         entre las diferentes páginas de la aplicación.-->
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
 </body>

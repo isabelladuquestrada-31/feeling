@@ -10,4 +10,9 @@ public class InicioController {
     public String inicio() {
         return "paginas/index";
     }
+
+    @GetMapping("/registro")
+    public String mostrarRegistro() {
+        return "paginas/signup";
+    }
 }
