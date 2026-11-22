@@ -87,6 +87,14 @@ public class Solicitud {
     private LocalDateTime fechaProgramada;
 
     /**
+     * Duración del acompañamiento en minutos (30, 60, 120 o 180).
+     * La registra el voluntario al marcar la solicitud como REALIZADA,
+     * por eso está vacía mientras el acompañamiento no se haya realizado.
+     */
+    @Column(name = "duracion_minutos")
+    private Integer duracionMinutos;
+
+    /**
      * Se ejecuta automaticamente antes de guardar la solicitud por primera vez.
      * Pone la fecha de creación y el estado PENDIENTE si no se asignaron.
      */
@@ -220,6 +228,20 @@ public class Solicitud {
      */
     public void setFechaProgramada(LocalDateTime fechaProgramada) {
         this.fechaProgramada = fechaProgramada;
+    }
+
+    /**
+     * @return la duración del acompañamiento en minutos, o null si todavía no se ha realizado
+     */
+    public Integer getDuracionMinutos() {
+        return duracionMinutos;
+    }
+
+    /**
+     * @param duracionMinutos duración del acompañamiento en minutos (30, 60, 120 o 180)
+     */
+    public void setDuracionMinutos(Integer duracionMinutos) {
+        this.duracionMinutos = duracionMinutos;
     }
 
 
