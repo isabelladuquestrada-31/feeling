@@ -8,9 +8,9 @@ import java.util.List;
 /**
  * Perfil de voluntario de un estudiante.
  *
- * <p>Un estudiante puede tener como máximo un perfil de voluntario.
+ * Un estudiante puede tener como máximo un perfil de voluntario.
  * Todo voluntario debe dominar al menos una materia y ofrecer
- * al menos un tipo de apoyo.</p>
+ * al menos un tipo de apoyo
  *
  * @author Isabella Duque
  * @version 1.0
@@ -19,17 +19,23 @@ import java.util.List;
 @Table(name = "voluntario")
 public class Voluntario {
 
-    /** Identificador único del voluntario. */
+    /**
+     * Identificador único del voluntario
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /** Estudiante dueño de este perfil. Un estudiante solo puede tener un perfil. */
+    /**
+     * Estudiante dueño de este perfil. Un estudiante solo puede tener un perfil.
+     */
     @OneToOne
     @JoinColumn(name = "estudiante_id", nullable = false, unique = true)
     private Estudiante estudiante;
 
-    /** Materias que domina el voluntario (al menos una). */
+    /**
+     * Materias que domina el voluntario
+     */
     @ManyToMany
     @JoinTable(
             name = "voluntario_materia",
@@ -38,7 +44,9 @@ public class Voluntario {
     )
     private List<Materia> materias = new ArrayList<>();
 
-    /** Tipos de apoyo que ofrece el voluntario (al menos uno). */
+    /**
+     * Tipos de apoyo que ofrece el voluntario
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "voluntario_tipo_apoyo",
@@ -48,7 +56,9 @@ public class Voluntario {
     @Column(name = "tipo_apoyo", nullable = false)
     private List<TipoApoyo> tiposApoyo = new ArrayList<>();
 
-    /** Estado actual del voluntario. */
+    /**
+     * Estado actual del voluntario.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private EstadoVoluntario estado;
