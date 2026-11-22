@@ -1,12 +1,74 @@
-/* ==========================================================
-   Ser voluntario (RF-05) - Panel del estudiante
-   Se apoya en solicitudes.css (encabezado, alertas, botones,
-   animaciones) y en las variables de global.css.
-   Basado en el mockup "Activarme como voluntario".
-   ========================================================== */
+/* 
+   PROYECTO: Feeling
+   ARCHIVO: ser-voluntario.css
+   UBICACIÓN: src/main/resources/static/css/ser-voluntario.css
+   MÓDULO: Ser voluntario (panel del estudiante)
+
+   AUTOR: Yulipaola Domínguez
+   VERSIÓN: 1.1.0
+   FECHA DE DOCUMENTACIÓN: 2026-11-22
+   ESTADO: Finalizado
+   TICKET: SCRUM-75 (RF-05)
+
+   DESCRIPCIÓN:
+   Hoja de estilos de la pantalla "Activarme como voluntario".
+   Da formato al formulario de dos pasos (materias y tipos de
+   apoyo), a la barra de envío, al perfil del voluntario que ya
+   se activó y a la columna lateral informativa. Se apoya en
+   solicitudes.css (encabezado, alertas, botones y animaciones)
+   y en las variables de global.css. Basada en el mockup
+   "Activarme como voluntario" (SCRUM-13).
+
+   CONTENIDO:
+   1. Distribución general
+   2. Encabezado con botón para volver
+   3. Pasos del formulario
+   4. Opciones con casilla
+   5. Barra de envío
+   6. Perfil del voluntario
+   7. Columna lateral
+   8. Animaciones propias
+   9. Tabletas (hasta 1100 px)
+   10. Celulares (hasta 600 px)
+   11. Celulares muy pequeños (hasta 380 px)
+   12. Pantallas táctiles
+   13. Movimiento reducido
+
+   VARIABLES DE global.css UTILIZADAS:
+   --color-primary, --color-primary-light, --color-primary-dark,
+   --color-soft, --color-surface, --color-background,
+   --color-border, --color-text, --color-text-secondary,
+   --color-text-light, --color-navy, --color-success,
+   --color-danger, --radius-large, --radius-medium,
+   --shadow-soft, --text-title, --text-small.
+
+   DEPENDENCIAS (definidas en solicitudes.css):
+   - Animación solicitudes-aparecer.
+   - Clases .boton-accion, .estado, .solicitudes__etiqueta y
+     .solicitudes__sr-only.
+   - Elemento .boton-accion__cargando (lo crea ser-voluntario.js).
+
+   HISTORIAL DE VERSIONES:
+   - 1.0.0: implementación inicial de la pantalla (SCRUM-75, RF-05).
+   - 1.1.0 (2026-11-22): documentación completa. Se quitó la
+     rotación de .lateral-tarjeta__frase y .voluntariado__lema para
+     que los textos queden horizontales.
+
+   OBSERVACIONES:
+   - .estado--activo y .estado--suspendido también pueden estar
+     definidas en inicio-panel.css. Si ambas hojas se cargan en la
+     misma página, conviene dejarlas en un solo archivo.
+   - Los colores #FBECEC, #E5F5EE, #F1FAFC, #EEF2FA, #F4F1FB,
+     #E4DDF5 y #6A4FB3 están escritos directamente. Se podrían
+     pasar a variables de global.css.
+   - Los selectores con :has() (.opcion:has(...)) no funcionan en
+     navegadores antiguos. La clase .elegida, que pone el JS,
+     cubre ese caso.
+ */
 
 /* 1. Distribución: formulario a la izquierda y columna lateral */
 
+/* Rejilla de dos columnas: contenido flexible y lateral de 300 px. */
 .voluntariado__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
@@ -14,12 +76,14 @@
     align-items: start;
 }
 
+/* min-width: 0 evita que el contenido desborde la columna. */
 .voluntariado__principal {
     min-width: 0;
 }
 
 /* 2. Encabezado con botón para volver */
 
+/* Fila con el botón de regreso y el título. Entra con animación. */
 .voluntariado__encabezado {
     display: flex;
     align-items: flex-start;
@@ -38,6 +102,7 @@
     color: var(--color-text-secondary);
 }
 
+/* Botón circular para volver a la página anterior. */
 .voluntariado__volver {
     display: inline-flex;
     flex-shrink: 0;
@@ -53,6 +118,8 @@
     transition: transform 0.2s ease, background-color 0.25s ease;
 }
 
+/* Estilo común de los iconos SVG de línea: sin relleno, trazo del
+   color del texto y extremos redondeados. */
 .voluntariado__volver svg,
 .paso__buscar svg,
 .opcion__icono svg,
@@ -75,6 +142,7 @@
     height: 22px;
 }
 
+/* Al pasar el cursor, el botón se desplaza un poco a la izquierda. */
 .voluntariado__volver:hover {
     background-color: var(--color-surface);
     transform: translateX(-3px);
@@ -86,12 +154,14 @@
 
 /* 3. Pasos del formulario (materias y tipos de apoyo) */
 
+/* Contenedor del formulario: los pasos van uno debajo del otro. */
 .voluntariado__formulario {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+/* Tarjeta de cada paso (es un fieldset). */
 .paso {
     min-width: 0;
     margin: 0;
@@ -104,10 +174,12 @@
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* El segundo paso entra un poco después. */
 .paso[data-paso="tipos"] {
     animation-delay: 0.1s;
 }
 
+/* Paso con error: borde rojo y pequeña sacudida. La clase la pone el JS. */
 .paso.con-error {
     border-color: var(--color-danger);
     box-shadow: 0 0 0 3px #FBECEC;
@@ -125,6 +197,7 @@
     padding: 0;
 }
 
+/* El elemento que sigue al legend limpia el float. */
 .paso__titulo + * {
     clear: both;
 }
@@ -158,6 +231,7 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+/* Check escondido (transparente y pequeño) hasta completar el paso. */
 .paso__numero-check {
     position: absolute;
     width: 18px;
@@ -167,6 +241,8 @@
     transition: opacity 0.25s ease, transform 0.3s ease;
 }
 
+/* Paso completo: el círculo pasa a verde, se oculta el número y
+   aparece el check. La clase .completo la pone el JS. */
 .paso.completo .paso__numero {
     background-color: var(--color-success);
     transform: scale(1.06);
@@ -181,6 +257,7 @@
     transform: scale(1);
 }
 
+/* Barra con el buscador y el contador de seleccionadas. */
 .paso__herramientas {
     display: flex;
     flex-wrap: wrap;
@@ -190,10 +267,12 @@
     margin-bottom: 16px;
 }
 
+/* Variante sin buscador: el contador queda a la izquierda. */
 .paso__herramientas--solo-contador {
     justify-content: flex-start;
 }
 
+/* Buscador de materias con icono de lupa a la izquierda. */
 .paso__buscar {
     position: relative;
     flex: 1 1 260px;
@@ -223,6 +302,7 @@
     transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 
+/* Foco con teclado: borde y halo del color principal. */
 .paso__buscar input:focus-visible {
     border-color: var(--color-primary);
     background-color: var(--color-text-light);
@@ -230,6 +310,7 @@
     box-shadow: 0 0 0 3px var(--color-soft);
 }
 
+/* Pastilla con la cantidad elegida (por ejemplo, "2 seleccionadas"). */
 .paso__contador {
     padding: 6px 12px;
     border-radius: 50px;
@@ -241,15 +322,18 @@
     transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
 }
 
+/* Pequeño aumento cuando cambia el número (lo agrega el JS). */
 .paso__contador.cambio {
     transform: scale(1.12);
 }
 
+/* Contador en verde cuando el paso está completo. */
 .paso.completo .paso__contador {
     background-color: #E5F5EE;
     color: var(--color-success);
 }
 
+/* Mensaje de error del paso. El JS lo muestra o lo oculta. */
 .paso__error {
     margin-top: 14px;
     color: var(--color-danger);
@@ -259,11 +343,13 @@
 
 /* 4. Opciones con casilla (materias y tipos de apoyo) */
 
+/* Rejilla de opciones. */
 .opciones {
     display: grid;
     gap: 12px;
 }
 
+/* Columnas automáticas; min(100%, ...) evita desbordes a 320 px. */
 .opciones--materias {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
 }
@@ -272,6 +358,7 @@
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
 }
 
+/* Mensaje cuando el buscador no encuentra materias. */
 .opciones__vacio {
     padding: 16px;
     border: 1px dashed var(--color-border);
@@ -280,6 +367,7 @@
     text-align: center;
 }
 
+/* Tarjeta de una opción (es un label que envuelve la casilla). */
 .opcion {
     position: relative;
     display: flex;
@@ -298,11 +386,13 @@
                 box-shadow 0.25s ease, transform 0.2s ease;
 }
 
+/* Variante de los tipos de apoyo: con descripción debajo del título. */
 .opcion--detalle {
     align-items: flex-start;
     min-height: 78px;
 }
 
+/* El atributo hidden lo usa el filtro del buscador. */
 .opcion[hidden] {
     display: none;
 }
@@ -326,6 +416,7 @@
     opacity: 0;
 }
 
+/* Casilla dibujada: cuadro con borde que se rellena al elegirla. */
 .opcion__caja {
     display: inline-flex;
     flex-shrink: 0;
@@ -340,6 +431,7 @@
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
+/* El check se dibuja con stroke-dashoffset: empieza oculto. */
 .opcion__caja svg {
     width: 14px;
     height: 14px;
@@ -349,6 +441,7 @@
     transition: stroke-dashoffset 0.25s ease 0.05s;
 }
 
+/* Icono de la materia o del tipo de apoyo. */
 .opcion__icono {
     display: inline-flex;
     flex-shrink: 0;
@@ -367,6 +460,7 @@
     height: 21px;
 }
 
+/* Bloque de texto: título y descripción o código. */
 .opcion__texto {
     display: flex;
     min-width: 0;
@@ -395,6 +489,7 @@
     box-shadow: 0 0 0 1px var(--color-primary) inset;
 }
 
+/* Casilla marcada: se rellena y aparece el check. */
 .opcion input:checked ~ .opcion__caja {
     border-color: var(--color-primary);
     background-color: var(--color-primary);
@@ -404,12 +499,15 @@
     stroke-dashoffset: 0;
 }
 
+/* Icono de la opción elegida: fondo de color y giro leve. Es el
+   icono el que gira, no un texto. */
 .opcion input:checked ~ .opcion__icono {
     background-color: var(--color-primary);
     color: var(--color-text-light);
     transform: rotate(-6deg) scale(1.05);
 }
 
+/* Animación corta al elegir una opción (la clase la pone el JS). */
 .opcion.recien-elegida {
     animation: voluntariado-pop 0.35s ease;
 }
@@ -422,6 +520,7 @@
 
 /* 5. Barra de envío */
 
+/* Barra con el mensaje de aporte y el botón principal. */
 .voluntariado__envio {
     display: flex;
     flex-wrap: wrap;
@@ -437,6 +536,7 @@
     animation: solicitudes-aparecer 0.6s ease 0.2s both;
 }
 
+/* Icono y mensaje de ánimo a la izquierda de la barra. */
 .voluntariado__aporte {
     display: flex;
     flex: 1 1 260px;
@@ -473,6 +573,7 @@
     color: var(--color-navy);
 }
 
+/* Botón principal (también se usa en el perfil del voluntario). */
 .boton-accion--principal {
     display: inline-flex;
     width: auto;
@@ -490,6 +591,7 @@
     background-color: var(--color-primary-dark);
 }
 
+/* Flecha del botón: avanza a la derecha al pasar el cursor. */
 .boton-accion__flecha {
     width: 18px;
     height: 18px;
@@ -502,6 +604,7 @@
 
 /* 6. Perfil del voluntario (cuando ya se activó) */
 
+/* Tarjeta con el perfil del voluntario. */
 .perfil-voluntario {
     padding: 26px;
     border: 1px solid var(--color-border);
@@ -511,6 +614,7 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Cabecera: insignia, título y estado. */
 .perfil-voluntario__cabecera {
     display: flex;
     flex-wrap: wrap;
@@ -519,6 +623,7 @@
     margin-bottom: 22px;
 }
 
+/* Insignia verde con check; aparece con efecto de rebote. */
 .perfil-voluntario__insignia {
     display: inline-flex;
     flex-shrink: 0;
@@ -551,6 +656,7 @@
     color: var(--color-text);
 }
 
+/* Grupo de datos (materias o tipos de apoyo). */
 .perfil-voluntario__grupo {
     margin-bottom: 18px;
 }
@@ -562,6 +668,7 @@
     font-weight: 800;
 }
 
+/* Fila de botones al final del perfil. */
 .perfil-voluntario__acciones {
     display: flex;
     flex-wrap: wrap;
@@ -587,6 +694,7 @@
     text-decoration: none;
 }
 
+/* Colores de la etiqueta de estado del voluntario. */
 .estado--activo {
     color: var(--color-success);
     background-color: #E5F5EE;
@@ -597,6 +705,7 @@
     background-color: #FBECEC;
 }
 
+/* Lista de chips (materias y tipos de apoyo). */
 .chips {
     display: flex;
     flex-wrap: wrap;
@@ -623,12 +732,14 @@
 
 /* 7. Columna lateral */
 
+/* Columna con las tarjetas informativas. */
 .voluntariado__lateral {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
+/* Tarjeta base de la columna lateral. */
 .lateral-tarjeta {
     padding: 20px;
     border: 1px solid var(--color-border);
@@ -638,6 +749,7 @@
     animation: solicitudes-aparecer 0.6s ease 0.15s both;
 }
 
+/* Tarjeta destacada con la frase y la ilustración. */
 .lateral-tarjeta--destacada {
     position: relative;
     overflow: hidden;
@@ -646,6 +758,7 @@
     animation-delay: 0.05s;
 }
 
+/* Frase de la tarjeta destacada. */
 .lateral-tarjeta__frase {
     position: relative;
     z-index: 1;
@@ -654,9 +767,9 @@
     font-size: 1.35rem;
     font-weight: 800;
     line-height: 1.2;
-    transform: rotate(-4deg);
 }
 
+/* Ilustración decorativa que flota suavemente. */
 .lateral-tarjeta__ilustracion {
     position: absolute;
     right: 12px;
@@ -679,6 +792,7 @@
     font-weight: 800;
 }
 
+/* Lista de beneficios con icono circular. */
 .lateral-lista {
     display: flex;
     flex-direction: column;
@@ -711,6 +825,7 @@
     height: 20px;
 }
 
+/* Tarjeta de accesibilidad e inclusión, en tono lila. */
 .lateral-tarjeta--inclusion {
     display: flex;
     gap: 12px;
@@ -741,32 +856,36 @@
     height: 22px;
 }
 
+/* Lema final de la columna lateral. */
 .voluntariado__lema {
     color: var(--color-primary);
     font-weight: 800;
     text-align: center;
-    transform: rotate(-3deg);
 }
 
 /* 8. Animaciones propias */
 
+/* Rebote corto al elegir una opción. */
 @keyframes voluntariado-pop {
     0% { transform: scale(1); }
     40% { transform: scale(1.04); }
     100% { transform: scale(1); }
 }
 
+/* Sacudida horizontal cuando un paso tiene error. */
 @keyframes voluntariado-sacudir {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-6px); }
     75% { transform: translateX(6px); }
 }
 
+/* Entrada de la insignia del perfil: crece mientras gira. */
 @keyframes voluntariado-insignia {
     from { opacity: 0; transform: scale(0.3) rotate(-30deg); }
     to { opacity: 1; transform: scale(1) rotate(0); }
 }
 
+/* Flotación de la ilustración de la columna lateral. */
 @keyframes voluntariado-flotar {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-6px); }
@@ -779,11 +898,13 @@
         grid-template-columns: 1fr;
     }
 
+    /* La columna lateral se reparte en dos columnas. */
     .voluntariado__lateral {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* El lema ocupa todo el ancho. */
     .voluntariado__lema {
         grid-column: 1 / -1;
     }
@@ -817,6 +938,7 @@
         padding: 10px;
     }
 
+    /* El mensaje de aporte se oculta para dar espacio al botón. */
     .voluntariado__aporte {
         display: none;
     }
@@ -866,6 +988,7 @@
 
 /* 13. Movimiento reducido */
 
+/* Si el sistema pide menos movimiento, se anulan animaciones y transiciones. */
 @media (prefers-reduced-motion: reduce) {
     .voluntariado__encabezado,
     .paso,
