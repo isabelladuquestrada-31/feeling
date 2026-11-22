@@ -654,7 +654,6 @@
     font-size: 1.35rem;
     font-weight: 800;
     line-height: 1.2;
-    transform: rotate(-4deg);
 }
 
 .lateral-tarjeta__ilustracion {
@@ -745,7 +744,6 @@
     color: var(--color-primary);
     font-weight: 800;
     text-align: center;
-    transform: rotate(-3deg);
 }
 
 /* 8. Animaciones propias */

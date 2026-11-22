@@ -742,7 +742,12 @@
 
     .franja-nueva__horas {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Sin esto, el campo de hora no se encoge y se sale de la tarjeta */
+    .campo-hora {
+        min-width: 0;
     }
 
     .franja-nueva__guion {
@@ -767,7 +772,7 @@
 
     .franja__edicion {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         margin: 0 10px 10px;
     }
 
@@ -786,6 +791,16 @@
 
     .disponibilidad__lateral {
         display: flex;
+    }
+}
+
+/* En celulares angostos la hora completa ("08:00 a. m.") no cabe en
+   dos columnas: inicio y fin quedan uno debajo del otro. */
+
+@media (max-width: 420px) {
+    .franja-nueva__horas,
+    .franja__edicion {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 

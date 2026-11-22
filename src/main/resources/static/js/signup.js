@@ -1,39 +1,76 @@
-
-/* ==========================================================
-   PROYECTO: FEELING
-   MÓDULO: REGISTRO DE ESTUDIANTES
-   ARCHIVO: signup.js
-
-   Funcionalidades:
-   - Validación de campos.
-   - Mensajes de error y éxito.
-   - Validación de correo electrónico.
-   - Validación de contraseña y confirmación.
-   - Validación de WhatsApp.
-   - Aceptación del tratamiento de datos.
-   - Mostrar y ocultar contraseñas.
-   - Apertura y cierre del diálogo de privacidad.
-   - Control del envío del formulario.
-   ========================================================== */
+/**
+ * PROYECTO: Feeling
+ * MÓDULO: Registro de estudiantes (RF-01)
+ * ARCHIVO: signup.js
+ * UBICACIÓN: src/main/resources/static/js/signup.js
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.2.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-22
+ * ESTADO: Finalizado
+ * TICKET: SCRUM-48
+ *
+ * DESCRIPCIÓN:
+ * Comportamiento del formulario de registro. Valida los campos en el
+ * navegador antes de enviarlos, muestra los mensajes de error junto a
+ * cada campo y controla el envío para que no se haga dos veces. La
+ * validación definitiva la hace el servidor (RegistroController).
+ *
+ * FUNCIONALIDADES PRINCIPALES:
+ * - Validar nombre completo, contraseña, confirmación, programa
+ *   académico, WhatsApp (+57 y 10 dígitos) y aceptación del aviso.
+ * - Mostrar y ocultar las contraseñas.
+ * - Abrir y cerrar el diálogo del aviso de privacidad.
+ * - Mostrar el estado "Creando cuenta..." mientras se envía.
+ * - Llevar el foco al mensaje de error que devuelve el servidor.
+ * - Quitar el estado de carga si el navegador restaura la página
+ *   al usar el botón "Atrás".
+ *
+ * VARIABLES PRINCIPALES:
+ * - fields: campos del formulario (HTMLElement).
+ * - errorElements: textos de error de cada campo (HTMLElement).
+ * - CONFIG: límites de longitud y formato de los campos (Object).
+ * - isSubmitting: indica si el formulario ya se está enviando (boolean).
+ *
+ * FUNCIONES:
+ * - showError / showSuccess / clearValidation: estado visual de un campo.
+ * - validateName, validatePassword, validateConfirmPassword,
+ *   validateProgram, validateWhatsapp, validatePrivacy: reglas de cada campo.
+ * - validateForm(): ejecuta todas las validaciones.
+ * - setLoading(loading): activa o desactiva el estado de carga del botón.
+ *
+ * TECNOLOGÍAS:
+ * - JavaScript (ECMAScript) y API del DOM.
+ * - Elemento <dialog> de HTML.
+ *
+ * DEPENDENCIAS:
+ * - signup.html: identificadores del formulario (signupForm, signupSubmit,
+ *   serverError, etc.) y atributos data-toggle-password,
+ *   data-open-dialog y data-close-dialog.
+ * - signup.css: clases visible, is-visible, input-error e input-success.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: validaciones del formulario.
+ * - 1.1.0: validación del programa académico como lista cerrada.
+ * - 1.2.0: foco en el error del servidor, reinicio del botón al volver
+ *   con "Atrás", se quita la validación de correo (el formulario no
+ *   lo pide) y documentación.
+ */
 
 document.addEventListener("DOMContentLoaded", () => {
 
     "use strict";
 
-    // ==========================================================
-    // 1. ELEMENTOS DEL FORMULARIO
-    // ==========================================================
+    // 1. Elementos del formulario
 
     const form = document.getElementById("signupForm");
 
     if (!form) {
-        console.error("Feeling: no se encontró el formulario de registro.");
         return;
     }
 
     const fields = {
         nombre: document.getElementById("nombreUsuario"),
-        correo: document.getElementById("correo"),
         contrasena: document.getElementById("contrasena"),
         confirmarContrasena: document.getElementById("confirmarContrasena"),
         programa: document.getElementById("programaAcademico"),
@@ -43,7 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const errorElements = {
         nombre: document.getElementById("errorNombreUsuario"),
-        correo: document.getElementById("errorCorreo"),
         contrasena: document.getElementById("errorContrasena"),
         confirmarContrasena: document.getElementById("errorConfirmarContrasena"),
         programa: document.getElementById("errorProgramaAcademico"),
@@ -51,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         privacidad: document.getElementById("errorTratamientoDatos")
     };
 
-    // Estos identificadores corresponden a tu HTML.
+    // Botón de envío, estado de carga y mensaje general.
     const submitButton = document.getElementById("signupSubmit");
     const submitText = document.getElementById("signupSubmitText");
     const submitLoading = document.getElementById("signupLoading");
@@ -65,15 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
         minPasswordLength: 8,
         maxPasswordLength: 64,
         maxNameLength: 50,
-        maxProgramLength: 100,
-        maxEmailLength: 254,
         whatsappPrefix: "+57",
         whatsappDigits: 10
     };
 
-    // ==========================================================
-    // 2. FUNCIONES GENERALES
-    // ==========================================================
+    // 2. Funciones generales
 
     function getValue(field) {
         return field ? field.value.trim() : "";
@@ -128,9 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ==========================================================
-    // 3. MENSAJE GENERAL DEL FORMULARIO
-    // ==========================================================
+    // 3. Mensaje general del formulario
 
     function showGeneralMessage(message) {
 
@@ -140,7 +170,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         generalMessage.textContent = message;
 
-        // Esta clase coincide con la regla CSS is-visible.
         generalMessage.classList.add("is-visible");
     }
 
@@ -154,9 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
         generalMessage.classList.remove("is-visible");
     }
 
-    // ==========================================================
-    // 4. VALIDACIÓN DEL NOMBRE COMPLETO
-    // ==========================================================
+    // 4. Validación del nombre completo
 
     function isValidFullName(value) {
 
@@ -206,57 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return showSuccess(field, error);
     }
 
-    // ==========================================================
-    // 5. VALIDACIÓN DEL CORREO ELECTRÓNICO
-    // ==========================================================
-
-    function validateEmail() {
-
-        const field = fields.correo;
-        const error = errorElements.correo;
-
-        // El formulario de registro no pide correo: si el campo no existe,
-        // esta validación no debe bloquear el envío.
-        if (!field) {
-            return true;
-        }
-
-        const email = getValue(field);
-
-        if (!email) {
-            return showError(
-                field,
-                error,
-                "Ingresa tu correo electrónico."
-            );
-        }
-
-        if (email.length > CONFIG.maxEmailLength) {
-            return showError(
-                field,
-                error,
-                "El correo electrónico supera la longitud permitida."
-            );
-        }
-
-        // Acepta correos válidos sin exigir un dominio institucional.
-        const emailPattern =
-            /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-        if (!emailPattern.test(email)) {
-            return showError(
-                field,
-                error,
-                "Ingresa un correo electrónico válido."
-            );
-        }
-
-        return showSuccess(field, error);
-    }
-
-    // ==========================================================
-    // 6. VALIDACIÓN DE LA CONTRASEÑA
-    // ==========================================================
+    // 5. Validación de la contraseña
 
     function validatePassword() {
 
@@ -314,9 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    // ==========================================================
-    // 7. VALIDACIÓN DE CONFIRMACIÓN DE CONTRASEÑA
-    // ==========================================================
+    // 6. Validación de confirmación de contraseña
 
     function validateConfirmPassword() {
 
@@ -349,9 +324,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return showSuccess(field, error);
     }
 
-    // ==========================================================
-    // 8. VALIDACIÓN DEL PROGRAMA ACADÉMICO
-    // ==========================================================
+    // 7. Validación del programa académico
 
     function validateProgram() {
 
@@ -376,9 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return showSuccess(field, error);
     }
 
-    // ==========================================================
-    // 9. VALIDACIÓN DEL NÚMERO DE WHATSAPP
-    // ==========================================================
+    // 8. Validación del número de WhatsApp
 
     function validateWhatsapp() {
 
@@ -416,9 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return showSuccess(field, error);
     }
 
-    // ==========================================================
-    // 10. VALIDACIÓN DEL TRATAMIENTO DE DATOS
-    // ==========================================================
+    // 9. Validación del tratamiento de datos
 
     function validatePrivacy() {
 
@@ -453,9 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    // ==========================================================
-    // 11. MOSTRAR Y OCULTAR CONTRASEÑAS
-    // ==========================================================
+    // 10. Mostrar y ocultar contraseñas
 
     document.querySelectorAll("[data-toggle-password]").forEach(button => {
 
@@ -498,9 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ==========================================================
-    // 12. APERTURA DEL DIÁLOGO DE PRIVACIDAD
-    // ==========================================================
+    // 11. Apertura del diálogo de privacidad
 
     document.querySelectorAll("[data-open-dialog]").forEach(button => {
 
@@ -521,9 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ==========================================================
-    // 13. CIERRE DEL DIÁLOGO DE PRIVACIDAD
-    // ==========================================================
+    // 12. Cierre del diálogo de privacidad
 
     document.querySelectorAll("[data-close-dialog]").forEach(button => {
 
@@ -552,16 +515,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // ==========================================================
-    // 14. VALIDACIONES AL SALIR DE LOS CAMPOS
-    // ==========================================================
+    // 13. Validaciones al salir de los campos
 
     if (fields.nombre) {
         fields.nombre.addEventListener("blur", validateName);
-    }
-
-    if (fields.correo) {
-        fields.correo.addEventListener("blur", validateEmail);
     }
 
     if (fields.whatsapp) {
@@ -584,9 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-    // ==========================================================
-    // 15. VALIDACIONES MIENTRAS SE ESCRIBE
-    // ==========================================================
+    // 14. Validaciones mientras se escribe
 
     if (fields.contrasena) {
 
@@ -623,9 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // ==========================================================
-    // 16. LIMPIEZA DE MENSAJES GENERALES
-    // ==========================================================
+    // 15. Limpieza de mensajes generales
 
     Object.values(fields).forEach(field => {
 
@@ -640,15 +593,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ==========================================================
-    // 17. VALIDACIÓN COMPLETA DEL FORMULARIO
-    // ==========================================================
+    // 16. Validación completa del formulario
 
     function validateForm() {
 
         const validations = [
             validateName(),
-            validateEmail(),
             validatePassword(),
             validateConfirmPassword(),
             validateProgram(),
@@ -659,9 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return validations.every(result => result === true);
     }
 
-    // ==========================================================
-    // 18. ENFOCAR EL PRIMER CAMPO INCORRECTO
-    // ==========================================================
+    // 17. Enfocar el primer campo incorrecto
 
     function focusFirstInvalidField() {
 
@@ -679,9 +627,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ==========================================================
-    // 19. ESTADO DE CARGA DEL BOTÓN
-    // ==========================================================
+    // 18. Estado de carga del botón
 
     function setLoading(loading) {
 
@@ -705,9 +651,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ==========================================================
-    // 20. CONTROL DEL ENVÍO DEL FORMULARIO
-    // ==========================================================
+    // 19. Control del envío del formulario
 
     form.addEventListener("submit", event => {
 
@@ -745,14 +689,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }, true);
 
-    // ==========================================================
-    // 21. ESTADO INICIAL
-    // ==========================================================
+    // 20. Estado inicial
 
     setLoading(false);
 
-    console.info(
-        "Feeling: validaciones del formulario de registro inicializadas."
-    );
+    // Si el servidor rechazó el registro (por ejemplo, nombre de usuario
+    // repetido), se muestra el mensaje y se lleva el foco hasta él.
+    const serverError = document.getElementById("serverError");
+
+    if (serverError) {
+        serverError.scrollIntoView({ block: "center" });
+        serverError.focus({ preventScroll: true });
+    }
+
+    // Al volver con "Atrás", el navegador puede restaurar la página tal
+    // como quedó (con el botón en "Creando cuenta..."). Se reinicia.
+    window.addEventListener("pageshow", event => {
+
+        if (event.persisted) {
+            isSubmitting = false;
+            setLoading(false);
+        }
+
+    });
 
 });
