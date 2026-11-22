@@ -1,28 +1,135 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layouts/layout-interno :: layout('Inicio | Feeling', ~{::section})}">
+      th:replace="~{layouts/layout-interno :: layout('Inicio del estudiante | Feeling', ~{::section})}">
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: inicio-estudiante.html
+    UBICACIÓN: src/main/resources/templates/paginas/inicio-estudiante.html
+    MÓDULO: Inicio del estudiante (pantallas de inicio por rol)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.1.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-22
+    ESTADO: Finalizado
+    TICKET: SCRUM-53 (RF-02)
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la pantalla de inicio del estudiante que ha
+    iniciado sesión. Muestra el saludo con su nombre, los accesos
+    rápidos a sus funciones, sus próximos acompañamientos y una
+    columna lateral con su perfil de voluntario. Se basa en el
+    mockup de inicio del estudiante (SCRUM-13).
+
+    FUNCIONALIDADES:
+    - Saludo personalizado con el nombre del usuario.
+    - Accesos rápidos: buscar voluntarios, mis acompañamientos y
+      perfil de voluntario.
+    - Lista de próximos acompañamientos (pendientes y aceptados), con
+      contacto por WhatsApp cuando la solicitud fue aceptada.
+    - Mensaje de estado vacío cuando no hay acompañamientos próximos.
+    - Resumen del perfil de voluntario (materias, solicitudes
+      recibidas y disponibilidad) o invitación a ser voluntario.
+    - Aviso cuando se intentó entrar a una página de administrador.
+
+    ESTRUCTURA DE LA PÁGINA:
+    - Alertas: acceso denegado y error al abrir WhatsApp.
+    - Columna principal: saludo, accesos rápidos y próximos
+      acompañamientos.
+    - Columna lateral: frase destacada, ajustes razonables, perfil de
+      voluntario y lema final.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura y accesibilidad (ARIA).
+    - Thymeleaf: layout, condicionales, iteración, rutas y textos.
+    - CSS3: presentación y diseño adaptable.
+    - JavaScript: efectos de los accesos y avisos.
+
+    DEPENDENCIAS:
+    - layouts/layout-interno: plantilla que aporta el encabezado del
+      documento (head), el título, el menú y el pie. Este archivo solo
+      entrega la sección de contenido y el título como parámetros.
+    - /css/solicitudes.css y /css/inicio-panel.css.
+    - /js/solicitudes.js y /js/inicio-panel.js.
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - nombre: nombre del usuario para el saludo.
+    - accesoDenegado: indica que intentó entrar a una página de
+      administrador.
+    - mensajeError: mensaje si no se pudo abrir WhatsApp.
+    - proximas: solicitudes pendientes y aceptadas.
+    - nombresMaterias: nombre de cada materia según su código.
+    - idioma: configuración regional para formatear las fechas.
+    - voluntario: perfil de voluntario (nulo si aún no lo es).
+    - pendientesRecibidas: cantidad de solicitudes recibidas
+      pendientes.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /voluntarios: búsqueda de voluntarios.
+    - /mis-acompanamientos: acompañamientos del estudiante.
+    - /ser-voluntario: perfil de voluntario.
+    - /solicitudes-recibidas: solicitudes que recibe el voluntario.
+    - /disponibilidad: disponibilidad del voluntario.
+    - /solicitudes/{id}/whatsapp: contacto por WhatsApp.
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-panel: identifica la sección que inicio-panel.js usa
+      como raíz.
+    - data-aviso, data-alerta y data-cerrar-alerta: avisos y cierre
+      de alertas, gestionados por solicitudes.js.
+    - data-solicitudes y la clase sin-js: soporte de solicitudes.js
+      y solicitudes.css (no incluidos en esta revisión).
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0 (2026-11-16): implementación inicial de la pantalla
+      (SCRUM-53, RF-02).
+    - 1.1.0 (2026-11-22): documentación completa. El título cambió de
+      Inicio a Inicio del estudiante para distinguirlo de la página
+      principal (index.html).
+
+    OBSERVACIONES:
+    - El favicon no se define aquí: lo aporta layouts/layout-interno.
+    - Las etiquetas link y script están dentro de la sección porque el
+      layout solo recibe ese fragmento. Lo ideal sería cargarlas desde
+      el head del layout.
+    - Los comentarios HTML llegan al navegador. Para que no se envíen,
+      se pueden escribir como comentarios de Thymeleaf.
+    -->
+
     <meta charset="UTF-8">
-    <title>Inicio | Feeling</title>
+
+    <!-- Título de respaldo para ver el archivo sin servidor. El título
+         real se envía al layout en el atributo th:replace de la
+         etiqueta html. -->
+    <title>Inicio del estudiante | Feeling</title>
 </head>
 <body>
 
 <!--
+    CONTENIDO DE LA PÁGINA
     RF-02: pantalla de inicio del estudiante (SCRUM-53).
     Saludo, accesos a sus funciones y próximas solicitudes.
     Basada en el mockup de inicio del estudiante (SCRUM-13).
+    El layout recibe esta sección como su contenido. La etiqueta
+    section se asocia con su título mediante aria-labelledby.
 -->
 <section class="solicitudes panel sin-js" data-solicitudes data-panel aria-labelledby="titulo-panel">
 
+    <!-- Hojas de estilo y scripts de la pantalla. Los scripts usan
+         defer para ejecutarse cuando el documento ya fue analizado. -->
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/inicio-panel.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
     <script th:src="@{/js/inicio-panel.js}" defer></script>
 
-    <!-- Avisos para lectores de pantalla -->
+    <!-- Región oculta a la vista que anuncia mensajes a los lectores de
+         pantalla de forma cortés (aria-live polite). -->
     <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
 
-    <!-- Llegó aquí porque intentó entrar al panel del administrador -->
+    <!-- Alerta de acceso denegado: se muestra si el usuario intentó entrar
+         al panel del administrador sin tener ese rol. Se puede cerrar con
+         el botón de la derecha. -->
     <div th:if="${accesoDenegado}" class="solicitudes__alerta solicitudes__alerta--error panel__alerta"
          role="alert" data-alerta>
         <span class="panel__alerta-icono" aria-hidden="true">
@@ -33,18 +140,24 @@
                 aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
 
-    <!-- Mensaje si no se pudo abrir el contacto de WhatsApp (RF-11) -->
+    <!-- Alerta de error: se muestra si no se pudo abrir el contacto de
+         WhatsApp (RF-11). El texto lo entrega el controlador. -->
     <div th:if="${mensajeError}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
         <span th:text="${mensajeError}"></span>
         <button type="button" class="solicitudes__alerta-cerrar"
                 aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
 
+    <!-- Rejilla de dos columnas: contenido principal y columna lateral.
+         En pantallas pequeñas la lateral pasa debajo del contenido. -->
     <div class="panel__grid">
 
+        <!-- Columna principal: saludo, accesos rápidos y próximos
+             acompañamientos. -->
         <div class="panel__principal">
 
-            <!-- Saludo -->
+            <!-- Saludo: título con el nombre del usuario, mensaje de apoyo y
+                 pastilla informativa. A la derecha va una ilustración decorativa. -->
             <div class="panel-hero">
                 <div class="panel-hero__texto">
                     <h1 id="titulo-panel">
@@ -61,6 +174,8 @@
                     </span>
                 </div>
 
+                <!-- Nota e ilustración decorativas. Se ocultan a las tecnologías de
+                     asistencia porque no aportan información. -->
                 <div class="panel-hero__arte" aria-hidden="true">
                     <p class="panel-hero__nota">Un poco de apoyo hace grandes diferencias <span>♥</span></p>
                     <svg class="panel-hero__ilustracion" viewBox="0 0 220 140">
@@ -86,9 +201,11 @@
                 </div>
             </div>
 
-            <!-- Accesos a las funciones del estudiante -->
+            <!-- Accesos rápidos a las funciones del estudiante. Es una lista de
+                 enlaces dentro de una navegación con nombre accesible. -->
             <nav class="panel-accesos" aria-label="Accesos rápidos">
                 <ul class="panel-accesos__lista">
+                    <!-- Acceso 1: buscar voluntarios por materia y tipo de ayuda. -->
                     <li class="solicitudes__item">
                         <a th:href="@{/voluntarios}" class="acceso acceso--buscar">
                             <span class="acceso__icono" aria-hidden="true">
@@ -101,6 +218,7 @@
                             </span>
                         </a>
                     </li>
+                    <!-- Acceso 2: consultar acompañamientos próximos e historial. -->
                     <li class="solicitudes__item">
                         <a th:href="@{/mis-acompanamientos}" class="acceso acceso--acompanamientos">
                             <span class="acceso__icono" aria-hidden="true">
@@ -113,6 +231,8 @@
                             </span>
                         </a>
                     </li>
+                    <!-- Acceso 3: ser voluntario o ver el perfil de voluntario. El título
+                         y el texto cambian según el usuario ya sea voluntario o no. -->
                     <li class="solicitudes__item">
                         <a th:href="@{/ser-voluntario}" class="acceso acceso--voluntario">
                             <span class="acceso__icono" aria-hidden="true">
@@ -130,7 +250,8 @@
                 </ul>
             </nav>
 
-            <!-- Próximas solicitudes (pendientes y aceptadas) -->
+            <!-- Próximos acompañamientos: solicitudes pendientes y aceptadas.
+                 El bloque es una región con nombre accesible (titulo-proximas). -->
             <div class="panel-bloque" role="region" aria-labelledby="titulo-proximas">
 
                 <div class="panel-bloque__cabecera">
@@ -141,6 +262,8 @@
                     </a>
                 </div>
 
+                <!-- Estado vacío: se muestra si el estudiante no tiene solicitudes
+                     próximas e invita a buscar un voluntario. -->
                 <div th:if="${#lists.isEmpty(proximas)}" class="panel-vacio">
                     <span class="panel-vacio__icono" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
@@ -152,10 +275,14 @@
                     <a th:href="@{/voluntarios}" class="boton-accion boton-accion--panel">Buscar voluntarios</a>
                 </div>
 
+                <!-- Lista de solicitudes próximas: una fila por cada solicitud. -->
                 <ul th:unless="${#lists.isEmpty(proximas)}" class="proximas">
                     <li th:each="s : ${proximas}" class="solicitudes__item">
                         <article class="proxima" th:attr="aria-labelledby='proxima-' + ${s.id}">
 
+                            <!-- Icono según las tres primeras letras del código de la materia:
+                                 MAT, ISW y FIS tienen icono propio; cualquier otro código usa
+                                 el icono de libro. -->
                             <span class="proxima__icono" aria-hidden="true"
                                   th:switch="${s.materiaCodigo != null and #strings.length(s.materiaCodigo) >= 3 ? #strings.toUpperCase(#strings.substring(s.materiaCodigo, 0, 3)) : ''}">
                                 <svg th:case="'MAT'" viewBox="0 0 24 24"><path d="M18 5H7l6 7-6 7h11"/></svg>
@@ -164,6 +291,8 @@
                                 <svg th:case="*" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14ZM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>
                             </span>
 
+                            <!-- Nombre de la materia (o su código si no se encuentra), tema y
+                                 fecha programada. La fecha se formatea según el idioma. -->
                             <div class="proxima__info">
                                 <h3 th:id="'proxima-' + ${s.id}"
                                     th:text="${nombresMaterias.get(s.materiaCodigo) != null} ? ${nombresMaterias.get(s.materiaCodigo)} : ${s.materiaCodigo}">
@@ -178,10 +307,14 @@
                                 </p>
                             </div>
 
+                            <!-- Etiqueta de estado: Aceptada o Pendiente. -->
                             <span class="estado"
                                   th:classappend="${s.estado.name() == 'ACEPTADA'} ? ' estado--aceptada' : ' estado--pendiente'"
                                   th:text="${s.estado.name() == 'ACEPTADA'} ? 'Aceptada' : 'Pendiente'">Pendiente</span>
 
+                            <!-- Solicitud aceptada: botón para contactar por WhatsApp en otra
+                                 pestaña. Envía el identificador de la solicitud y el parámetro
+                                 volver para regresar a esta pantalla. -->
                             <a th:if="${s.estado.name() == 'ACEPTADA'}"
                                th:href="@{/solicitudes/{id}/whatsapp(id=${s.id}, volver='inicio')}" target="_blank" rel="noopener"
                                class="boton-whatsapp boton-whatsapp--pequeno proxima__whatsapp"
@@ -189,6 +322,7 @@
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a9 9 0 0 1-13.5 7.8L3 21l1.3-4.4A9 9 0 1 1 21 12Z"/><path d="M9 9.5c.4 2.2 2.3 4.1 4.5 4.5"/></svg>
                                 WhatsApp
                             </a>
+                            <!-- Solicitud pendiente: enlace al detalle en Mis acompañamientos. -->
                             <a th:unless="${s.estado.name() == 'ACEPTADA'}" th:href="@{/mis-acompanamientos}" class="proxima__detalle">
                                 Ver detalle
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
@@ -199,9 +333,11 @@
             </div>
         </div>
 
-        <!-- Columna lateral -->
+        <!-- Columna lateral: información de apoyo para el estudiante. Es un
+             elemento aside con nombre accesible. -->
         <aside class="panel__lateral" aria-label="Información para ti">
 
+            <!-- Tarjeta con la frase destacada y una hoja decorativa. -->
             <div class="panel-tarjeta panel-tarjeta--destacada">
                 <p class="panel-tarjeta__frase">Tu apoyo también importa <span aria-hidden="true">♥</span></p>
                 <svg class="panel-tarjeta__hoja" viewBox="0 0 60 90" aria-hidden="true">
@@ -210,6 +346,8 @@
                 </svg>
             </div>
 
+            <!-- Aviso de ajustes razonables. La función aún no está disponible,
+                 por eso muestra la etiqueta Muy pronto. -->
             <div class="panel-tarjeta panel-tarjeta--ajustes">
                 <h2 class="panel-tarjeta__titulo">Ajustes razonables</h2>
                 <p>Si necesitas algún ajuste para tu acompañamiento, podrás indicarlo en tu perfil.</p>
@@ -219,8 +357,11 @@
                 </span>
             </div>
 
-            <!-- Su voluntariado -->
+            <!-- Perfil de voluntariado: muestra una de dos versiones según si el
+                 usuario ya es voluntario o todavía no. -->
             <div class="panel-tarjeta panel-tarjeta--voluntariado">
+                <!-- El usuario ya es voluntario: estado del perfil, materias y
+                     accesos a solicitudes recibidas, disponibilidad y perfil. -->
                 <th:block th:if="${voluntario != null}">
                     <div class="panel-tarjeta__fila">
                         <h2 class="panel-tarjeta__titulo">Tu perfil de voluntario</h2>
@@ -232,6 +373,9 @@
                     <ul class="panel-chips">
                         <li th:each="m : ${voluntario.materias}" th:text="${m.nombre}">Cálculo</li>
                     </ul>
+                    <!-- Acceso a solicitudes recibidas con contador de pendientes. El
+                         contador cambia de estilo si hay pendientes y su aria-label
+                         anuncia la cantidad. -->
                     <a th:href="@{/solicitudes-recibidas}" class="panel-recibidas">
                         <span class="panel-recibidas__icono" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
@@ -242,6 +386,7 @@
                               th:text="${pendientesRecibidas}"
                               th:attr="aria-label=${pendientesRecibidas == 1} ? '1 pendiente' : ${pendientesRecibidas} + ' pendientes'">0</span>
                     </a>
+                    <!-- Acceso a la disponibilidad del voluntario. -->
                     <a th:href="@{/disponibilidad}" class="panel-recibidas">
                         <span class="panel-recibidas__icono" aria-hidden="true">
                             <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
@@ -254,6 +399,7 @@
                     </a>
                 </th:block>
 
+                <!-- El usuario aún no es voluntario: invitación a registrarse. -->
                 <th:block th:if="${voluntario == null}">
                     <span class="panel-tarjeta__icono" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z"/></svg>
@@ -264,6 +410,7 @@
                 </th:block>
             </div>
 
+            <!-- Lema final de la columna lateral. -->
             <p class="panel__lema">Tu talento también es parte de la comunidad <span aria-hidden="true">♥</span></p>
         </aside>
     </div>
