@@ -1,12 +1,13 @@
 /**
- * PROYECTO: FEELING
+ * PROYECTO: Feeling
  * MÓDULO: Página pública
  * ARCHIVO: inicio.css
+ * UBICACIÓN: src/main/resources/static/css/inicio.css
  *
  * AUTOR: Yulipaola Domínguez
  * VERSIÓN: 3.0.0
- * FECHA DE DOCUMENTACIÓN: 16 de noviembre de 2026
- * ESTADO: En desarrollo
+ * FECHA DE DOCUMENTACIÓN: 2026-11-16
+ * ESTADO: Finalizado
  *
  * DESCRIPCIÓN:
  * Hoja de estilos encargada de definir la presentación visual, distribución
@@ -18,16 +19,21 @@
  * gráfica de la plataforma.
  *
  * ESTRUCTURA Y FUNCIONALIDADES:
- * - Configuración general y presentación de la página.
- * - Estilos para encabezados, etiquetas y botones.
- * - Diseño del encabezado y navegación principal.
- * - Presentación del banner principal y sus recursos gráficos.
- * - Diseño de las secciones informativas de la plataforma.
- * - Presentación de los tipos de apoyo ofrecidos.
- * - Visualización de beneficios y llamada a la acción.
- * - Animaciones y transiciones visuales.
- * - Adaptación responsive para escritorio, tabletas y celulares.
- * - Compatibilidad con la preferencia de movimiento reducido.
+ * 1. Configuración general y presentación de la página.
+ * 2. Encabezados y etiquetas de sección.
+ * 3. Sistema de botones.
+ * 4. Encabezado y navegación principal.
+ * 5. Banner principal y sus recursos gráficos.
+ * 6. Banner inferior de características.
+ * 7. Sección de presentación de Feeling.
+ * 8. Sección de funcionamiento de la plataforma.
+ * 9. Sección de tipos de apoyo.
+ * 10. Sección de beneficios.
+ * 11. Sección de invitación final.
+ * 12. Animaciones y transiciones visuales.
+ * 13 a 19. Adaptación responsive para escritorio, tabletas y celulares.
+ * 20. Compatibilidad con la preferencia de movimiento reducido.
+ * 21. Logotipo institucional.
  *
  * TECNOLOGÍAS:
  * - CSS3.
@@ -39,25 +45,26 @@
  *
  * DEPENDENCIAS:
  * - global.css: definición de variables y estilos generales del proyecto.
- * - Elementos HTML de la página de inicio.
+ * - index.html: los nombres de las clases deben coincidir con los
+ *   utilizados en el documento HTML de la página de inicio.
  * - Recursos gráficos ubicados en el directorio público de imágenes.
  *
  * OBSERVACIONES:
- * Los nombres de las clases CSS deben coincidir con los utilizados
- * en el documento HTML y los puntos de interrupción responsive deben
- * mantenerse sincronizados con la lógica del menú implementada en inicio.js.
+ * Los puntos de interrupción responsive deben mantenerse sincronizados
+ * con la lógica del menú implementada en inicio.js.
  *
  */
 
 
 /* 1. CONFIGURACIÓN GENERAL DE LA PÁGINA
-   
+
    Establece las reglas generales de desplazamiento, tipografía, colores,
    imágenes y dimensiones del contenedor principal.
 
    Las variables utilizadas se encuentran definidas en las hojas de estilos
    generales del proyecto.
    */
+
 /* Configuración del desplazamiento vertical y separación de anclas. */
 
 html {
@@ -101,10 +108,11 @@ html {
 
 
 /* 2. ENCABEZADOS DE SECCIÓN
-  
+
    Define la presentación de las etiquetas identificadoras, títulos
    y descripciones que introducen las diferentes secciones informativas.
    */
+
 /* Etiqueta visual utilizada para identificar el tema de cada sección. */
 
 .etiqueta-seccion {
@@ -162,10 +170,11 @@ html {
 
 
 /* 3. SISTEMA DE BOTONES
-   
+
    Define los estilos compartidos de los botones de la página y sus variantes
    visuales, incluyendo estados de interacción y transiciones.
-    */
+   */
+
 /* Estilos base de los botones de la página pública. */
 
 .pagina-inicio .boton {
@@ -242,10 +251,11 @@ html {
 
 
 /* 4. ENCABEZADO Y NAVEGACIÓN PRINCIPAL
-  
+
    Establece la estructura visual del encabezado de la página, la ubicación
    del logotipo, los enlaces de navegación y las acciones de acceso.
-    */
+   */
+
 /* Encabezado fijo en la parte superior de la ventana del navegador. */
 
 .inicio-header {
@@ -364,10 +374,11 @@ html {
 
 
 /* 5. BANNER PRINCIPAL
-   
+
    Define la sección inicial de presentación de Feeling. Incluye la imagen
    de fondo, el contenedor del contenido, el título principal y la descripción.
-    */
+   */
+
 /* Contenedor principal del banner de bienvenida. */
 
 .banner-inicio {
@@ -439,10 +450,11 @@ html {
 
 
 /* 6. BANNER INFERIOR DE CARACTERÍSTICAS
-   
+
    Controla la presentación de la imagen informativa ubicada debajo
    del banner principal.
    */
+
 /* Contenedor centrado y limitado al ancho disponible. */
 
 .banner-caracteristicas {
@@ -463,10 +475,11 @@ html {
 
 
 /* 7. SECCIÓN DE PRESENTACIÓN DE FEELING
-   
+
    Define la distribución de la sección introductoria de la plataforma,
    el bloque destacado y las tarjetas que describen sus principios.
    */
+
 /* Contenedor general de la presentación. */
 
 .seccion-presentacion {
@@ -572,13 +585,6 @@ html {
     background-color: var(--color-surface);
 }
 
-/* Variante cromática azul. */
-
-.tarjeta-icono--azul {
-    color: var(--color-navy);
-    background-color: var(--color-background);
-}
-
 /* Títulos de las tarjetas de presentación. */
 
 .tarjeta-presentacion h3 {
@@ -598,10 +604,11 @@ html {
 
 
 /* 8. SECCIÓN DE FUNCIONAMIENTO DE LA PLATAFORMA
-   
+
    Presenta los pasos necesarios para utilizar Feeling mediante tarjetas
    conectadas visualmente en una secuencia de tres etapas.
-    */
+   */
+
 /* Contenedor general de la sección. */
 
 .seccion-funcionamiento {
@@ -707,10 +714,11 @@ html {
 
 
 /* 9. SECCIÓN DE TIPOS DE APOYO
-   
+
    Define la presentación de las modalidades de acompañamiento ofrecidas
    por Feeling, organizadas en tarjetas informativas.
    */
+
 /* Contenedor general de la sección de apoyo. */
 
 .seccion-apoyo {
@@ -847,12 +855,12 @@ html {
 }
 
 
-/* 
-   10. SECCIÓN DE BENEFICIOS
-   
+/* 10. SECCIÓN DE BENEFICIOS
+
    Organiza las ventajas principales de la plataforma mediante tarjetas
    distribuidas en una cuadrícula de cuatro columnas.
-    */
+   */
+
 /* Contenedor general de la sección de beneficios. */
 
 .seccion-beneficios {
@@ -907,7 +915,9 @@ html {
     background-color: var(--color-surface);
 }
 
-/* Variante de color azul claro. */
+/* Redefine el color y el fondo base del icono (azul claro).
+   Al declararse después de la variante menta, esta regla prevalece
+   sobre ella en los elementos que combinan ambas clases. */
 
 .beneficio-icono {
     color: var(--color-navy);
@@ -939,12 +949,12 @@ html {
 }
 
 
-/* 
-   11. SECCIÓN DE INVITACIÓN FINAL
-   
+/* 11. SECCIÓN DE INVITACIÓN FINAL
+
    Define el bloque de cierre de la página pública, diseñado para destacar
    el mensaje de invitación y dirigir al usuario hacia la acción principal.
-    */
+   */
+
 /* Fondo degradado y distribución general de la sección. */
 
 .seccion-invitacion {
@@ -1030,10 +1040,11 @@ html {
 
 
 /* 12. ANIMACIONES
-   
+
    Define la animación de entrada utilizada en el contenido del banner
    principal para generar una aparición progresiva del elemento.
-    */
+   */
+
 /* Animación que combina transparencia y desplazamiento vertical. */
 
 @keyframes inicio-aparecer {
@@ -1050,10 +1061,10 @@ html {
 
 
 /* 13. ADAPTACIÓN PARA TABLETAS Y PANTALLAS MEDIANAS
-   
+
    Ajusta las dimensiones, separaciones y distribución de los componentes
    cuando el ancho de pantalla es igual o inferior a 1100 px.
-*/
+   */
 
 @media (max-width: 1100px) {
 
@@ -1116,13 +1127,13 @@ html {
 
 
 /* 14. NAVEGACIÓN PARA DISPOSITIVOS MÓVILES
-   
+
    Define la presentación del encabezado y el menú desplegable en pantallas
    con un ancho máximo de 800 px.
 
    Este breakpoint debe coincidir con el utilizado en inicio.js para
    mantener sincronizados el comportamiento y la presentación del menú.
-*/
+   */
 
 @media (max-width: 800px) {
 
@@ -1149,10 +1160,8 @@ html {
         max-height: 55px;
     }
 
-    /*
-     * Presentación del botón hamburguesa.
-     * Este botón permite controlar la apertura y el cierre del menú móvil.
-     */
+    /* Presentación del botón hamburguesa.
+       Este botón permite controlar la apertura y el cierre del menú móvil. */
 
     .inicio-menu-boton {
         display: flex;
@@ -1221,11 +1230,9 @@ html {
         box-shadow: var(--shadow-soft);
     }
 
-    /* Muestra el menú cuando JavaScript agrega la clase "abierto"
-       o la clase alternativa "menu-abierto". */
+    /* Muestra el menú cuando inicio.js agrega la clase "abierto". */
 
-    .inicio-nav.abierto,
-    .inicio-nav.menu-abierto {
+    .inicio-nav.abierto {
         display: flex;
     }
 
@@ -1297,10 +1304,10 @@ html {
 
 
 /* 15. AJUSTES PARA CELULARES
-   
+
    Reduce espacios, tamaños tipográficos y dimensiones de componentes
    para pantallas con un ancho máximo de 600 px.
- */
+   */
 
 @media (max-width: 600px) {
 
@@ -1477,10 +1484,10 @@ html {
 
 
 /* 16. AJUSTES PARA CELULARES PEQUEÑOS
-   
+
    Realiza reducciones adicionales en los elementos de navegación y
    presentación para dispositivos con un ancho máximo de 380 px.
-    */
+   */
 
 @media (max-width: 380px) {
 
@@ -1531,10 +1538,10 @@ html {
 
 
 /* 17. AJUSTES PARA ANCHOS EXTREMADAMENTE REDUCIDOS
-   
+
    Adapta el encabezado cuando el espacio horizontal disponible es igual
    o inferior a 220 px.
-*/
+   */
 
 @media (max-width: 220px) {
 
@@ -1560,10 +1567,10 @@ html {
 
 
 /* 18. AJUSTES PARA PANTALLAS MUY ANCHAS
-   
+
    Incrementa las dimensiones del banner principal y adapta su contenedor
    para aprovechar el espacio disponible en pantallas de gran tamaño.
- */
+   */
 
 @media (min-width: 1600px) {
 
@@ -1583,11 +1590,11 @@ html {
 
 
 /* 19. VISIBILIDAD DEL BANNER DE CARACTERÍSTICAS EN CELULARES
-   
+
    Oculta el banner inferior de características en dispositivos con un ancho
    máximo de 500 px para adaptar la extensión del contenido a pantallas
    pequeñas.
- */
+   */
 
 @media (max-width: 500px) {
 
@@ -1602,7 +1609,7 @@ html {
    Respeta la configuración de accesibilidad del sistema operativo o navegador.
    Cuando el usuario solicita reducir las animaciones, se minimizan los
    desplazamientos y las transiciones visuales de los elementos de la página.
-*/
+   */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -1623,11 +1630,16 @@ html {
         transition-duration: 0.01ms !important;
     }
 }
-/* ==========================================================
-   LOGOTIPO INSTITUCIONAL
-   Ubicación: esquina inferior derecha.
-   Comportamiento: se oculta en pantallas pequeñas.
-   ========================================================== */
+
+
+/* 21. LOGOTIPO INSTITUCIONAL
+
+   Define la presentación del logotipo de la universidad. Se ubica en la
+   esquina inferior derecha del banner principal, cuyo contenedor funciona
+   como referencia de posición.
+   */
+
+/* Posición del contenedor del logotipo dentro del banner. */
 
 .signup-logo-universidad {
     position: absolute;
@@ -1639,6 +1651,8 @@ html {
     justify-content: center;
 }
 
+/* Dimensiones y ajuste de la imagen del logotipo. */
+
 .signup-logo-universidad img {
     display: block;
     width: 120px;
@@ -1646,7 +1660,8 @@ html {
     object-fit: contain;
 }
 
-/* Ocultar el logotipo en dispositivos pequeños. */
+/* Oculta el logotipo en dispositivos con un ancho máximo de 600 px. */
+
 @media (max-width: 600px) {
     .signup-logo-universidad {
         display: none;
