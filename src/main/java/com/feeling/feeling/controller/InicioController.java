@@ -24,5 +24,4 @@ public class InicioController {
     public String inicio() {
         return "paginas/index";
     }
-
 }
