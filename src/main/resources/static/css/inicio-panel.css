@@ -1,13 +1,86 @@
-/* ==========================================================
-   Pantallas de inicio por rol (SCRUM-53, RF-02)
-   Inicio del estudiante y del administrador.
-   Se apoya en solicitudes.css (alertas, botones, entrada de
-   tarjetas) y en las variables de global.css.
-   Basado en los mockups de SCRUM-13.
-   ========================================================== */
+/* PROYECTO: Feeling
+   ARCHIVO: inicio-panel.css
+   UBICACIÓN: src/main/resources/static/css/inicio-panel.css
+   MÓDULO: Pantallas de inicio por rol (RF-02)
 
-/* 1. Distribución: contenido a la izquierda y columna lateral */
+   AUTOR: Yulipaola Domínguez
+   VERSIÓN: 1.1.0
+   FECHA DE DOCUMENTACIÓN: 2026-11-22
+   ESTADO: Finalizado
+   TICKET: SCRUM-53
 
+   DESCRIPCIÓN:
+   Hoja de estilos de las pantallas de inicio según el rol del
+   usuario: inicio del estudiante (con su perfil de voluntario) y
+   pantalla del administrador. Define la distribución, el saludo,
+   los accesos rápidos, los bloques de contenido, la columna lateral,
+   las animaciones propias y la adaptación a distintos tamaños de
+   pantalla. Se basa en los mockups de SCRUM-13.
+
+   CONTENIDO:
+   1. Distribución general y alertas.
+   2. Saludo e ilustración.
+   3. Accesos rápidos.
+   4. Bloques de contenido (próximos acompañamientos).
+   5. Columna lateral.
+   6. Administrador: cifras y gestión de usuarios.
+   7. Animaciones propias.
+   8. Tabletas y pantallas medianas (hasta 1100 px y 860 px).
+   9. Celulares (hasta 600 px y 380 px).
+   10. Pantallas táctiles.
+   11. Preferencia de menos movimiento.
+
+   TECNOLOGÍAS:
+   - CSS3: rejillas (grid), flexbox, variables, animaciones y
+     consultas de medios.
+
+   DEPENDENCIAS:
+   - global.css: variables de color, radios, sombra y tamaño de
+     texto (--color-*, --radius-*, --shadow-soft, --text-small).
+   - solicitudes.css: animación solicitudes-aparecer, clase .onda con
+     su animación, etiquetas .estado y .estado--pendiente, botones
+     .boton-accion y .boton-whatsapp, y las clases solicitudes__*.
+
+   PÁGINAS QUE LA UTILIZAN:
+   - templates/paginas/inicio-estudiante.html (revisada).
+   - Pantalla del administrador, admin.html (no incluida en esta
+     revisión).
+
+   ADAPTACIÓN:
+   Puntos de quiebre en 1100, 860, 600 y 380 px. El ancho mínimo
+   exigido para el proyecto es 320 px.
+
+   HISTORIAL DE VERSIONES:
+   - 1.0.0 (2026-11-16): implementación inicial de las pantallas de
+     inicio por rol (SCRUM-53, RF-02).
+   - 1.1.0 (2026-11-22): documentación completa del archivo. Se
+     retiró la rotación de los textos .panel-hero__nota,
+     .panel-tarjeta__frase y .panel__lema, y la cursiva de
+     .panel-hero__nota, para que queden horizontales.
+
+   OBSERVACIONES:
+   - Las reglas .cifra, .gestion y .panel-cifras son de la pantalla
+     del administrador. Estas otras no las usa inicio-estudiante.html
+     y conviene revisarlas en admin.html antes de eliminarlas:
+     .ilus-punto, .ilus-barra, .panel-tarjeta--exito,
+     .panel-tarjeta--privado y .panel-hero__texto .solicitudes__etiqueta.
+   - En la sección 5, el primer selector de la regla de la campana
+     (con ~) nunca coincide, porque el icono va antes del número en el
+     HTML. La regla funciona gracias al segundo selector, que usa
+     :has().
+   - Dos reglas usan !important para vencer a .panel-tarjeta p, que
+     tiene mayor especificidad.
+   */
+
+/* 1. DISTRIBUCIÓN GENERAL Y ALERTAS
+
+   Organiza la pantalla en dos columnas: el contenido principal a la
+   izquierda y una columna lateral de 300 px a la derecha. También
+   define las alertas de la página y el estilo común de los iconos
+   de línea.
+   */
+
+/* Rejilla principal: contenido flexible y columna lateral fija. */
 .panel__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
@@ -15,6 +88,8 @@
     align-items: start;
 }
 
+/* Columna principal: apila sus bloques en vertical. min-width: 0
+   evita que un contenido ancho desborde la rejilla. */
 .panel__principal {
     display: flex;
     min-width: 0;
@@ -22,18 +97,25 @@
     gap: 24px;
 }
 
+/* Alertas de la página (acceso denegado y errores): icono y mensaje
+   en una misma fila. Se suman a las clases de solicitudes.css. */
 .panel__alerta {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
+/* Contenedor del icono de la alerta; conserva su tamaño. */
 .panel__alerta-icono {
     display: inline-flex;
     flex-shrink: 0;
 }
 
-/* Íconos de línea de toda la página */
+/* Íconos de línea de toda la página.
+
+   Los SVG del HTML no traen colores propios: se dibujan sin relleno
+   y con trazo redondeado que hereda currentColor, por lo que cada
+   icono toma el color de su contenedor. */
 .panel__alerta-icono svg,
 .panel-hero__pastilla svg,
 .acceso__icono svg,
@@ -54,13 +136,20 @@
     stroke-linejoin: round;
 }
 
+/* Tamaño del icono de la alerta. */
 .panel__alerta-icono svg {
     width: 22px;
     height: 22px;
 }
 
-/* 2. Saludo */
+/* 2. SALUDO E ILUSTRACIÓN
 
+   Tarjeta de bienvenida con el nombre del usuario, un mensaje de
+   apoyo, la pastilla informativa y la ilustración animada.
+   */
+
+/* Tarjeta de saludo: dos columnas (texto e ilustración) sobre un
+   degradado suave. Entra con la animación solicitudes-aparecer. */
 .panel-hero {
     position: relative;
     display: grid;
@@ -78,27 +167,34 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Título del saludo con tamaño fluido: crece con el ancho de la
+   pantalla entre 1.5rem y 2.05rem. */
 .panel-hero h1 {
     margin-bottom: 10px;
     font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2.05rem);
 }
 
+/* Párrafo del saludo con ancho máximo para facilitar la lectura. */
 .panel-hero__texto p {
     max-width: 440px;
     margin-bottom: 16px;
     color: var(--color-text-secondary);
 }
 
+/* Regla sin uso: inicio-estudiante.html no contiene ningún elemento
+   con la clase solicitudes__etiqueta. */
 .panel-hero__texto .solicitudes__etiqueta {
     margin-bottom: 10px;
 }
 
+/* Emoji de saludo: se agita dos veces al cargar la página. */
 .panel-hero__mano {
     display: inline-block;
     transform-origin: 70% 80%;
     animation: panel-saludar 2.4s ease-in-out 0.8s 2;
 }
 
+/* Pastilla informativa bajo el saludo. */
 .panel-hero__pastilla {
     display: inline-flex;
     align-items: center;
@@ -112,6 +208,7 @@
     font-weight: 700;
 }
 
+/* Corazón de la pastilla, con animación de latido continua. */
 .panel-hero__pastilla svg {
     width: 18px;
     height: 18px;
@@ -120,11 +217,16 @@
     animation: panel-latir 2.2s ease-in-out infinite;
 }
 
+/* Contenedor de la ilustración; sirve de referencia para ubicar
+   la nota. */
 .panel-hero__arte {
     position: relative;
     min-height: 150px;
 }
 
+/* Nota de apoyo sobre la ilustración. Se oculta en celulares
+   (sección 9). Versión 1.1.0: se retiró la rotación y la cursiva
+   para que el texto quede horizontal. */
 .panel-hero__nota {
     position: absolute;
     top: -14px;
@@ -133,17 +235,17 @@
     max-width: 130px;
     color: var(--color-primary-dark);
     font-size: 0.85rem;
-    font-style: italic;
     font-weight: 700;
     line-height: 1.25;
     text-align: center;
-    transform: rotate(-6deg);
 }
 
+/* Corazón de la nota. */
 .panel-hero__nota span {
     color: var(--color-primary);
 }
 
+/* Ilustración SVG en línea: ancho fluido con un máximo de 300 px. */
 .panel-hero__ilustracion {
     display: block;
     width: 100%;
@@ -157,7 +259,12 @@
     stroke-linejoin: round;
 }
 
-/* Piezas de la ilustración */
+/* Piezas de la ilustración.
+
+   Cada clase ilus- da color a una parte del dibujo del HTML: planta,
+   libros, portátil y lápices. */
+/* Hojas de la planta: se mecen desde la base. Cada una tiene un
+   retraso distinto para que no se muevan al mismo tiempo. */
 .ilus-hoja {
     fill: #7CCFB0;
     stroke: #2E8F6F;
@@ -174,6 +281,7 @@
     animation-delay: 1.2s;
 }
 
+/* Colores de las demás piezas del dibujo. */
 .ilus-maceta,
 .ilus-vaso {
     fill: #FFFFFF;
@@ -203,6 +311,9 @@
     stroke: rgba(8, 126, 150, 0.25);
 }
 
+/* Piezas de una gráfica de barras (punto y barras que crecen).
+   inicio-estudiante.html no las usa; se conservan porque pueden
+   pertenecer a la pantalla del administrador. */
 .ilus-punto {
     fill: var(--color-primary);
     stroke: none;
@@ -231,13 +342,20 @@
     animation-delay: 0.6s;
 }
 
+/* Pantalla y base del portátil: flotan suavemente. */
 .panel-hero__ilustracion .ilus-pantalla,
 .panel-hero__ilustracion .ilus-base {
     animation: panel-flotar 5s ease-in-out infinite;
 }
 
-/* 3. Accesos a las funciones */
+/* 3. ACCESOS RÁPIDOS
 
+   Tres tarjetas de acceso: buscar voluntarios, mis acompañamientos y
+   perfil de voluntario. Cada variante cambia su color mediante las
+   variables locales --acceso-color y --acceso-fondo.
+   */
+
+/* Lista de accesos: tres columnas iguales en escritorio. */
 .panel-accesos__lista {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -245,6 +363,8 @@
     list-style: none;
 }
 
+/* Tarjeta de acceso. Sus colores salen de las variables locales,
+   que las variantes redefinen. */
 .acceso {
     --acceso-color: var(--color-primary);
     --acceso-fondo: #E6F6F8;
@@ -266,6 +386,7 @@
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+/* Al pasar el cursor: borde de color, sombra y elevación. */
 .acceso:hover {
     border-color: var(--acceso-color);
     box-shadow: 0 10px 24px rgba(23, 59, 101, 0.12);
@@ -273,11 +394,15 @@
     transform: translateY(-4px);
 }
 
+/* Efecto de presión: la clase presionada la agrega inicio-panel.js
+   en pantallas táctiles; :active cubre el clic con ratón. */
 .acceso.presionada,
 .acceso:active {
     transform: scale(0.97);
 }
 
+/* Variantes de color: la tarjeta Buscar voluntarios usa los valores
+   por defecto; las otras dos redefinen las variables. */
 .acceso--acompanamientos {
     --acceso-color: #4F7BD8;
     --acceso-fondo: #EAF0FC;
@@ -288,6 +413,7 @@
     --acceso-fondo: #E6F5EC;
 }
 
+/* Círculo con el icono de la tarjeta. */
 .acceso__icono {
     display: inline-flex;
     align-items: center;
@@ -302,6 +428,7 @@
     transition: transform 0.3s ease;
 }
 
+/* El icono se inclina levemente al pasar el cursor. */
 .acceso:hover .acceso__icono {
     transform: rotate(-8deg) scale(1.06);
 }
@@ -321,6 +448,7 @@
     font-size: var(--text-small);
 }
 
+/* Flecha circular al pie de la tarjeta; se desplaza al pasar el cursor. */
 .acceso__flecha {
     display: inline-flex;
     align-self: flex-end;
@@ -346,13 +474,20 @@
     height: 18px;
 }
 
-/* Onda al tocar una tarjeta de acceso */
+/* Onda al tocar una tarjeta de acceso. El elemento .onda lo crea
+   inicio-panel.js; su animación está definida en solicitudes.css. */
 .acceso .onda {
     background-color: rgba(255, 255, 255, 0.6);
 }
 
-/* 4. Bloques (próximos acompañamientos, gestión de usuarios) */
+/* 4. BLOQUES DE CONTENIDO
 
+   Bloques con borde y sombra. Aquí se define el de próximos
+   acompañamientos (lista y estado vacío); el de gestión de usuarios
+   del administrador está en la sección 6.
+   */
+
+/* Bloque base: fondo blanco, borde, sombra y entrada con retraso. */
 .panel-bloque {
     padding: 22px;
     border: 1px solid var(--color-border);
@@ -362,6 +497,7 @@
     animation: solicitudes-aparecer 0.6s ease 0.2s both;
 }
 
+/* Cabecera del bloque: título a la izquierda y enlace a la derecha. */
 .panel-bloque__cabecera {
     display: flex;
     align-items: center;
@@ -374,6 +510,7 @@
     font-size: 1.15rem;
 }
 
+/* Enlace de texto con flecha (Ver todos, Ver mi perfil). */
 .panel-bloque__enlace {
     display: inline-flex;
     align-items: center;
@@ -395,7 +532,8 @@
     transform: translateX(3px);
 }
 
-/* Lista de próximas solicitudes */
+/* Lista de próximas solicitudes (pendientes y aceptadas), separadas
+   por una línea entre filas. */
 .proximas {
     display: flex;
     flex-direction: column;
@@ -406,6 +544,8 @@
     border-top: 1px solid var(--color-border);
 }
 
+/* Fila de una solicitud en cuatro columnas: icono, información,
+   estado y acción. */
 .proxima {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto auto;
@@ -414,6 +554,7 @@
     padding: 14px 4px;
 }
 
+/* Círculo con el icono de la materia. */
 .proxima__icono {
     display: inline-flex;
     align-items: center;
@@ -456,6 +597,8 @@
     flex-shrink: 0;
 }
 
+/* Colores de las etiquetas de estado. La base .estado y la variante
+   estado--pendiente están en solicitudes.css. */
 .estado--aceptada {
     color: var(--color-success);
     background-color: #E3F4EA;
@@ -471,6 +614,8 @@
     background-color: #FBEAEA;
 }
 
+/* Enlace Ver detalle con forma de botón; alto mínimo de 40 px para
+   facilitar el toque. */
 .proxima__detalle {
     display: inline-flex;
     align-items: center;
@@ -502,7 +647,8 @@
     height: 16px;
 }
 
-/* Sin solicitudes próximas */
+/* Estado vacío: se muestra cuando el estudiante no tiene
+   acompañamientos próximos. */
 .panel-vacio {
     display: flex;
     flex-wrap: wrap;
@@ -544,6 +690,8 @@
     height: 24px;
 }
 
+/* Variante del botón base .boton-accion (solicitudes.css) para
+   esta pantalla. */
 .boton-accion--panel {
     display: inline-flex;
     width: auto;
@@ -562,14 +710,20 @@
     text-decoration: none;
 }
 
-/* 5. Columna lateral */
+/* 5. COLUMNA LATERAL
 
+   Tarjetas de la derecha: frase destacada, ajustes razonables,
+   perfil de voluntario (con sus accesos y contador) y lema final.
+   */
+
+/* Columna lateral: tarjetas apiladas con separación de 16 px. */
 .panel__lateral {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
+/* Tarjeta base de la columna lateral. */
 .panel-tarjeta {
     padding: 20px;
     border: 1px solid var(--color-border);
@@ -584,6 +738,7 @@
     font-size: var(--text-small);
 }
 
+/* Tarjeta de la frase destacada, con degradado y hoja decorativa. */
 .panel-tarjeta--destacada {
     position: relative;
     overflow: hidden;
@@ -592,6 +747,8 @@
     animation-delay: 0.05s;
 }
 
+/* Frase destacada. Usa !important porque .panel-tarjeta p tiene
+   mayor especificidad. Versión 1.1.0: se retiró la rotación. */
 .panel-tarjeta__frase {
     position: relative;
     z-index: 1;
@@ -600,9 +757,9 @@
     font-size: 1.35rem !important;
     font-weight: 800;
     line-height: 1.2;
-    transform: rotate(-4deg);
 }
 
+/* Hoja decorativa en la esquina inferior; se mece suavemente. */
 .panel-tarjeta__hoja {
     position: absolute;
     right: 14px;
@@ -625,6 +782,7 @@
     font-weight: 800;
 }
 
+/* Fila con título y etiqueta de estado del perfil de voluntario. */
 .panel-tarjeta__fila {
     display: flex;
     align-items: center;
@@ -637,6 +795,7 @@
     margin-bottom: 0;
 }
 
+/* Etiqueta Muy pronto para funciones que aún no están disponibles. */
 .panel-tarjeta__pronto {
     display: inline-flex;
     align-items: center;
@@ -656,6 +815,7 @@
     height: 16px;
 }
 
+/* Retrasos escalonados de la animación de entrada de las tarjetas. */
 .panel-tarjeta--ajustes {
     animation-delay: 0.2s;
 }
@@ -669,6 +829,7 @@
     margin-top: 14px;
 }
 
+/* Círculo con el icono de la tarjeta de voluntariado. */
 .panel-tarjeta__icono {
     display: inline-flex;
     align-items: center;
@@ -691,12 +852,14 @@
     animation: panel-latir 2.2s ease-in-out infinite;
 }
 
+/* Rótulo de datos del perfil (por ejemplo, Materias). Usa !important por la misma razón que la frase destacada. */
 .panel-tarjeta__dato {
     margin-bottom: 6px;
     color: var(--color-navy) !important;
     font-weight: 800;
 }
 
+/* Etiquetas con las materias del voluntario. */
 .panel-chips {
     display: flex;
     flex-wrap: wrap;
@@ -714,7 +877,8 @@
     font-weight: 700;
 }
 
-/* Acceso a las solicitudes recibidas del voluntario, con su contador */
+/* Accesos del voluntario (solicitudes recibidas y disponibilidad).
+   El de solicitudes recibidas muestra un contador de pendientes. */
 .panel-recibidas {
     display: flex;
     align-items: center;
@@ -755,6 +919,9 @@
     stroke-linejoin: round;
 }
 
+/* La campana se mueve cuando hay solicitudes nuevas. El primer
+   selector (con ~) no coincide nunca, porque el icono va antes del
+   número en el HTML; la regla funciona gracias a :has(). */
 .panel-recibidas__numero--nuevas ~ .panel-recibidas__icono,
 .panel-recibidas:has(.panel-recibidas__numero--nuevas) .panel-recibidas__icono {
     animation: panel-campana 2.4s ease-in-out 1s 2;
@@ -766,6 +933,7 @@
     font-size: var(--text-small);
 }
 
+/* Contador de solicitudes pendientes. */
 .panel-recibidas__numero {
     min-width: 26px;
     padding: 2px 8px;
@@ -776,11 +944,14 @@
     text-align: center;
 }
 
+/* Contador resaltado en rojo cuando hay solicitudes pendientes. */
 .panel-recibidas__numero--nuevas {
     background-color: var(--color-danger);
     color: var(--color-text-light);
 }
 
+/* Variantes de tarjeta de éxito y de privacidad. inicio-estudiante.html
+   no las usa; revisar en admin.html antes de eliminarlas. */
 .panel-tarjeta--exito {
     border-color: #CDEBDA;
     background-color: #EEF8F2;
@@ -802,15 +973,22 @@
     color: var(--color-text-light);
 }
 
+/* Lema final de la columna lateral. Versión 1.1.0: se retiró la
+   rotación. */
 .panel__lema {
     color: var(--color-primary);
     font-weight: 800;
     text-align: center;
-    transform: rotate(-3deg);
 }
 
-/* 6. Administrador: cifras y gestión de usuarios */
+/* 6. ADMINISTRADOR: CIFRAS Y GESTIÓN DE USUARIOS
 
+   Estilos de la pantalla del administrador: tarjetas con cifras y
+   bloque de gestión de usuarios. inicio-estudiante.html no los
+   utiliza.
+   */
+
+/* Lista de cifras: tres columnas iguales. */
 .panel-cifras {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -818,6 +996,8 @@
     list-style: none;
 }
 
+/* Tarjeta de una cifra. Usa la variable local --cifra-color, que las
+   variantes activos y suspendidos redefinen. */
 .cifra {
     --cifra-color: var(--color-primary);
     display: flex;
@@ -876,6 +1056,7 @@
     font-weight: 700;
 }
 
+/* Bloque de gestión de usuarios. */
 .gestion {
     display: flex;
     flex-wrap: wrap;
@@ -884,6 +1065,7 @@
     scroll-margin-top: 24px;
 }
 
+/* Resalta el bloque cuando se llega a él mediante el enlace #gestion. */
 .gestion:target {
     border-color: var(--color-primary);
     animation: panel-resaltar 1.4s ease 2;
@@ -923,46 +1105,62 @@
     margin-top: 0;
 }
 
-/* 7. Animaciones propias */
+/* 7. ANIMACIONES PROPIAS
 
+   Los nombres llevan el prefijo panel-. Todas se desactivan en la
+   sección 11 cuando el usuario prefiere menos movimiento.
+   */
+
+/* Mano que saluda. */
 @keyframes panel-saludar {
     0%, 60%, 100% { transform: rotate(0); }
     10%, 30% { transform: rotate(16deg); }
     20%, 40% { transform: rotate(-10deg); }
 }
 
+/* Latido del corazón. */
 @keyframes panel-latir {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.15); }
 }
 
+/* Balanceo suave de las hojas. */
 @keyframes panel-mecer {
     0%, 100% { transform: rotate(0); }
     50% { transform: rotate(-4deg); }
 }
 
+/* Flotación vertical del portátil. */
 @keyframes panel-flotar {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-4px); }
 }
 
+/* Crecimiento de las barras desde la base. */
 @keyframes panel-crecer {
     from { transform: scaleY(0); }
     to { transform: scaleY(1); }
 }
 
+/* Movimiento de la campana de solicitudes nuevas. */
 @keyframes panel-campana {
     0%, 50%, 100% { transform: rotate(0); }
     10%, 30% { transform: rotate(14deg); }
     20%, 40% { transform: rotate(-14deg); }
 }
 
+/* Halo que resalta el bloque de gestión al llegar a él. */
 @keyframes panel-resaltar {
     0%, 100% { box-shadow: var(--shadow-soft); }
     50% { box-shadow: 0 0 0 6px rgba(8, 126, 150, 0.18); }
 }
 
-/* 8. Tabletas: la columna lateral pasa abajo */
+/* 8. TABLETAS Y PANTALLAS MEDIANAS
+
+   Hasta 1100 px: la columna lateral pasa debajo del contenido y se
+   organiza en dos columnas.
+   Hasta 860 px: los accesos pasan a una sola columna.
+   */
 
 @media (max-width: 1100px) {
     .panel__grid {
@@ -979,6 +1177,7 @@
     }
 }
 
+/* Hasta 860 px: accesos en una columna, con forma de fila. */
 @media (max-width: 860px) {
     .panel-accesos__lista {
         grid-template-columns: minmax(0, 1fr);
@@ -1009,8 +1208,15 @@
     }
 }
 
-/* 9. Celulares */
+/* 9. CELULARES
 
+   Hasta 600 px: el saludo y las listas pasan a una columna, se oculta
+   la nota de la ilustración y las solicitudes se reorganizan por áreas.
+   Hasta 380 px: ajustes de tamaño para anchos cercanos al mínimo de
+   320 px.
+   */
+
+/* Hasta 600 px: celulares. */
 @media (max-width: 600px) {
     .panel-hero {
         grid-template-columns: minmax(0, 1fr);
@@ -1088,6 +1294,7 @@
     }
 }
 
+/* Hasta 380 px: celulares pequeños (el mínimo exigido es 320 px). */
 @media (max-width: 380px) {
     .panel-hero h1 {
         font-size: 1.45rem;
@@ -1104,7 +1311,11 @@
     }
 }
 
-/* 10. Pantallas táctiles: sin efectos de hover que se quedan pegados */
+/* 10. PANTALLAS TÁCTILES
+
+   En dispositivos sin cursor se anulan los efectos de elevación al
+   pasar el cursor, porque en el toque quedarían pegados.
+   */
 
 @media (hover: none) {
     .acceso:hover,
@@ -1119,7 +1330,11 @@
     }
 }
 
-/* 11. Menos movimiento */
+/* 11. PREFERENCIA DE MENOS MOVIMIENTO
+
+   Si el usuario pidió reducir el movimiento en su sistema, se
+   desactivan todas las animaciones y transiciones del panel.
+   */
 
 @media (prefers-reduced-motion: reduce) {
     .panel *,
