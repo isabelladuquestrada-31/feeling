@@ -6,6 +6,7 @@ import com.feeling.feeling.model.Materia;
 import com.feeling.feeling.model.TipoApoyo;
 import com.feeling.feeling.repository.IMateriaRepository;
 import com.feeling.feeling.repository.IVoluntarioRepository;
+import com.feeling.feeling.repository.SolicitudRepository;
 import com.feeling.feeling.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 
@@ -26,8 +27,8 @@ class VoluntarioServiceTest {
 
     private final UsuarioRepository usuarioRepository = mock(UsuarioRepository.class);
     private final VoluntarioService servicio = new VoluntarioService(
-            usuarioRepository, mock(IMateriaRepository.class), mock(IVoluntarioRepository.class));
-
+            usuarioRepository, mock(IMateriaRepository.class), mock(IVoluntarioRepository.class),
+            mock(SolicitudRepository.class));
     /**
      * Si el estudiante ya se activó, se devuelve su perfil con sus materias y tipos de apoyo.
      */

@@ -3,7 +3,7 @@ import com.feeling.feeling.model.*;
 import com.feeling.feeling.repository.IMateriaRepository;
 import com.feeling.feeling.repository.IVoluntarioRepository;
 import com.feeling.feeling.repository.UsuarioRepository;
-import com.feeling.feeling.service.VoluntarioService;
+import com.feeling.feeling.repository.SolicitudRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,19 +22,21 @@ public class VoluntarioService {
     private final UsuarioRepository usuarioRepository;
     private final IMateriaRepository materiaRepository;
     private final IVoluntarioRepository voluntarioRepository;
+    private final SolicitudRepository solicitudRepository;
 
     /**
      * Crea el servicio con los repositorios que necesita.
      *
-     * @param usuarioRepository    repositorio de usuarios
-     * @param materiaRepository    repositorio de materias
+     * @param usuarioRepository repositorio de usuarios
+     * @param materiaRepository repositorio de materias
      * @param voluntarioRepository repositorio de voluntarios
+     * @param solicitudRepository repositorio de solicitudes, para calcular las horas de voluntariado
      */
-
-    public VoluntarioService(UsuarioRepository usuarioRepository, IMateriaRepository materiaRepository, IVoluntarioRepository voluntarioRepository) {
+    public VoluntarioService(UsuarioRepository usuarioRepository, IMateriaRepository materiaRepository, IVoluntarioRepository voluntarioRepository, SolicitudRepository solicitudRepository) {
         this.usuarioRepository = usuarioRepository;
         this.materiaRepository = materiaRepository;
         this.voluntarioRepository = voluntarioRepository;
+        this.solicitudRepository = solicitudRepository;
     }
 
     /**
@@ -102,5 +104,21 @@ public class VoluntarioService {
                     voluntario.getTiposApoyo().size();
                     return voluntario;
                 });
+    }
+
+    /**
+     * Calcula las horas de voluntariado acumuladas de un voluntarios
+     * Suma la duración de sus acompañamientos en estado REALIZADA y la pasa a horas
+     *
+     * @param voluntarioId ide del voluntario
+     * @return total de horas
+     */
+    @Transactional(readOnly = true)
+    public double calcularHorasVoluntariado (Integer voluntarioId) {
+        Long minutos = solicitudRepository.sumarMinutosPorVoluntarioYEstado(voluntarioId, EstadoSolicitud.REALIZADA);
+        if (minutos==null){
+            return 0;
+        }
+        return minutos/60;
     }
 }
