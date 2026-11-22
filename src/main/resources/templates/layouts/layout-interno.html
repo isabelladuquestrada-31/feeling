@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
-      th:fragment="layout(titulo, contenido)">
+      th:fragment="layout(titulo, contenido)"
+      th:classappend="${clasesAccesibilidad}">
 
 <head>
     <meta charset="UTF-8">
@@ -13,6 +14,9 @@
     <!-- Estilos generales -->
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/interno.css}">
+
+    <!-- Preferencias de accesibilidad del usuario (RF-04): letra grande y alto contraste -->
+    <link rel="stylesheet" th:href="@{/css/accesibilidad.css}">
 
     <!-- Scripts compartidos -->
     <script th:src="@{/js/header.js}" defer></script>

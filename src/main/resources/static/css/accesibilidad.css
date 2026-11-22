@@ -1,0 +1,85 @@
+/* ==========================================================
+   Preferencias de accesibilidad (RF-04)
+   Las clases se ponen en <html> desde layout-interno.html con
+   las preferencias guardadas del usuario, y se aplican en
+   todas las páginas internas.
+   - letra-grande: agranda todo el texto.
+   - alto-contraste: colores con contraste de al menos 7:1
+     (WCAG nivel AAA para texto; el mínimo AA es 4.5:1).
+   ========================================================== */
+
+/* 1. Letra grande
+   Casi todos los tamaños del proyecto están en rem (global.css),
+   así que basta con agrandar la letra de la raíz: 1rem pasa de 16px a 20px. */
+
+html.letra-grande {
+    font-size: 125%;
+}
+
+/* 2. Alto contraste
+   Se reemplazan las variables de color de global.css; como todas las
+   páginas usan esas variables, el cambio llega a todo el sitio. */
+
+html.alto-contraste {
+    --color-primary: #00566A;
+    --color-primary-light: #00566A;
+    --color-primary-dark: #003A48;
+
+    --color-navy: #0A1F44;
+    --color-background: #FFFFFF;
+    --color-surface: #E3F1F4;
+    --color-soft: #E3F1F4;
+
+    --color-text: #1A2E44;
+    --color-text-secondary: #0A1628;
+
+    --color-success: #14593C;
+    --color-danger: #9B1C1C;
+    --color-warning: #7A4A00;
+
+    --color-border: #4B5F73;
+    --shadow-soft: none;
+}
+
+/* Bordes visibles en tarjetas y campos */
+html.alto-contraste .perfil__tarjeta,
+html.alto-contraste .paso,
+html.alto-contraste .tarjeta-solicitud,
+html.alto-contraste .lateral-tarjeta {
+    border-width: 2px;
+}
+
+/* Enlaces siempre subrayados para no depender solo del color */
+html.alto-contraste .main-content a:not(.boton-accion):not([class*="boton"]) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* Foco del teclado más grueso y oscuro */
+html.alto-contraste button:focus-visible,
+html.alto-contraste a:focus-visible,
+html.alto-contraste input:focus-visible,
+html.alto-contraste select:focus-visible,
+html.alto-contraste textarea:focus-visible {
+    outline: 3px solid #000000;
+    outline-offset: 3px;
+}
+
+/* Textos de ejemplo dentro de los campos */
+html.alto-contraste ::placeholder {
+    color: #4B5F73;
+    opacity: 1;
+}
+
+/* Mensajes de éxito y error con texto más oscuro */
+html.alto-contraste .solicitudes__alerta {
+    border-width: 2px;
+}
+
+html.alto-contraste .solicitudes__alerta--exito {
+    border-color: var(--color-success);
+}
+
+html.alto-contraste .solicitudes__alerta--error {
+    border-color: var(--color-danger);
+}

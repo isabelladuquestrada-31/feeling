@@ -3,6 +3,7 @@ package com.feeling.feeling.controller;
 import com.feeling.feeling.model.Administrador;
 import com.feeling.feeling.model.Usuario;
 import com.feeling.feeling.service.IServicioAutenticacion;
+import com.feeling.feeling.service.PreferenciasService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,15 +25,23 @@ import java.util.Optional;
 @Controller
 public class LoginController {
 
+    //=====DOCUMENTAR ESTEEEEE======= DORA
     private final IServicioAutenticacion servicioAutenticacion;
+
+    /**
+     * Servicio para cargar las preferencias de accesibilidad al iniciar sesión (RF-04)
+     */
+    private final PreferenciasService preferenciasService;
+
 
     /**
      * Crea el controlador con el servicio de autenticación.
      *
      * @param servicioAutenticacion servicio que verifica los datos del usuario
      */
-    public LoginController(IServicioAutenticacion servicioAutenticacion) {
+    public LoginController(IServicioAutenticacion servicioAutenticacion, PreferenciasService preferenciasService) {
         this.servicioAutenticacion = servicioAutenticacion;
+        this.preferenciasService = preferenciasService;
     }
 
     /**
@@ -49,9 +58,9 @@ public class LoginController {
      * Verifica los datos del formulario y redirige al usuario según su rol.
      *
      * @param nombreUsuario nombre de usuario escrito en el formulario
-     * @param contrasena contraseña escrita en el formulario
-     * @param sesion sesión donde se guarda el usuario que inició sesión
-     * @param model modelo para enviar el mensaje de error a la vista
+     * @param contrasena    contraseña escrita en el formulario
+     * @param sesion        sesión donde se guarda el usuario que inició sesión
+     * @param model         modelo para enviar el mensaje de error a la vista
      * @return la redirección a la página del rol, o el login con un error
      */
     @PostMapping("/login")
@@ -68,6 +77,7 @@ public class LoginController {
 
         Usuario usuario = resultado.get();
         sesion.setAttribute("usuario", usuario);
+        sesion.setAttribute(PreferenciasService.ATRIBUTO_SESION, preferenciasService.obtener(usuario.getId()));
 
         if (usuario instanceof Administrador) {
             return "redirect:/admin";
@@ -87,5 +97,4 @@ public class LoginController {
         sesion.invalidate();
         return "redirect:/login";
     }
-
-}
+}
