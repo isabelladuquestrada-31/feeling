@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Mi perfil | Feeling', ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi perfil | Feeling</title>
+</head>
+<body>
+
+<!--
+    RF-03: Editar perfil (SCRUM-91).
+    - Formulario precargado con el nombre preferido, los pronombres y el WhatsApp.
+    - Si el servidor encuentra errores, cada uno se muestra debajo de su campo.
+    - A la derecha, una vista previa de cómo te ven los demás estudiantes.
+    Basada en el mockup "Perfil y accesibilidad".
+-->
+<section class="solicitudes perfil sin-js" data-solicitudes aria-labelledby="titulo-perfil">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/perfil.js}" defer></script>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <!-- Encabezado -->
+    <header class="perfil__encabezado">
+        <span class="solicitudes__etiqueta">Tu cuenta</span>
+        <h1 id="titulo-perfil">Mi perfil</h1>
+        <p>Mantén tus datos al día para que tus compañeros sepan cómo llamarte y cómo contactarte.</p>
+    </header>
+
+    <!-- Mensaje de éxito después de guardar -->
+    <div th:if="${mensaje}" class="solicitudes__alerta solicitudes__alerta--exito" role="status" data-alerta>
+        <span th:text="${mensaje}">Tus datos se guardaron correctamente.</span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <!-- Resumen de errores (si el servidor rechazó el formulario) -->
+    <div th:if="${errores != null and !errores.isEmpty()}"
+         class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
+        <span>No pudimos guardar tus datos. Revisa los campos marcados.</span>
+        <button type="button" class="solicitudes__alerta-cerrar"
+                aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <div class="perfil__grid">
+
+        <!-- Formulario: Mis datos -->
+        <form class="perfil__tarjeta perfil__formulario" th:action="@{/perfil}" method="post"
+              novalidate aria-labelledby="titulo-datos" data-formulario-perfil>
+
+            <div class="perfil__tarjeta-cabecera">
+                <span class="perfil__tarjeta-icono" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+                </span>
+                <div>
+                    <h2 id="titulo-datos">Mis datos</h2>
+                    <p>
+                        Inicias sesión como
+                        <strong th:text="${usuarioNombre}">estudiante1</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Nombre preferido -->
+            <div class="campo" th:classappend="${errores != null and errores['nombrePreferido'] != null} ? 'campo--error'"
+                 data-campo="nombrePreferido">
+                <label for="nombrePreferido" class="campo__etiqueta">
+                    Nombre con el que prefiero que me llamen
+                    <span class="campo__opcional">(opcional)</span>
+                </label>
+                <input type="text" id="nombrePreferido" name="nombrePreferido" class="campo__control"
+                       maxlength="50" autocomplete="nickname" placeholder="Ej.: Sam"
+                       th:value="${nombrePreferido}"
+                       th:attr="aria-invalid=${errores != null and errores['nombrePreferido'] != null} ? 'true' : 'false'"
+                       aria-describedby="ayuda-nombre error-nombre">
+                <div class="campo__pie">
+                    <p id="ayuda-nombre" class="campo__ayuda">Si lo dejas vacío, se usará tu nombre de usuario.</p>
+                    <span class="campo__contador" aria-hidden="true" data-contador-nombre>0/50</span>
+                </div>
+                <p id="error-nombre" class="campo__error" role="alert"
+                   th:text="${errores != null} ? ${errores['nombrePreferido']}"
+                   th:hidden="${errores == null or errores['nombrePreferido'] == null}"></p>
+            </div>
+
+            <!-- Pronombres -->
+            <div class="campo" th:classappend="${errores != null and errores['pronombres'] != null} ? 'campo--error'"
+                 data-campo="pronombres">
+                <label for="pronombres" class="campo__etiqueta">
+                    Pronombres
+                    <span class="campo__opcional">(opcional)</span>
+                </label>
+                <select id="pronombres" name="pronombres" class="campo__control"
+                        th:attr="aria-invalid=${errores != null and errores['pronombres'] != null} ? 'true' : 'false'"
+                        aria-describedby="error-pronombres">
+                    <option value="">Sin elegir</option>
+                    <option th:each="opcion : ${opcionesPronombres}"
+                            th:value="${opcion}" th:text="${opcion}"
+                            th:selected="${opcion == pronombres}">Elle</option>
+                </select>
+                <p id="error-pronombres" class="campo__error" role="alert"
+                   th:text="${errores != null} ? ${errores['pronombres']}"
+                   th:hidden="${errores == null or errores['pronombres'] == null}"></p>
+            </div>
+
+            <!-- WhatsApp -->
+            <div class="campo" th:classappend="${errores != null and errores['whatsapp'] != null} ? 'campo--error'"
+                 data-campo="whatsapp">
+                <label for="whatsapp" class="campo__etiqueta">
+                    Número de WhatsApp
+                    <span class="campo__obligatorio" aria-hidden="true">*</span>
+                </label>
+                <div class="campo__con-prefijo">
+                    <span class="campo__prefijo" aria-hidden="true">+57</span>
+                    <input type="tel" id="whatsapp" name="whatsapp" class="campo__control"
+                           inputmode="numeric" maxlength="10" autocomplete="tel-national"
+                           placeholder="3001234567" required
+                           th:value="${whatsapp}"
+                           th:attr="aria-invalid=${errores != null and errores['whatsapp'] != null} ? 'true' : 'false'"
+                           aria-describedby="ayuda-whatsapp error-whatsapp">
+                </div>
+                <p id="ayuda-whatsapp" class="campo__ayuda">
+                    Celular de 10 dígitos. Solo se comparte cuando se acepta una solicitud de acompañamiento.
+                </p>
+                <p id="error-whatsapp" class="campo__error" role="alert"
+                   th:text="${errores != null} ? ${errores['whatsapp']}"
+                   th:hidden="${errores == null or errores['whatsapp'] == null}"></p>
+            </div>
+
+            <p class="perfil__nota">
+                <span class="campo__obligatorio" aria-hidden="true">*</span> Campo obligatorio.
+            </p>
+
+            <div class="perfil__acciones">
+                <button type="submit" class="boton-accion boton-accion--principal" data-guardar>
+                    <span data-guardar-texto>Guardar cambios</span>
+                </button>
+            </div>
+        </form>
+
+        <!-- Columna lateral: vista previa y privacidad -->
+        <aside class="perfil__lateral" aria-label="Cómo te ven los demás">
+
+            <div class="perfil__tarjeta perfil__vista-previa">
+                <h2 class="perfil__lateral-titulo">Así te verán tus compañeros</h2>
+                <div class="vista-previa">
+                    <span class="vista-previa__avatar" aria-hidden="true" data-previa-inicial
+                          th:text="${#strings.toUpperCase(#strings.substring(nombrePreferido != null and !#strings.isEmpty(nombrePreferido) ? nombrePreferido : usuarioNombre, 0, 1))}">S</span>
+                    <div>
+                        <strong class="vista-previa__nombre" data-previa-nombre
+                                th:text="${nombrePreferido != null and !#strings.isEmpty(nombrePreferido)} ? ${nombrePreferido} : ${usuarioNombre}">Sam</strong>
+                        <span class="vista-previa__pronombres" data-previa-pronombres
+                              th:text="${pronombres != null and !#strings.isEmpty(pronombres) and pronombres != 'Prefiero no decir'} ? '(' + ${pronombres} + ')' : ''">(Elle)</span>
+                    </div>
+                </div>
+                <p class="perfil__lateral-texto">
+                    Tu nombre preferido y tus pronombres aparecen en las solicitudes y en la búsqueda de voluntarios.
+                </p>
+            </div>
+
+            <div class="perfil__tarjeta perfil__privacidad">
+                <span class="perfil__tarjeta-icono perfil__tarjeta-icono--suave" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                </span>
+                <div>
+                    <h2 class="perfil__lateral-titulo">Tu número está protegido</h2>
+                    <p class="perfil__lateral-texto">
+                        Nadie ve tu WhatsApp en la búsqueda. Solo lo recibe la otra persona cuando una solicitud queda aceptada.
+                    </p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</section>
+
+</body>
+</html>

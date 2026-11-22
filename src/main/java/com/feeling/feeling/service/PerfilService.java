@@ -23,7 +23,7 @@ public class PerfilService {
     /**
      * Opciones de pronombres que puede elegir el estudiante
      */
-    public static final List<String> PRONOMBRES = List.of("Él", "Ella", "Prefiero no decir");
+    public static final List<String> PRONOMBRES = List.of("Él", "Ella", "Elle", "Prefiero no decir");
 
     /**
      * Largo máximo del nombre preferido (es el mismo de la columna en la base de datos)

@@ -94,7 +94,7 @@ public class PerfilController {
 
         Map<String, String> errores = perfilService.validar(nombrePreferido, pronombres, whatsapp);
 
-        if (errores.isEmpty()) {
+        if (!errores.isEmpty()) {
             cargarFormulario(model, nombrePreferido, pronombres, whatsapp, errores);
             cargarDatosPagina(model, usuario);
             return "paginas/perfil";
@@ -105,7 +105,7 @@ public class PerfilController {
     }
 
     /**
-     * Envía a la vista los valores del formulario, las opciones de prpnombres y los errores.
+     * Envía a la vista los valores del formulario, las opciones de pronombres y los errores.
      *
      * @param model           modelo para enviar los datos a la vista
      * @param nombrePreferido nombre preferido ingresado por el usuario
