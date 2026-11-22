@@ -119,6 +119,6 @@ public class VoluntarioService {
         if (minutos==null){
             return 0;
         }
-        return minutos/60;
+        return minutos/60.0;
     }
 }
