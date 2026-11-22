@@ -5,17 +5,18 @@
 <head>
 
     <!--
-    PROYECTO: FEELING
+    PROYECTO: Feeling
     ARCHIVO: index.html
+    UBICACIÓN: src/main/resources/templates/paginas/index.html
     MÓDULO: Página de inicio
-    
+
     AUTOR: Yulipaola Domínguez
     VERSIÓN: 2.0.0
     FECHA DE DOCUMENTACIÓN: 2026-11-16
-    ESTADO: En desarrollo
+    ESTADO: Finalizado
 
     DESCRIPCIÓN:
-    Documento HTML correspondiente a la página principal de la
+    Plantilla HTML correspondiente a la página principal de la
     plataforma Feeling. Presenta la identidad de la aplicación,
     su propósito, las modalidades de acompañamiento, el funcionamiento
     general de la plataforma y sus principales beneficios.
@@ -33,9 +34,17 @@
     - Acceso al inicio de sesión.
     - Navegación adaptable a dispositivos móviles.
 
+    ESTRUCTURA DE LA PÁGINA (identificador de cada sección):
+    - #inicio: encabezado y banner principal.
+    - #que-es: presentación de la plataforma.
+    - #como-funciona: pasos para utilizar Feeling.
+    - #tipos-apoyo: modalidades de acompañamiento.
+    - #beneficios: beneficios de la comunidad.
+    - Invitación final y pie de página.
+
     TECNOLOGÍAS:
     - HTML5: estructura y organización del contenido.
-    - Thymeleaf: resolución de rutas y recursos de la aplicación.
+    - Thymeleaf: resolución de rutas, recursos y fragmentos de la aplicación.
     - CSS3: presentación visual y diseño adaptable.
     - JavaScript: interacciones y comportamiento del menú.
 
@@ -49,16 +58,29 @@
     RECURSOS GRÁFICOS:
     - /img/favicon-32x32.png
     - /img/Logosímbolo_Sin_Fondo.png
+    - /img/Logo_UAM.png
     - /img/Banner.jpeg
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-menu-boton: identifica el botón que abre y cierra el menú móvil.
+      Es el selector con el que inicio.js localiza el botón.
+    - id="inicio-navegacion": identifica el menú de navegación. Es el
+      identificador con el que inicio.js localiza el menú y el que
+      referencia el atributo aria-controls del botón.
+    - data-menu: atributo presente en el menú que no es utilizado
+      por inicio.js ni por inicio.css.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /login: inicio de sesión.
+    - /registro: registro de nuevos usuarios.
 
     OBSERVACIONES:
     Los recursos estáticos se resuelven mediante las expresiones
     de Thymeleaf y deben encontrarse dentro de la carpeta static
     del proyecto Spring Boot.
+    -->
 
-   -->
-
-    <!-- Configuración básica del documento y compatibilidad con dispositivos -->
+    <!-- Codificación de caracteres y adaptación a dispositivos móviles -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -72,30 +94,34 @@
           type="image/png"
           th:href="@{/img/favicon-32x32.png}">
 
-    <!-- Título de la página -->
+    <!-- Título de la página mostrado en la pestaña del navegador -->
     <title>Inicio | Feeling</title>
 
-    <!-- Hojas de estilo generales y específicas de la página de inicio -->
+    <!-- Hojas de estilo: generales de la aplicación y específicas
+         de la página de inicio. El orden determina la prioridad
+         de las reglas, por lo que inicio.css se carga al final. -->
     <link rel="stylesheet" th:href="@{/css/global.css}">
     <link rel="stylesheet" th:href="@{/css/interno.css}">
     <link rel="stylesheet" th:href="@{/css/inicio.css}">
 
-    <!-- Archivo JavaScript encargado de las interacciones de la página -->
+    <!-- Script de las interacciones de la página. El atributo defer
+         lo ejecuta una vez que el documento ha sido analizado. -->
     <script th:src="@{/js/inicio.js}" defer></script>
 </head>
 
 <body class="pagina-inicio">
         <!--
             ENCABEZADO Y NAVEGACIÓN PRINCIPAL
-            Contiene el logotipo, el menú de navegación y los accesos
-            a las páginas de inicio de sesión y registro.
+            Contiene el logotipo, el botón del menú móvil, los enlaces
+            a las secciones de la página y los accesos a las páginas
+            de inicio de sesión y registro.
         -->
         
          <header class="inicio-header">
 
         <div class="inicio-header__contenedor">
 
-            <!-- Logotipo de Feeling con acceso a la sección inicial -->
+            <!-- Logotipo de Feeling con enlace a la sección inicial -->
             <a href="#inicio"
                class="inicio-logo"
                aria-label="Feeling, ir al inicio">
@@ -104,9 +130,11 @@
                      alt="Logo de Feeling">
             </a>
 
-            <!-- Botón de navegación adaptable para dispositivos móviles.
-                 Los atributos ARIA permiten comunicar su estado y
-                 su relación con el menú a las tecnologías de asistencia. -->
+            <!-- Botón del menú de navegación para dispositivos móviles.
+                 Los atributos ARIA comunican su estado (aria-expanded)
+                 y su relación con el menú (aria-controls) a las
+                 tecnologías de asistencia. El atributo data-menu-boton
+                 permite localizarlo desde JavaScript. -->
             <button class="inicio-menu-boton"
                     type="button"
                     aria-label="Abrir menú de navegación"
@@ -118,13 +146,17 @@
 
             </button>
 
-            <!-- Menú principal con enlaces a las diferentes secciones
-                 informativas de la página y opciones de autenticación. -->
+            <!-- Menú principal con enlaces a las secciones informativas
+                 de la página y opciones de autenticación. El script
+                 lo localiza mediante su identificador inicio-navegacion.
+                 La sección #tipos-apoyo no tiene enlace en este menú. -->
             <nav class="inicio-nav"
                  id="inicio-navegacion"
                  data-menu
                  aria-label="Navegación principal">
 
+                <!-- La clase activo indica la sección marcada
+                     por defecto al cargar la página. -->
                 <a href="#inicio" class="inicio-nav__enlace activo">
                     Inicio
                 </a>
@@ -141,8 +173,9 @@
                     Beneficios
                 </a>
 
-                <!-- Acciones de acceso para usuarios registrados
-                     y estudiantes que desean crear una cuenta. -->
+                <!-- Acciones de acceso: inicio de sesión para usuarios
+                     registrados y registro para nuevos estudiantes.
+                     Las rutas se resuelven mediante Thymeleaf. -->
                 <div class="inicio-nav__acciones">
 
                     <a th:href="@{/login}"
@@ -173,6 +206,7 @@
              BANNER PRINCIPAL
              Presenta el propósito general de Feeling mediante
              un mensaje introductorio y un acceso al registro.
+             Es el destino de los enlaces a #inicio.
              -->
         <section class="banner-inicio" id="inicio">
 
@@ -180,6 +214,8 @@
 
                 <div class="banner-inicio__contenido">
 
+                    <!-- Título principal de la página. El elemento span
+                         permite resaltar visualmente parte del mensaje. -->
                     <h1>
                         Juntos
                         <span>el aprendizaje</span>
@@ -213,7 +249,9 @@
                     <!--
                         LOGOTIPO INSTITUCIONAL
                         Identifica la universidad a la que pertenece la plataforma.
-                        Se muestra en la esquina inferior derecha de la página.
+                        Su posición en la página (esquina inferior derecha)
+                        se define en la hoja de estilos inicio.css.
+                        La clase conserva el prefijo signup- en su nombre.
                     -->
                     <div class="signup-logo-universidad">
                         <img th:src="@{/img/Logo_UAM.png}"
@@ -224,6 +262,8 @@
         <!--  BANNER INFORMATIVO COMPLEMENTARIO
              Muestra una imagen promocional relacionada con
              la propuesta de valor y los servicios de Feeling.
+             El atributo aria-label describe la sección a las
+             tecnologías de asistencia.
             -->
         <section class="banner-caracteristicas"
                  aria-label="Banner informativo de Feeling">
@@ -236,6 +276,7 @@
         <!--  PRESENTACIÓN DE FEELING
              Explica el propósito de la plataforma, su enfoque
              colaborativo y la importancia del apoyo entre pares.
+             Es el destino del enlace "¿Qué es Feeling?" (#que-es).
              -->
         <section class="seccion-presentacion" id="que-es">
 
@@ -262,7 +303,9 @@
                 </div>
 
                 <!-- Mensaje destacado que resume el enfoque humano
-                     y colaborativo de la plataforma. -->
+                     y colaborativo de la plataforma. El símbolo del
+                     icono es decorativo y se oculta a las tecnologías
+                     de asistencia. -->
                 <div class="presentacion-destacada">
 
                     <div class="presentacion-destacada__icono">
@@ -287,10 +330,13 @@
                 </div>
 
                 <!-- Tarjetas que presentan los principios
-                     fundamentales de la comunidad Feeling. -->
+                     fundamentales de la comunidad Feeling.
+                     Cada icono es un SVG en línea que hereda el color
+                     del texto mediante currentColor. -->
                 <div class="presentacion-tarjetas">
 
-                    <!-- Primera tarjeta: intercambio de conocimientos -->
+                    <!-- Primera tarjeta: intercambio de conocimientos.
+                         Icono de libro. Variante de color: cian. -->
                     <article class="tarjeta-presentacion">
 
                         <div class="tarjeta-icono tarjeta-icono--cian">
@@ -319,7 +365,8 @@
 
                     </article>
 
-                    <!-- Segunda tarjeta: acompañamiento y aprendizaje mutuo -->
+                    <!-- Segunda tarjeta: acompañamiento y aprendizaje mutuo.
+                         Icono de personas. Variante de color: menta. -->
                     <article class="tarjeta-presentacion">
 
                         <div class="tarjeta-icono tarjeta-icono--menta">
@@ -349,7 +396,9 @@
 
                     </article>
 
-                    <!-- Tercera tarjeta: construcción de una comunidad colaborativa -->
+                    <!-- Tercera tarjeta: construcción de una comunidad colaborativa.
+                         Icono de red de personas. Utiliza el estilo base
+                         de tarjeta-icono, sin variante de color. -->
                     <article class="tarjeta-presentacion">
 
                         <div class="tarjeta-icono tarjeta-icono">
@@ -390,6 +439,7 @@
              FUNCIONAMIENTO DE LA PLATAFORMA
              Describe el proceso general que sigue un estudiante
              para registrarse, encontrar apoyo y conectarse.
+             Es el destino del enlace "Cómo funciona" (#como-funciona).
              -->
         <section class="seccion-funcionamiento" id="como-funciona">
 
@@ -414,10 +464,13 @@
                 </div>
 
                 <!-- Secuencia visual de los tres pasos principales
-                     para utilizar los servicios de la plataforma. -->
+                     para utilizar los servicios de la plataforma.
+                     Los conectores entre tarjetas son elementos
+                     decorativos ocultos a las tecnologías de asistencia. -->
                 <div class="pasos-contenedor">
 
-                    <!-- Paso 1: creación de una cuenta -->
+                    <!-- Paso 1: creación de una cuenta.
+                         Icono de usuario con signo de adición. -->
                     <article class="tarjeta-paso">
 
                         <span class="paso-numero">01</span>
@@ -452,7 +505,8 @@
                          con el segundo dentro de la secuencia. -->
                     <div class="pasos-conector" aria-hidden="true">→</div>
 
-                    <!-- Paso 2: búsqueda de estudiantes voluntarios -->
+                    <!-- Paso 2: búsqueda de estudiantes voluntarios.
+                         Icono de lupa. Variante de color: menta. -->
                     <article class="tarjeta-paso">
 
                         <span class="paso-numero">02</span>
@@ -487,7 +541,8 @@
                          con el tercero dentro de la secuencia. -->
                     <div class="pasos-conector" aria-hidden="true">→</div>
 
-                    <!-- Paso 3: envío de la solicitud y conexión entre estudiantes -->
+                    <!-- Paso 3: envío de la solicitud y conexión entre estudiantes.
+                         Icono de flecha de envío. Variante de color: azul. -->
                     <article class="tarjeta-paso">
 
                         <span class="paso-numero">03</span>
@@ -527,6 +582,7 @@
         <!-- TIPOS DE APOYO
              Presenta las alternativas de acompañamiento disponibles
              y describe las necesidades que busca atender Feeling.
+             Identificador: #tipos-apoyo.
              -->
         <section class="seccion-apoyo" id="tipos-apoyo">
 
@@ -555,7 +611,9 @@
                      de acompañamiento ofrecidas por la plataforma. -->
                 <div class="apoyo-grid">
 
-                    <!-- Tarjeta de apoyo académico -->
+                    <!-- Tarjeta de apoyo académico.
+                         La clase tarjeta-apoyo--academico define
+                         la variante visual de esta modalidad. -->
                     <article class="tarjeta-apoyo tarjeta-apoyo--academico">
 
                         <!-- Elemento decorativo utilizado exclusivamente
@@ -604,7 +662,9 @@
 
                     </article>
 
-                    <!-- Tarjeta de orientación y colaboración entre pares -->
+                    <!-- Tarjeta de orientación y colaboración entre pares.
+                         La clase tarjeta-apoyo--emocional define
+                         la variante visual de esta modalidad. -->
                     <article class="tarjeta-apoyo tarjeta-apoyo--emocional">
 
                         <!-- Elemento decorativo utilizado exclusivamente
@@ -662,7 +722,8 @@
 
         <!-- BENEFICIOS DE FEELING
              Destaca las características que diferencian la plataforma
-             y los beneficios de participar en su comunidad.-->
+             y los beneficios de participar en su comunidad.
+             Es el destino del enlace "Beneficios" (#beneficios).-->
         <section class="seccion-beneficios" id="beneficios">
 
             <div class="contenedor">
@@ -687,10 +748,13 @@
                 </div>
 
                 <!-- Tarjetas informativas de los principales beneficios
-                     y características de la comunidad Feeling. -->
+                     y características de la comunidad Feeling.
+                     Los iconos son decorativos y se ocultan a las
+                     tecnologías de asistencia con aria-hidden. -->
                 <div class="beneficios-grid">
 
-                    <!-- Beneficio 1: colaboración académica -->
+                    <!-- Beneficio 1: colaboración académica.
+                         Icono de personas. -->
                     <article class="tarjeta-beneficio">
 
                         <div class="beneficio-icono" aria-hidden="true">
@@ -717,7 +781,8 @@
 
                     </article>
 
-                    <!-- Beneficio 2: coordinación de horarios -->
+                    <!-- Beneficio 2: coordinación de horarios.
+                         Icono de calendario con reloj. Variante de color: menta. -->
                     <article class="tarjeta-beneficio">
 
                         <div class="beneficio-icono beneficio-icono--menta"
@@ -787,7 +852,8 @@
 
                     </article>
 
-                    <!-- Beneficio 4: comunicación entre los participantes -->
+                    <!-- Beneficio 4: comunicación entre los participantes.
+                         Icono de mensaje. Variante de color: lila. -->
                     <article class="tarjeta-beneficio">
 
                         <div class="beneficio-icono beneficio-icono--lila"
@@ -864,8 +930,8 @@
 
     <!-- PIE DE PÁGINA
          Incorpora el fragmento compartido del footer mediante
-         Thymeleaf para mantener una estructura consistente
-         entre las diferentes páginas de la aplicación.-->
+         Thymeleaf (fragments/footer) para mantener una estructura
+         consistente entre las diferentes páginas de la aplicación.-->
     <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
 </body>
