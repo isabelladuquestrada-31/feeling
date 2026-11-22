@@ -110,13 +110,7 @@ detalle varchar(255),
 foreign key (solicitud_id) references solicitud(id)
 );
 
-create table seguimiento (
-solicitud_id int primary key,
-notas text,
-duracion_minutos int not null,
-fecha datetime not null default current_timestamp,
-foreign key (solicitud_id) references solicitud(id)
-);
+
 
 create table calificacion (
 solicitud_id int primary key,
