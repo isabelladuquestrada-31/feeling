@@ -12,6 +12,8 @@
     - Formulario precargado con el nombre preferido, los pronombres y el WhatsApp.
     - Si el servidor encuentra errores, cada uno se muestra debajo de su campo.
     - A la derecha, una vista previa de cómo te ven los demás estudiantes.
+    RF-04: Preferencias de accesibilidad (SCRUM-93).
+    - Interruptores de letra grande y alto contraste que se guardan en la cuenta.
     Basada en el mockup "Perfil y accesibilidad".
 -->
 <section class="solicitudes perfil sin-js" data-solicitudes aria-labelledby="titulo-perfil">
@@ -141,8 +143,55 @@
             </div>
         </form>
 
-        <!-- Columna lateral: vista previa y privacidad -->
-        <aside class="perfil__lateral" aria-label="Cómo te ven los demás">
+        <!-- Columna lateral: accesibilidad, vista previa y privacidad -->
+        <aside class="perfil__lateral" aria-label="Accesibilidad y cómo te ven los demás">
+
+            <!-- RF-04: preferencias de accesibilidad (SCRUM-93) -->
+            <form class="perfil__tarjeta perfil__accesibilidad" th:action="@{/perfil/accesibilidad}" method="post"
+                  aria-labelledby="titulo-accesibilidad" data-formulario-accesibilidad>
+
+                <div class="perfil__accesibilidad-cabecera">
+                    <span class="perfil__tarjeta-icono perfil__tarjeta-icono--suave" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="4" r="2"/><path d="M4 8l8 2 8-2M12 10v5M12 15l-4 6M12 15l4 6"/></svg>
+                    </span>
+                    <div>
+                        <h2 id="titulo-accesibilidad" class="perfil__lateral-titulo">Accesibilidad</h2>
+                        <p class="perfil__lateral-texto">Se aplica en todas las páginas y queda guardada en tu cuenta.</p>
+                    </div>
+                </div>
+
+                <!-- Caso de fallo: no se pudieron guardar -->
+                <div th:if="${errorAccesibilidad}" class="solicitudes__alerta solicitudes__alerta--error perfil__alerta-accesibilidad"
+                     role="alert" data-alerta>
+                    <span th:text="${errorAccesibilidad}">No pudimos guardar tus preferencias. Intenta de nuevo.</span>
+                    <button type="button" class="solicitudes__alerta-cerrar"
+                            aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+                </div>
+
+                <label class="interruptor">
+                    <span class="interruptor__texto">
+                        <strong>Letra grande</strong>
+                        <small>Aumenta el tamaño de todo el texto.</small>
+                    </span>
+                    <input type="checkbox" role="switch" name="letraGrande" value="true"
+                           th:checked="${letraGrande}" data-preferencia="letra-grande">
+                    <span class="interruptor__control" aria-hidden="true"></span>
+                </label>
+
+                <label class="interruptor">
+                    <span class="interruptor__texto">
+                        <strong>Alto contraste</strong>
+                        <small>Colores más oscuros y bordes marcados.</small>
+                    </span>
+                    <input type="checkbox" role="switch" name="altoContraste" value="true"
+                           th:checked="${altoContraste}" data-preferencia="alto-contraste">
+                    <span class="interruptor__control" aria-hidden="true"></span>
+                </label>
+
+                <!-- Sin JavaScript se guarda con este botón; con JavaScript se guarda al mover el interruptor -->
+                <button type="submit" class="boton-accion boton-accion--secundario perfil__guardar-preferencias"
+                        data-guardar-preferencias>Guardar preferencias</button>
+            </form>
 
             <div class="perfil__tarjeta perfil__vista-previa">
                 <h2 class="perfil__lateral-titulo">Así te verán tus compañeros</h2>
