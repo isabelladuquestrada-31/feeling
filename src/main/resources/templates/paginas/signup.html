@@ -2,6 +2,77 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: signup.html
+    UBICACIÓN: src/main/resources/templates/paginas/signup.html
+    MÓDULO: Registro de estudiantes (RF-01)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.2.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-22
+    ESTADO: Finalizado
+    TICKET: SCRUM-48
+
+    DESCRIPCIÓN:
+    Vista de registro de Feeling. Permite que un estudiante nuevo cree
+    su cuenta con su nombre completo, contraseña, programa académico y
+    número de WhatsApp, y acepte el aviso de tratamiento de datos.
+
+    FUNCIONALIDADES:
+    - Formulario de registro con validación en el navegador (signup.js)
+      y validación final en el servidor (RegistroController).
+    - Lista cerrada de programas académicos agrupados por facultad.
+    - Mostrar y ocultar las contraseñas.
+    - Diálogo con el aviso de tratamiento de datos personales.
+    - Mensaje de error enviado por el servidor (por ejemplo, nombre de
+      usuario repetido).
+    - Enlaces para volver al inicio y para iniciar sesión.
+
+    ESTRUCTURA DE LA PÁGINA:
+    - Enlace "Volver al inicio".
+    - Panel de presentación (mensaje de la comunidad).
+    - Logo de la Universidad Autónoma de Manizales.
+    - Tarjeta con el formulario de registro.
+    - Diálogo del aviso de privacidad (#privacyDialog).
+    - Pie de página compartido.
+
+    TECNOLOGÍAS:
+    - HTML5, Thymeleaf, CSS3 y JavaScript.
+
+    DEPENDENCIAS:
+    - /css/global.css, /css/interno.css, /css/signup.css
+    - /js/signup.js
+    - fragments/footer
+
+    DATOS DEL MODELO:
+    - programas: programas académicos agrupados por facultad.
+    - error: mensaje de error del servidor.
+    - nombreUsuario, programaAcademico, numeroWhatsApp,
+      aceptaTratamientoDatos: datos que el estudiante ya había escrito
+      cuando el registro falla (la contraseña no se devuelve).
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - GET /registro: muestra el formulario.
+    - POST /registro: registra al estudiante.
+    - /: página de inicio (enlace "Volver al inicio").
+    - /login: inicio de sesión.
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-toggle-password: botón que muestra u oculta una contraseña.
+    - data-open-dialog / data-close-dialog: abren y cierran el aviso
+      de privacidad.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: vista de registro según el mockup.
+    - 1.1.0: lista cerrada de programas académicos.
+    - 1.2.0: enlace para volver al inicio, una sola columna en
+      pantallas medianas, fondo más suave y documentación.
+
+    OBSERVACIONES:
+    El texto del aviso de privacidad es provisional (pendiente SCRUM-50).
+    -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -31,6 +102,17 @@
 <main class="signup-main">
 
     <div class="signup-main__overlay" aria-hidden="true"></div>
+
+    <!-- Enlace para volver a la página de inicio -->
+    <a class="signup-volver" th:href="@{/}">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5"/>
+            <path d="m12 19-7-7 7-7"/>
+        </svg>
+        Volver al inicio
+    </a>
 
     <!-- Panel izquierdo: presentación -->
 
@@ -121,6 +203,7 @@
                      id="serverError"
                      role="alert"
                      aria-live="assertive"
+                     tabindex="-1"
                      th:if="${error}"
                      th:text="${error}">
                 </div>
@@ -162,15 +245,13 @@
                                    maxlength="50"
                                    required
                                    th:value="${nombreUsuario}"
-                                   aria-describedby="errorNombreUsuario"
-                                   th:attr="aria-invalid=${errorNombreUsuario != null}">
+                                   aria-describedby="errorNombreUsuario">
 
                         </div>
 
                         <small class="signup-form__error"
                                id="errorNombreUsuario"
-                               aria-live="polite"
-                               th:text="${errorNombreUsuario}">
+                               aria-live="polite">
                         </small>
 
                     </div>
@@ -243,8 +324,7 @@
 
                         <small class="signup-form__error"
                                id="errorContrasena"
-                               aria-live="polite"
-                               th:text="${errorContrasena}">
+                               aria-live="polite">
                         </small>
 
                     </div>
@@ -348,8 +428,7 @@
                             <select id="programaAcademico"
                                     name="programaAcademico"
                                     required
-                                    aria-describedby="errorProgramaAcademico"
-                                    th:attr="aria-invalid=${errorProgramaAcademico != null}">
+                                    aria-describedby="errorProgramaAcademico">
 
                                 <option value=""
                                         disabled
@@ -373,8 +452,7 @@
 
                         <small class="signup-form__error"
                                id="errorProgramaAcademico"
-                               aria-live="polite"
-                               th:text="${errorProgramaAcademico}">
+                               aria-live="polite">
                         </small>
 
                     </div>
@@ -413,8 +491,7 @@
                                    maxlength="16"
                                    required
                                    th:value="${numeroWhatsApp}"
-                                   aria-describedby="ayudaWhatsApp errorNumeroWhatsApp"
-                                   th:attr="aria-invalid=${errorNumeroWhatsApp != null}">
+                                   aria-describedby="ayudaWhatsApp errorNumeroWhatsApp">
 
                         </div>
 
@@ -425,8 +502,7 @@
 
                         <small class="signup-form__error"
                                id="errorNumeroWhatsApp"
-                               aria-live="polite"
-                               th:text="${errorNumeroWhatsApp}">
+                               aria-live="polite">
                         </small>
 
                     </div>
@@ -452,8 +528,7 @@
                                value="true"
                                required
                                th:checked="${aceptaTratamientoDatos}"
-                               aria-describedby="ayudaTratamientoDatos errorTratamientoDatos"
-                               th:attr="aria-invalid=${errorTratamientoDatos != null}">
+                               aria-describedby="ayudaTratamientoDatos errorTratamientoDatos">
 
                         <label for="aceptaTratamientoDatos">
                             He leído y acepto el tratamiento de mis datos personales.
@@ -476,8 +551,7 @@
 
                     <small class="signup-form__error"
                            id="errorTratamientoDatos"
-                           aria-live="polite"
-                           th:text="${errorTratamientoDatos}">
+                           aria-live="polite">
                     </small>
 
                 </div>
@@ -534,7 +608,7 @@
             </form>
 
 
-            <!-- navegación -->
+            <!-- Enlace para iniciar sesión -->
 
             <div class="signup-form-footer">
 
@@ -655,7 +729,7 @@
 <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
 
-<!-- JavaScript exclusivo del registro -->
+<!-- Comportamiento del formulario de registro -->
 
 <script th:src="@{/js/signup.js}" defer></script>
 

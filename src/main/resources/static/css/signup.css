@@ -1,24 +1,44 @@
-/* =========================================================
-   PROYECTO: FEELING
-   MÓDULO: REGISTRO DE ESTUDIANTES
+/*
+   PROYECTO: Feeling
    ARCHIVO: signup.css
+   UBICACIÓN: src/main/resources/static/css/signup.css
+   MÓDULO: Registro de estudiantes (RF-01)
 
-   Diseño:
-   - Inspirado en el mockup de registro.
-   - Diseño adaptable a escritorio, tablet y celular.
-   - Accesibilidad y navegación mediante teclado.
-   - Integración con las variables definidas en global.css.
+   AUTOR: Yulipaola Domínguez
+   VERSIÓN: 1.2.0
+   FECHA DE DOCUMENTACIÓN: 2026-11-22
+   ESTADO: Finalizado
+   TICKET: SCRUM-48
 
-   Consideraciones:
-   - Se conserva la paleta de colores global.
-   - Se mantienen las dimensiones y distribución de los campos.
-   - Se prioriza la legibilidad y la consistencia visual.
-   ========================================================= */
+   DESCRIPCIÓN:
+   Estilos de la vista de registro: fondo, panel de presentación,
+   tarjeta del formulario, campos con iconos, mensajes de error,
+   aviso de privacidad y adaptación a distintos tamaños de pantalla.
+   Usa las variables de color y tipografía de global.css.
+
+   CONTENIDO:
+   1. Configuración general.
+   2. Contenedor principal, fondo y enlace "Volver al inicio".
+   3. Panel de presentación.
+   4. Logo de la universidad.
+   5 a 15. Formulario: encabezado, campos, errores, aviso y botones.
+   16. Diálogo del aviso de privacidad.
+   17. Foco del teclado.
+   18 a 22. Adaptación: pantallas grandes, hasta 1100 px (una sola
+       columna), 600 px y 380 px.
+   23. Movimiento reducido.
+   Al final: estilo de la lista de programas académicos.
+
+   HISTORIAL DE VERSIONES:
+   - 1.0.0: estilos según el mockup de registro.
+   - 1.1.0: estilo de la lista de programas académicos.
+   - 1.2.0: una sola columna desde 1100 px (el texto de presentación
+     se deformaba entre 850 y 1100 px), fondo más suave, enlace
+     "Volver al inicio" y documentación.
+*/
 
 
-/* =========================================================
-   1. CONFIGURACIÓN GENERAL
-   ========================================================= */
+/* 1. Configuración general */
 
 .signup-page {
     min-height: 100vh;
@@ -52,9 +72,7 @@
 }
 
 
-/* =========================================================
-   2. CONTENEDOR PRINCIPAL
-   ========================================================= */
+/* 2. Contenedor principal */
 
 .signup-main {
     position: relative;
@@ -92,17 +110,58 @@
 
     z-index: -1;
 
+    /* Velo claro y desenfoque leve: la ilustración queda de fondo
+       sin competir con el formulario. */
     background:
         linear-gradient(105deg,
-            rgba(8, 45, 68, 0.18),
-            rgba(8, 126, 150, 0.10),
-            rgba(23, 59, 101, 0.24));
+            rgba(245, 250, 251, 0.45),
+            rgba(245, 250, 251, 0.25),
+            rgba(218, 243, 249, 0.40));
+
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
 }
 
 
-/* =========================================================
-   3. PANEL IZQUIERDO: PRESENTACIÓN
-   ========================================================= */
+/* Enlace para volver a la página de inicio */
+
+.signup-volver {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    z-index: 3;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 8px 14px;
+
+    color: var(--color-primary-dark);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-decoration: none;
+
+    background-color: rgba(255, 255, 255, 0.88);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.signup-volver svg {
+    width: 16px;
+    height: 16px;
+}
+
+.signup-volver:hover {
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+}
+
+
+/* 3. Panel izquierdo: presentación */
 
 .signup-presentation {
     position: relative;
@@ -110,7 +169,10 @@
 
     justify-content: flex-start;
     left: 0;
-    margin-left: 180px;
+
+    /* Deja aire a la izquierda en pantallas anchas y se reduce
+       a medida que la pantalla se acerca a 1100 px. */
+    margin-left: clamp(0px, calc((100vw - 1100px) * 0.9), 180px);
 
     display: flex;
 
@@ -249,9 +311,7 @@
 }
 
 
-/* =========================================================
-   4. LOGO UNIVERSIDAD AUTÓNOMA DE MANIZALES
-   ========================================================= */
+/* 4. Logo Universidad Autónoma de Manizales */
 
 .signup-university-logo {
     position: absolute;
@@ -286,9 +346,7 @@
 }
 
 
-/* =========================================================
-   5. PANEL DERECHO: FORMULARIO
-   ========================================================= */
+/* 5. Panel derecho: formulario */
 
 .signup-form-panel {
     position: relative;
@@ -322,9 +380,7 @@
 }
 
 
-/* =========================================================
-   6. ENCABEZADO DEL FORMULARIO
-   ========================================================= */
+/* 6. Encabezado del formulario */
 
 .signup-form-header {
     margin-bottom: 20px;
@@ -366,9 +422,7 @@
 }
 
 
-/* =========================================================
-   7. ESTRUCTURA DEL FORMULARIO
-   ========================================================= */
+/* 7. Estructura del formulario */
 
 .signup-form {
     display: flex;
@@ -468,9 +522,7 @@
 }
 
 
-/* =========================================================
-   8. CONTROLES E ICONOS
-   ========================================================= */
+/* 8. Controles e iconos */
 
 .signup-form__control {
     position: relative;
@@ -582,9 +634,7 @@
 }
 
 
-/* =========================================================
-   9. BOTONES MOSTRAR / OCULTAR CONTRASEÑA
-   ========================================================= */
+/* 9. Botones mostrar / ocultar contraseña */
 
 .signup-form__toggle-password {
     position: absolute;
@@ -630,9 +680,7 @@
 }
 
 
-/* =========================================================
-   10. TEXTOS DE AYUDA
-   ========================================================= */
+/* 10. Textos de ayuda */
 
 .signup-form__help {
     display: block;
@@ -650,9 +698,7 @@
 }
 
 
-/* =========================================================
-   11. MENSAJES DE ERROR
-   ========================================================= */
+/* 11. Mensajes de error */
 
 .signup-form__error {
     display: block;
@@ -742,9 +788,7 @@
 }
 
 
-/* =========================================================
-   12. TRATAMIENTO DE DATOS PERSONALES
-   ========================================================= */
+/* 12. Tratamiento de datos personales */
 
 .signup-form__terms-container {
     display: flex;
@@ -866,9 +910,7 @@
 }
 
 
-/* =========================================================
-   13. BOTÓN CREAR CUENTA
-   ========================================================= */
+/* 13. Botón crear cuenta */
 
 .signup-form__submit {
     display: flex;
@@ -953,9 +995,7 @@
 }
 
 
-/* =========================================================
-   14. INDICADOR DE CARGA
-   ========================================================= */
+/* 14. Indicador de carga */
 
 .signup-form__loading {
     display: inline-flex;
@@ -998,9 +1038,7 @@
 }
 
 
-/* =========================================================
-   15. FOOTER DEL FORMULARIO
-   ========================================================= */
+/* 15. Footer del formulario */
 
 .signup-form-footer {
     display: grid;
@@ -1110,9 +1148,7 @@
 }
 
 
-/* =========================================================
-   16. MODAL: TRATAMIENTO DE DATOS
-   ========================================================= */
+/* 16. Modal: tratamiento de datos */
 
 .privacy-dialog {
     position: fixed;
@@ -1342,9 +1378,7 @@
 }
 
 
-/* =========================================================
-   17. ACCESIBILIDAD Y ENFOQUE DEL TECLADO
-   ========================================================= */
+/* 17. Accesibilidad y enfoque del teclado */
 
 .signup-page a:focus-visible,
 .signup-page button:focus-visible,
@@ -1364,9 +1398,7 @@
 }
 
 
-/* =========================================================
-   18. RESPONSIVE: PANTALLAS GRANDES
-   ========================================================= */
+/* 18. Responsive: pantallas grandes */
 
 @media (min-width: 1500px) {
 
@@ -1405,20 +1437,9 @@
 }
 
 
-/* =========================================================
-   19. RESPONSIVE: PORTÁTILES Y TABLETAS GRANDES
-   ========================================================= */
+/* 19. Responsive: portátiles y tabletas grandes */
 
 @media (max-width: 1100px) {
-
-    .signup-main {
-        grid-template-columns:
-            minmax(200px, 0.7fr) minmax(430px, 1.3fr);
-
-        gap: 22px;
-
-        padding: 30px 25px 65px;
-    }
 
     .signup-presentation__content {
         width: 100%;
@@ -1457,11 +1478,12 @@
 }
 
 
-/* =========================================================
-   20. RESPONSIVE: TABLETAS
-   ========================================================= */
+/* 20. Responsive: tabletas y portátiles pequeños
+   Desde 1100 px los dos paneles ya no caben lado a lado sin
+   deformar el texto, por eso la presentación sube encima del
+   formulario. */
 
-@media (max-width: 850px) {
+@media (max-width: 1100px) {
 
     .signup-main {
         grid-template-columns: 1fr;
@@ -1470,7 +1492,16 @@
 
         min-height: 100vh;
 
-        padding: 25px 22px 80px;
+        padding: 70px 22px 80px;
+    }
+
+    /* El título ocupa una o dos líneas en lugar de cuatro */
+    .signup-presentation__title {
+        display: block;
+    }
+
+    .signup-presentation__title span {
+        display: inline;
     }
 
     .signup-presentation {
@@ -1484,9 +1515,9 @@
     }
 
     .signup-presentation__content {
-        max-width: 600px;
+        max-width: 650px;
 
-        padding: 5px;
+        padding: 10px 14px;
     }
 
     .signup-presentation__eyebrow {
@@ -1520,16 +1551,14 @@
 }
 
 
-/* =========================================================
-   21. RESPONSIVE: CELULARES
-   ========================================================= */
+/* 21. Responsive: celulares */
 
 @media (max-width: 600px) {
 
     .signup-main {
         gap: 17px;
 
-        padding: 20px 15px 75px;
+        padding: 64px 15px 75px;
 
         background-position: center;
     }
@@ -1692,9 +1721,7 @@
 }
 
 
-/* =========================================================
-   22. RESPONSIVE: CELULARES PEQUEÑOS
-   ========================================================= */
+/* 22. Responsive: celulares pequeños */
 
 @media (max-width: 380px) {
 
@@ -1750,9 +1777,7 @@
 }
 
 
-/* =========================================================
-   23. ACCESIBILIDAD: MOVIMIENTO REDUCIDO
-   ========================================================= */
+/* 23. Accesibilidad: movimiento reducido */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -1770,12 +1795,10 @@
 }
 
 
-/* =========================================================
-   LISTA DE PROGRAMAS ACADÉMICOS
+/* Lista de programas académicos
    El programa se elige de una lista cerrada (ProgramaAcademico)
    para que no haya textos libres. Comparte el estilo de los
-   campos de texto y solo cambia la flecha y el cursor.
-   ========================================================= */
+   campos de texto y solo cambia la flecha y el cursor. */
 
 .signup-form__control select {
     appearance: none;

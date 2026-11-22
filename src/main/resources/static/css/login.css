@@ -1,59 +1,39 @@
-
 /*
- * =========================================================
- * PROYECTO: FEELING
- * MÓDULO: AUTENTICACIÓN DE USUARIOS
- * ARCHIVO: login.css
- * VERSIÓN: 2.1.0
- * =========================================================
- *
- * DESCRIPCIÓN:
- * Define la presentación visual de la pantalla de inicio
- * de sesión de la plataforma Feeling.
- *
- * DISTRIBUCIÓN PRINCIPAL:
- * - El formulario se centra respecto a toda la pantalla.
- * - En escritorio amplio, el cuadro informativo aparece
- *   a la izquierda del formulario y ligeramente más abajo
- *   del centro vertical.
- * - El cuadro informativo mantiene un tamaño compacto.
- * - Cuando no existe espacio suficiente para ubicar ambos
- *   elementos lado a lado, el cuadro informativo se mueve
- *   automáticamente encima del formulario.
- * - En pantallas pequeñas, el contenido se reorganiza
- *   verticalmente para evitar superposiciones.
- *
- * CARACTERÍSTICAS:
- * - Imagen de fondo a pantalla completa.
- * - Cuadro informativo con efecto de vidrio.
- * - Tarjeta de autenticación translúcida.
- * - Logotipo de Feeling.
- * - Campos con iconos.
- * - Mensajes de error del servidor.
- * - Botones interactivos.
- * - Diseño adaptable a escritorio, tabletas y celulares.
- * - Accesibilidad mediante teclado.
- * - Compatibilidad con movimiento reducido.
- *
- * DEPENDENCIAS:
- * - global.css
- * - login.html
- *
- * RECURSOS:
- * - Fondo_LogIn.jpg
- * - Logosímbolo_Sin_Fondo.png
- * - Logo_UAM.png
- *
- * IMPORTANTE:
- * Este archivo controla únicamente los estilos visuales.
- * La autenticación y las sesiones son responsabilidad
- * del backend de Spring Boot.
- */
+   PROYECTO: Feeling
+   ARCHIVO: login.css
+   UBICACIÓN: src/main/resources/static/css/login.css
+   MÓDULO: Inicio de sesión (RF-02)
+
+   AUTOR: Yulipaola Domínguez
+   VERSIÓN: 2.2.0
+   FECHA DE DOCUMENTACIÓN: 2026-11-22
+   ESTADO: Finalizado
+   TICKET: SCRUM-52
+
+   DESCRIPCIÓN:
+   Estilos de la vista de inicio de sesión: imagen de fondo, cuadro
+   informativo, tarjeta translúcida con el formulario, logo de la
+   universidad y adaptación a escritorio, tabletas y celulares.
+   Usa las variables de color y tipografía de global.css.
+
+   DISTRIBUCIÓN:
+   - Escritorio (más de 1100 px de ancho y 700 px de alto): el
+     formulario queda centrado y el cuadro informativo a su izquierda.
+   - Pantallas más pequeñas o bajas: el cuadro informativo pasa encima
+     del formulario para que no se superpongan.
+
+   RECURSOS:
+   - /img/Fondo_LogIn.jpg, /img/Logosímbolo_Sin_Fondo.png, /img/Logo_UAM.png
+
+   HISTORIAL DE VERSIONES:
+   - 1.0.0: estilos según el mockup de inicio de sesión.
+   - 2.0.0: distribución adaptable sin superposición (sección 22).
+   - 2.1.0: ajustes para pantallas bajas y celulares pequeños.
+   - 2.2.0: fondo más suave, enlace "Volver al inicio" y documentación.
+*/
 
 
-/* =========================================================
-   1. CONFIGURACIÓN GENERAL
-   ========================================================= */
+/* 1. Configuración general */
 
 /*
  * Se establecen los estilos generales de la página.
@@ -99,9 +79,7 @@
 }
 
 
-/* =========================================================
-   2. CONTENEDOR PRINCIPAL Y FONDO
-   ========================================================= */
+/* 2. Contenedor principal y fondo */
 
 /*
  * El contenedor principal utiliza position: relative
@@ -145,20 +123,60 @@
 
     z-index: -1;
 
+    /* Velo claro y desenfoque leve para que la ilustración
+       no compita con el formulario. */
     background: linear-gradient(
         105deg,
-        rgba(8, 45, 68, 0.12) 0%,
-        rgba(8, 126, 150, 0.08) 48%,
-        rgba(23, 59, 101, 0.16) 100%
+        rgba(245, 250, 251, 0.35) 0%,
+        rgba(245, 250, 251, 0.20) 48%,
+        rgba(218, 243, 249, 0.35) 100%
     );
+
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 
     pointer-events: none;
 }
 
 
-/* =========================================================
-   3. CUADRO INFORMATIVO SUPERIOR
-   ========================================================= */
+/* Enlace para volver a la página de inicio */
+
+.login-volver {
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    z-index: 3;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 8px 14px;
+
+    color: var(--color-primary-dark);
+    font-size: 0.85rem;
+    font-weight: 800;
+
+    background-color: rgba(255, 255, 255, 0.88);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    box-shadow: var(--shadow-soft);
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.login-volver svg {
+    width: 16px;
+    height: 16px;
+}
+
+.login-volver:hover {
+    color: var(--color-text-light);
+    background-color: var(--color-primary);
+}
+
+
+/* 3. Cuadro informativo superior */
 
 /*
  * Este panel contiene el mensaje:
@@ -280,9 +298,7 @@
 }
 
 
-/* =========================================================
-   4. PANEL DE AUTENTICACIÓN
-   ========================================================= */
+/* 4. Panel de autenticación */
 
 /*
  * CENTRADO DEL FORMULARIO:
@@ -346,9 +362,7 @@
 }
 
 
-/* =========================================================
-   5. ENCABEZADO Y LOGOTIPO DE FEELING
-   ========================================================= */
+/* 5. Encabezado y logotipo de Feeling */
 
 .login-form-header {
     display: flex;
@@ -419,9 +433,7 @@
 }
 
 
-/* =========================================================
-   6. ESTRUCTURA DEL FORMULARIO
-   ========================================================= */
+/* 6. Estructura del formulario */
 
 .login-form {
     display: flex;
@@ -458,9 +470,7 @@
 }
 
 
-/* =========================================================
-   7. CAMPOS DE ENTRADA E ICONOS
-   ========================================================= */
+/* 7. Campos de entrada e iconos */
 
 .login-form__control {
     position: relative;
@@ -548,18 +558,56 @@
 }
 
 
-/* =========================================================
-   8. VALIDACIÓN VISUAL DE LOS CAMPOS
-   ========================================================= */
+/* 8. Validación visual de los campos */
 
-.login-form__control input:focus:invalid {
+.login-form__control input.is-invalid {
     border-color: var(--color-danger, #C94343);
 }
 
+/* Mensaje de error debajo de cada campo (lo escribe login.js) */
 
-/* =========================================================
-   9. MENSAJE DE ERROR DEL SERVIDOR
-   ========================================================= */
+.login-form__error {
+    display: block;
+
+    margin-top: 6px;
+
+    color: var(--color-danger, #C94343);
+
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.login-form__error:empty {
+    display: none;
+}
+
+/* Mensaje general cuando faltan campos */
+
+.login-form__message {
+    display: none;
+
+    margin: 0;
+    padding: 10px 13px;
+
+    color: var(--color-danger, #C94343);
+
+    background-color: rgba(201, 67, 67, 0.08);
+
+    border: 1px solid rgba(201, 67, 67, 0.55);
+    border-radius: var(--radius-small, 6px);
+
+    font-size: 0.81rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.login-form__message.is-visible {
+    display: block;
+}
+
+
+/* 9. Mensaje de error del servidor */
 
 /*
  * El LoginController agrega el atributo "error" cuando
@@ -592,9 +640,7 @@
 }
 
 
-/* =========================================================
-   10. BOTÓN DE INICIO DE SESIÓN
-   ========================================================= */
+/* 10. Botón de inicio de sesión */
 
 .login-form__submit {
     display: flex;
@@ -663,9 +709,7 @@
 }
 
 
-/* =========================================================
-   11. PIE DE LA TARJETA Y ACCESO AL REGISTRO
-   ========================================================= */
+/* 11. Pie de la tarjeta y acceso al registro */
 
 .login-form-footer {
     display: flex;
@@ -746,9 +790,7 @@
 }
 
 
-/* =========================================================
-   12. LOGOTIPO DE LA UNIVERSIDAD
-   ========================================================= */
+/* 12. Logotipo de la universidad */
 
 /*
  * El logotipo institucional se mantiene en la esquina
@@ -791,9 +833,7 @@
 }
 
 
-/* =========================================================
-   13. ANIMACIÓN DE ENTRADA
-   ========================================================= */
+/* 13. Animación de entrada */
 
 @keyframes login-aparecer {
     from {
@@ -808,9 +848,7 @@
 }
 
 
-/* =========================================================
-   14. ACCESIBILIDAD Y NAVEGACIÓN POR TECLADO
-   ========================================================= */
+/* 14. Accesibilidad y navegación por teclado */
 
 .login-page a:focus-visible,
 .login-page button:focus-visible,
@@ -828,9 +866,7 @@
 }
 
 
-/* =========================================================
-   15. RESPONSIVE: PANTALLAS GRANDES
-   ========================================================= */
+/* 15. Responsive: pantallas grandes */
 
 /*
  * En pantallas grandes se conserva el tamaño compacto
@@ -888,9 +924,7 @@
 }
 
 
-/* =========================================================
-   16. RESPONSIVE: PORTÁTILES Y TABLETAS GRANDES
-   ========================================================= */
+/* 16. Responsive: portátiles y tabletas grandes */
 
 /*
  * Esta sección conserva las dimensiones generales.
@@ -922,9 +956,7 @@
 }
 
 
-/* =========================================================
-   17. RESPONSIVE: TABLETAS
-   ========================================================= */
+/* 17. Responsive: tabletas */
 
 /*
  * En tabletas el cuadro informativo aparece arriba
@@ -987,9 +1019,7 @@
 }
 
 
-/* =========================================================
-   18. RESPONSIVE: CELULARES
-   ========================================================= */
+/* 18. Responsive: celulares */
 
 /*
  * En celulares los elementos se organizan verticalmente.
@@ -1104,9 +1134,7 @@
 }
 
 
-/* =========================================================
-   19. RESPONSIVE: CELULARES PEQUEÑOS
-   ========================================================= */
+/* 19. Responsive: celulares pequeños */
 
 @media (max-width: 380px) {
 
@@ -1167,9 +1195,7 @@
 }
 
 
-/* =========================================================
-   20. RESPONSIVE: PANTALLAS BAJAS
-   ========================================================= */
+/* 20. Responsive: pantallas bajas */
 
 /*
  * En pantallas de escritorio con poca altura se utiliza
@@ -1229,9 +1255,7 @@
 }
 
 
-/* =========================================================
-   21. ACCESIBILIDAD: MOVIMIENTO REDUCIDO
-   ========================================================= */
+/* 21. Accesibilidad: movimiento reducido */
 
 /*
  * Respeta la preferencia del sistema operativo para usuarios
@@ -1253,9 +1277,7 @@
 }
 
 
-/* =========================================================
-   22. DISTRIBUCIÓN RESPONSIVE Y PREVENCIÓN DE SUPERPOSICIÓN
-   ========================================================= */
+/* 22. Distribución responsive y prevención de superposición */
 
 /*
  * Esta sección controla la distribución definitiva
@@ -1278,9 +1300,7 @@
  */
 
 
-/* ---------------------------------------------------------
-   22.1. ESCRITORIO: DISTRIBUCIÓN LATERAL
-   --------------------------------------------------------- */
+/* 22.1. Escritorio: distribución lateral */
 
 /*
  * Se utiliza la distribución lateral solamente cuando
@@ -1377,9 +1397,7 @@
 }
 
 
-/* ---------------------------------------------------------
-   22.2. PANTALLAS CON ESPACIO LIMITADO
-   --------------------------------------------------------- */
+/* 22.2. Pantallas con espacio limitado */
 
 /*
  * Cuando el ancho es menor o igual a 1100 píxeles,
@@ -1412,7 +1430,8 @@
 
         margin: 0;
 
-        padding: 25px 20px 30px;
+        /* Espacio superior para el enlace "Volver al inicio" */
+        padding: 70px 20px 30px;
 
         overflow-x: hidden;
         overflow-y: auto;
@@ -1539,16 +1558,14 @@
 }
 
 
-/* ---------------------------------------------------------
-   22.3. AJUSTES PARA CELULARES
-   --------------------------------------------------------- */
+/* 22.3. Ajustes para celulares */
 
 @media (max-width: 600px) {
 
     .login-main {
         gap: 18px;
 
-        padding: 22px 15px 25px;
+        padding: 64px 15px 25px;
     }
 
     .login-presentation {
@@ -1590,16 +1607,14 @@
 }
 
 
-/* ---------------------------------------------------------
-   22.4. AJUSTES PARA CELULARES PEQUEÑOS
-   --------------------------------------------------------- */
+/* 22.4. Ajustes para celulares pequeños */
 
 @media (max-width: 380px) {
 
     .login-main {
         gap: 15px;
 
-        padding: 18px 12px 22px;
+        padding: 62px 12px 22px;
     }
 
     .login-presentation__content {
@@ -1629,9 +1644,7 @@
 }
 
 
-/* ---------------------------------------------------------
-   22.5. AJUSTES PARA PANTALLAS MUY BAJAS
-   --------------------------------------------------------- */
+/* 22.5. Ajustes para pantallas muy bajas */
 
 /*
  * En ventanas con muy poca altura se reducen los espacios
@@ -1647,7 +1660,7 @@
     .login-main {
         gap: 14px;
 
-        padding-top: 12px;
+        padding-top: 62px;
         padding-bottom: 20px;
     }
 

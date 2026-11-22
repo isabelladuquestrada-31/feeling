@@ -1,45 +1,60 @@
-
 /**
- * PROYECTO: FEELING
- * MÓDULO: INICIO DE SESIÓN
+ * PROYECTO: Feeling
+ * MÓDULO: Inicio de sesión (RF-02)
  * ARCHIVO: login.js
+ * UBICACIÓN: src/main/resources/static/js/login.js
  *
- * VERSIÓN: 1.0.0
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.2.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-22
+ * ESTADO: Finalizado
+ * TICKET: SCRUM-52
  *
  * DESCRIPCIÓN:
- * Gestiona las interacciones del formulario de inicio de sesión.
+ * Comportamiento del formulario de inicio de sesión. Revisa que el
+ * nombre de usuario y la contraseña no estén vacíos, muestra los
+ * mensajes de error y evita que el formulario se envíe dos veces.
+ * La autenticación la hace el servidor (LoginController).
  *
- * FUNCIONALIDADES:
- * - Validación de campos obligatorios.
- * - Validación de usuario y contraseña.
- * - Mostrar y ocultar la contraseña.
- * - Visualización de mensajes de validación.
- * - Control del estado de carga del botón.
- * - Prevención de envíos repetidos.
- * - Accesibilidad mediante teclado y lectores de pantalla.
+ * FUNCIONALIDADES PRINCIPALES:
+ * - Validar que los dos campos tengan contenido.
+ * - Mostrar el error debajo de cada campo y un mensaje general.
+ * - Mostrar "Ingresando..." en el botón mientras se envía.
+ * - Quitar el estado de carga si el navegador restaura la página
+ *   al usar el botón "Atrás".
  *
- * INTEGRACIÓN:
- * El formulario se envía mediante POST a /login.
- * La autenticación y validación de credenciales son responsabilidad
- * del LoginController y del ServicioAutenticacion de Spring Boot.
+ * VARIABLES PRINCIPALES:
+ * - usuario, contrasena: campos del formulario (HTMLElement).
+ * - errorUsuario, errorContrasena: textos de error (HTMLElement).
+ * - enviando: indica si el formulario ya se está enviando (boolean).
  *
- * IMPORTANTE:
- * Este archivo no realiza la autenticación ni almacena contraseñas.
+ * FUNCIONES:
+ * - mostrarError / limpiarError: estado de error de un campo.
+ * - validarUsuario / validarContrasena / validarFormulario.
+ * - establecerCarga(cargando): estado de carga del botón.
+ *
+ * DEPENDENCIAS:
+ * - login.html: identificadores loginForm, nombreUsuario, contrasena,
+ *   errorNombreUsuario, errorContrasena, loginFormMessage, loginSubmit,
+ *   loginSubmitText y loginLoading.
+ * - login.css: clases is-invalid e is-visible.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: validación de campos y control del envío.
+ * - 1.2.0: reinicio del botón al volver con "Atrás", se quita el código
+ *   de mostrar contraseña (la vista no tiene ese botón) y documentación.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
 
     "use strict";
 
-    // ----------------------------------------------------------
-    // 1. REFERENCIAS A LOS ELEMENTOS DEL FORMULARIO
-    // ----------------------------------------------------------
+    // 1. Referencias a los elementos del formulario
 
     const form = document.getElementById("loginForm");
 
     // Comprueba que la página contiene el formulario de inicio.
     if (!form) {
-        console.error("Feeling: no se encontró el formulario de inicio de sesión.");
         return;
     }
 
@@ -57,9 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let enviando = false;
 
-    // ----------------------------------------------------------
-    // 2. FUNCIONES PARA MOSTRAR Y LIMPIAR ERRORES
-    // ----------------------------------------------------------
+    // 2. Funciones para mostrar y limpiar errores
 
     /**
      * Muestra un mensaje de error en un campo.
@@ -125,9 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mensajeGeneral.classList.add("is-visible");
     }
 
-    // ----------------------------------------------------------
-    // 3. VALIDACIÓN DEL NOMBRE DE USUARIO
-    // ----------------------------------------------------------
+    // 3. Validación del nombre de usuario
 
     /**
      * Comprueba que el usuario haya ingresado su nombre de usuario.
@@ -157,9 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    // ----------------------------------------------------------
-    // 4. VALIDACIÓN DE LA CONTRASEÑA
-    // ----------------------------------------------------------
+    // 4. Validación de la contraseña
 
     /**
      * Comprueba que el usuario haya ingresado su contraseña.
@@ -190,9 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    // ----------------------------------------------------------
-    // 5. VALIDACIÓN COMPLETA DEL FORMULARIO
-    // ----------------------------------------------------------
+    // 5. Validación completa del formulario
 
     /**
      * Ejecuta las validaciones de todos los campos.
@@ -207,53 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return usuarioValido && contrasenaValida;
     }
 
-    // ----------------------------------------------------------
-    // 6. MOSTRAR Y OCULTAR CONTRASEÑA
-    // ----------------------------------------------------------
-
-    /**
-     * Permite alternar la visibilidad de la contraseña.
-     *
-     * El botón correspondiente debe tener el atributo:
-     * data-toggle-password="contrasena"
-     */
-    document.querySelectorAll("[data-toggle-password]").forEach(boton => {
-
-        boton.addEventListener("click", () => {
-
-            const identificador = boton.dataset.togglePassword;
-            const campo = document.getElementById(identificador);
-
-            if (!campo) {
-                console.error(
-                    "Feeling: no se encontró el campo de contraseña:",
-                    identificador
-                );
-                return;
-            }
-
-            const mostrar = campo.type === "password";
-
-            campo.type = mostrar ? "text" : "password";
-
-            boton.setAttribute(
-                "aria-label",
-                mostrar ? "Ocultar contraseña" : "Mostrar contraseña"
-            );
-
-            boton.setAttribute(
-                "aria-pressed",
-                String(mostrar)
-            );
-
-            campo.focus();
-        });
-
-    });
-
-    // ----------------------------------------------------------
-    // 7. VALIDACIÓN AL SALIR DE LOS CAMPOS
-    // ----------------------------------------------------------
+    // 6. Validación al salir de los campos
 
     if (usuario) {
         usuario.addEventListener("blur", validarUsuario);
@@ -263,9 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
         contrasena.addEventListener("blur", validarContrasena);
     }
 
-    // ----------------------------------------------------------
-    // 8. LIMPIEZA DE ERRORES MIENTRAS SE ESCRIBE
-    // ----------------------------------------------------------
+    // 7. Limpieza de errores mientras se escribe
 
     if (usuario) {
 
@@ -289,9 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // ----------------------------------------------------------
-    // 9. CONTROL DEL ESTADO DE CARGA
-    // ----------------------------------------------------------
+    // 8. Control del estado de carga
 
     /**
      * Actualiza el botón mientras se procesa el envío.
@@ -320,9 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // ----------------------------------------------------------
-    // 10. CONTROL DEL ENVÍO DEL FORMULARIO
-    // ----------------------------------------------------------
+    // 9. Control del envío del formulario
 
     form.addEventListener("submit", evento => {
 
@@ -364,14 +319,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ----------------------------------------------------------
-    // 11. CONFIGURACIÓN INICIAL
-    // ----------------------------------------------------------
+    // 10. Configuración inicial
 
     establecerCarga(false);
 
-    console.info(
-        "Feeling: formulario de inicio de sesión inicializado correctamente."
-    );
+    // Al volver con "Atrás", el navegador puede restaurar la página con
+    // el botón en "Ingresando...". Se reinicia.
+    window.addEventListener("pageshow", evento => {
+
+        if (evento.persisted) {
+            enviando = false;
+            establecerCarga(false);
+        }
+
+    });
 
 });

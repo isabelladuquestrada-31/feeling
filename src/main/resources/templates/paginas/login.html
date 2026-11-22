@@ -1,113 +1,113 @@
-
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <!--
-        PROYECTO: FEELING
-        MÓDULO: AUTENTICACIÓN DE USUARIOS
-        ARCHIVO: login.html
-        VERSIÓN: 1.0.0
-        TECNOLOGÍAS: HTML5, Thymeleaf y CSS3
+    PROYECTO: Feeling
+    ARCHIVO: login.html
+    UBICACIÓN: src/main/resources/templates/paginas/login.html
+    MÓDULO: Inicio de sesión (RF-02)
 
-        DESCRIPCIÓN:
-        Define la estructura de la vista de inicio de sesión de Feeling.
-        Permite que los usuarios registrados ingresen sus credenciales
-        para acceder a las funcionalidades de la plataforma.
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.2.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-22
+    ESTADO: Finalizado
+    TICKET: SCRUM-52
 
-        FUNCIONALIDADES:
-        - Presentación de la identidad visual de Feeling.
-        - Formulario para ingresar nombre de usuario y contraseña.
-        - Envío de credenciales al controlador de autenticación.
-        - Visualización de mensajes de error devueltos por el servidor.
-        - Navegación hacia la vista de registro.
+    DESCRIPCIÓN:
+    Vista de inicio de sesión de Feeling. Permite que un usuario
+    registrado ingrese su nombre de usuario y contraseña para entrar
+    a la plataforma.
 
-        INTEGRACIÓN CON EL BACKEND:
-        Controlador: LoginController
-        Ruta de visualización: GET /login
-        Ruta de autenticación: POST /login
-        Parámetros esperados: nombreUsuario y contrasena
-        Vista asociada: paginas/login
+    FUNCIONALIDADES:
+    - Formulario de inicio de sesión (nombre de usuario y contraseña).
+    - Validación de campos vacíos en el navegador (login.js).
+    - Mensaje de error del servidor cuando las credenciales no son válidas.
+    - Estado "Ingresando..." del botón mientras se envía.
+    - Enlaces para volver al inicio y para crear una cuenta.
 
-        DEPENDENCIAS:
-        - global.css: variables y estilos generales de la plataforma.
-        - login.css: estilos específicos de esta vista.
-        - Thymeleaf: resolución de rutas y visualización de datos del servidor.
+    ESTRUCTURA DE LA PÁGINA:
+    - Enlace "Volver al inicio".
+    - Cuadro informativo ("Tu bienestar también es parte de tu éxito").
+    - Tarjeta con el logo, el formulario y el acceso al registro.
+    - Logo de la Universidad Autónoma de Manizales.
+    - Pie de página compartido.
 
-        RECURSOS GRÁFICOS:
-        - Fondo_LogIn.jpg: imagen de fondo de la pantalla.
-        - Logosímbolo_Sin_Fondo.png: identidad visual de Feeling.
-        - Logo_UAM.png: identidad institucional de la universidad.
+    TECNOLOGÍAS:
+    - HTML5, Thymeleaf, CSS3 y JavaScript.
 
-        RESPONSABILIDAD:
-        Este archivo contiene exclusivamente la estructura y los elementos
-        de la interfaz. La validación de credenciales y el control de
-        sesiones son responsabilidad del backend.
+    DEPENDENCIAS:
+    - /css/global.css, /css/login.css, /css/interno.css
+    - /js/login.js
+    - fragments/footer
+
+    DATOS DEL MODELO:
+    - error: mensaje que envía LoginController cuando las credenciales
+      no son correctas.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - GET /login: muestra el formulario.
+    - POST /login: envía nombreUsuario y contrasena a LoginController.
+    - /: página de inicio (enlace "Volver al inicio").
+    - /registro: registro de nuevos usuarios.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: vista de inicio de sesión según el mockup.
+    - 1.1.0: distribución adaptable sin superposición.
+    - 1.2.0: enlace para volver al inicio, mensajes de validación por
+      campo, estado de carga del botón y documentación.
+
+    OBSERVACIONES:
+    La validación de credenciales y el manejo de la sesión los hace
+    el backend (LoginController y ServicioAutenticacion).
     -->
 
-    <!-- Configuración del documento y compatibilidad con dispositivos -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Metadatos descriptivos de la página -->
     <meta name="description"
           content="Inicia sesión en Feeling y accede a tu comunidad de apoyo académico universitario.">
 
     <meta name="theme-color" content="#087E96">
 
-    <!-- Título e icono de la pestaña del navegador -->
     <title>Iniciar sesión | Feeling</title>
 
     <link rel="icon"
           type="image/png"
           th:href="@{/img/favicon-32x32.png}">
 
-    <!-- Hoja de estilos general: contiene las variables visuales compartidas -->
+    <!-- Variables y estilos generales; luego los de esta vista -->
     <link rel="stylesheet"
           th:href="@{/css/global.css}">
 
-    <!-- Hoja de estilos específica para la pantalla de inicio de sesión -->
     <link rel="stylesheet"
           th:href="@{/css/login.css}">
 
-    
+    <!-- Estilos del pie de página compartido -->
     <link rel="stylesheet"
           th:href="@{/css/interno.css}">
-          
 </head>
 
 <body class="login-page">
 
-    <!--
-        CONTENEDOR PRINCIPAL
-
-        Organiza los dos componentes principales de la pantalla:
-        el panel informativo y el panel de autenticación.
-
-        La estructura permite adaptar la distribución mediante CSS
-        según el tamaño de pantalla del dispositivo.
-    -->
     <main class="login-main">
 
-        <!--
-            CAPA DE CONTRASTE
-
-            Se utiliza para mejorar la legibilidad del contenido
-            sobre la imagen de fondo sin modificar la imagen original.
-            Es un elemento exclusivamente decorativo.
-        -->
+        <!-- Capa decorativa que suaviza la imagen de fondo -->
         <div class="login-main__overlay" aria-hidden="true"></div>
 
+        <!-- Enlace para volver a la página de inicio -->
+        <a class="login-volver" th:href="@{/}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 12H5"/>
+                <path d="m12 19-7-7 7-7"/>
+            </svg>
+            Volver al inicio
+        </a>
 
-        <!--
-            PANEL DE PRESENTACIÓN
 
-            Contiene el mensaje institucional y la descripción
-            de los servicios de acompañamiento ofrecidos por Feeling.
-
-            El encabezado principal de esta sección utiliza h1
-            para identificar el contenido principal de la página.
-        -->
+        <!-- Cuadro informativo -->
         <section class="login-presentation"
                  aria-labelledby="login-presentation-title">
 
@@ -132,28 +132,15 @@
         </section>
 
 
-        <!--
-            PANEL DE AUTENTICACIÓN
-
-            Contiene la tarjeta de inicio de sesión y sus elementos.
-            El formulario envía las credenciales al controlador
-            encargado de verificar la identidad del usuario.
-        -->
+        <!-- Tarjeta de inicio de sesión -->
         <section class="login-form-panel"
                  aria-labelledby="login-form-title">
 
             <div class="login-form-panel__content">
 
-
-                <!--
-                    ENCABEZADO DEL FORMULARIO
-
-                    Presenta el logotipo de Feeling, el título
-                    de bienvenida y una descripción de la acción.
-                -->
+                <!-- Logo, título y descripción -->
                 <header class="login-form-header">
 
-                    <!-- Logotipo principal de la plataforma -->
                     <div class="login-form-header__brand">
 
                         <img src="/img/Logosímbolo_Sin_Fondo.png"
@@ -174,35 +161,15 @@
                 </header>
 
 
-                <!--
-                    FORMULARIO DE INICIO DE SESIÓN
-
-                    Envía las credenciales mediante el método POST
-                    al endpoint /login del LoginController.
-
-                    Los atributos name de los campos deben coincidir
-                    exactamente con los parámetros recibidos por
-                    el método iniciarSesion del controlador.
-                -->
+                <!-- Formulario: los name deben coincidir con los
+                     parámetros de LoginController -->
                 <form class="login-form"
                       id="loginForm"
                       th:action="@{/login}"
-                      method="post">
+                      method="post"
+                      novalidate>
 
-
-                    <!--
-                        MENSAJE DE ERROR DEL SERVIDOR
-
-                        El controlador agrega el atributo "error"
-                        cuando las credenciales no son válidas.
-
-                        Thymeleaf comprueba si el atributo existe
-                        y muestra su contenido dentro de la tarjeta.
-
-                        El mensaje se anuncia mediante aria-live
-                        para facilitar su identificación por lectores
-                        de pantalla.
-                    -->
+                    <!-- Error enviado por el servidor (credenciales no válidas) -->
                     <div class="login-form__server-error"
                          id="loginServerError"
                          role="alert"
@@ -212,15 +179,7 @@
                     </div>
 
 
-                    <!--
-                        CAMPO DE NOMBRE DE USUARIO
-
-                        Permite ingresar el identificador utilizado
-                        por el usuario para autenticarse.
-
-                        name="nombreUsuario" corresponde al parámetro
-                        @RequestParam del LoginController.
-                    -->
+                    <!-- Nombre de usuario -->
                     <div class="login-form__group">
 
                         <label for="nombreUsuario">
@@ -229,7 +188,6 @@
 
                         <div class="login-form__control">
 
-                            <!-- Icono decorativo del campo -->
                             <svg class="login-form__icon"
                                  xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 24 24"
@@ -252,29 +210,19 @@
                                    autocomplete="username"
                                    maxlength="50"
                                    required
-                                   autofocus>
+                                   autofocus
+                                   aria-describedby="errorNombreUsuario">
 
                         </div>
+
+                        <small class="login-form__error"
+                               id="errorNombreUsuario"
+                               aria-live="polite"></small>
 
                     </div>
 
 
-                    <!--
-                        CAMPO DE CONTRASEÑA
-
-                        Permite ingresar la contraseña asociada
-                        a la cuenta del usuario.
-
-                        El tipo password oculta los caracteres
-                        durante su introducción.
-
-                        autocomplete="current-password" indica
-                        al navegador que se trata de una contraseña
-                        correspondiente a una cuenta existente.
-
-                        name="contrasena" corresponde al parámetro
-                        recibido por el LoginController.
-                    -->
+                    <!-- Contraseña (los espacios no se recortan) -->
                     <div class="login-form__group">
 
                         <label for="contrasena">
@@ -283,7 +231,6 @@
 
                         <div class="login-form__control">
 
-                            <!-- Icono decorativo del campo -->
                             <svg class="login-form__icon"
                                  xmlns="http://www.w3.org/2000/svg"
                                  viewBox="0 0 24 24"
@@ -305,44 +252,38 @@
                                    placeholder="Ingresa tu contraseña"
                                    autocomplete="current-password"
                                    maxlength="64"
-                                   required>
+                                   required
+                                   aria-describedby="errorContrasena">
 
                         </div>
+
+                        <small class="login-form__error"
+                               id="errorContrasena"
+                               aria-live="polite"></small>
 
                     </div>
 
 
-                    <!--
-                        BOTÓN DE AUTENTICACIÓN
+                    <!-- Mensaje general cuando faltan campos -->
+                    <p class="login-form__message"
+                       id="loginFormMessage"
+                       role="alert"
+                       aria-live="assertive"></p>
 
-                        Envía los valores de los campos al servidor
-                        para que el servicio de autenticación compruebe
-                        las credenciales ingresadas.
 
-                        La respuesta del servidor determina si el usuario
-                        accede a la plataforma o permanece en el formulario
-                        con un mensaje de error.
-                    -->
                     <button type="submit"
                             class="login-form__submit"
                             id="loginSubmit">
 
-                        Iniciar sesión
+                        <span id="loginSubmitText">Iniciar sesión</span>
+                        <span id="loginLoading" hidden>Ingresando...</span>
 
                     </button>
 
                 </form>
 
 
-                <!--
-                    PIE DE LA TARJETA
-
-                    Proporciona acceso a la creación de una cuenta
-                    para los usuarios que todavía no están registrados.
-
-                    La ruta /registro corresponde a la vista de registro
-                    gestionada por el controlador correspondiente.
-                -->
+                <!-- Acceso al registro -->
                 <footer class="login-form-footer">
 
                     <p class="login-form-footer__description">
@@ -361,12 +302,7 @@
         </section>
 
 
-        <!--
-            IDENTIDAD INSTITUCIONAL
-
-            Muestra el logotipo de la Universidad Autónoma de Manizales.
-            Su ubicación y dimensiones se controlan desde login.css.
-        -->
+        <!-- Logo de la Universidad Autónoma de Manizales -->
         <div class="login-university-logo">
 
             <img src="/img/Logo_UAM.png"
@@ -376,16 +312,12 @@
         </div>
 
     </main>
-    
-<!-- Footer compartido -->
 
+<!-- Pie de página compartido -->
 <th:block th:replace="~{fragments/footer :: footer}"></th:block>
 
-
-<!-- JavaScript exclusivo del registro -->
-
+<!-- Comportamiento del formulario de inicio de sesión -->
 <script th:src="@{/js/login.js}" defer></script>
-
 
 </body>
 
