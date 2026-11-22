@@ -195,3 +195,48 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarContador();
     actualizarVistaPrevia();
 });
+
+/*
+   Preferencias de accesibilidad (RF-04)
+   - Al mover un interruptor, la página cambia de inmediato (clase en <html>).
+   - Luego se envía el formulario para guardar la preferencia en la cuenta.
+   - Si el servidor no puede guardarla, la página vuelve a cargar con las
+     preferencias anteriores y muestra el aviso.
+*/
+document.addEventListener("DOMContentLoaded", () => {
+    const formulario = document.querySelector("[data-formulario-accesibilidad]");
+
+    if (!formulario) {
+        return;
+    }
+
+    const avisoLector = document.querySelector("[data-aviso]");
+    const interruptores = formulario.querySelectorAll("input[data-preferencia]");
+    let enviando = false;
+
+    interruptores.forEach(interruptor => {
+        interruptor.addEventListener("change", () => {
+            if (enviando) return;
+
+            // 1. Cambio inmediato en la página
+            const clase = interruptor.dataset.preferencia;
+            document.documentElement.classList.toggle(clase, interruptor.checked);
+
+            const nombre = interruptor.closest(".interruptor").querySelector("strong").textContent;
+            if (avisoLector) {
+                avisoLector.textContent = `${nombre} ${interruptor.checked ? "activado" : "desactivado"}. Guardando.`;
+            }
+
+            // 2. Guardar en la cuenta (pequeña pausa para que se vea el interruptor moverse)
+            enviando = true;
+            formulario.classList.add("guardando");
+            setTimeout(() => formulario.submit(), 300);
+        });
+    });
+
+    // Si el usuario vuelve con el botón "atrás", los interruptores quedan listos otra vez.
+    window.addEventListener("pageshow", () => {
+        enviando = false;
+        formulario.classList.remove("guardando");
+    });
+});
