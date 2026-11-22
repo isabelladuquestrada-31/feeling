@@ -3,6 +3,8 @@ package com.feeling.feeling.repository;
 import com.feeling.feeling.model.EstadoSolicitud;
 import com.feeling.feeling.model.Solicitud;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -84,4 +86,16 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
      */
     List<Solicitud> findByVoluntarioIdAndEstadoInAndFechaProgramadaAfter(
             Integer voluntarioId, List<EstadoSolicitud> estados, LocalDateTime desde);
+
+    /**
+     * RF-15: suma los minutos de los acompañamientos de un voluntario en un estado dado.
+     * Se usa con el estado REALIZADA para calcular las horas de voluntariado.
+     *
+     * @param voluntarioId id del voluntario
+     * @param estado       estado de las solicitudes que se suman (REALIZADA)
+     * @return total de minutos, o null si el voluntario no tiene solicitudes en ese estado
+     */
+    @Query("select sum(s.duracionMinutos) from Solicitud s where s.voluntarioId = :voluntarioId and s.estado = :estado")
+    Long sumarMinutosPorVoluntarioYEstado(@Param("voluntarioId") Integer voluntarioId,
+                                          @Param("estado") EstadoSolicitud estado);
 }
