@@ -25,13 +25,4 @@ public class InicioController {
         return "paginas/index";
     }
 
-    /**
-     * Muestra el formulario de registro de estudiantes.
-     *
-     * @return nombre de la vista de registro.
-     */
-    @GetMapping("/registro")
-    public String mostrarRegistro() {
-        return "paginas/signup";
-    }
 }
