@@ -4,6 +4,9 @@
    - Cuenta los caracteres del tema.
    - Valida que todo esté completo antes de enviar, igual que el backend,
      para avisar sin recargar la página.
+   - Ajustes razonables (RF-09, SCRUM-95): muestra el campo para
+     describir el ajuste cuando se marca "Otro" y no deja enviar si
+     queda vacío.
    - Botón "volver" que regresa a la página anterior.
    La onda de los botones y el cierre de alertas los maneja solicitudes.js.
    ========================================================== */
@@ -188,18 +191,140 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. Antes de enviar: revisa que todo esté completo.
+    // 3. Ajustes razonables (RF-09): paso opcional con casillas.
+    const casillasAjuste = Array.from(formulario.querySelectorAll("[data-ajuste]"));
+    const campoOtro = formulario.querySelector("[data-campo-otro]");
+    const detalleOtro = formulario.querySelector("[data-detalle-otro]");
+    const caracteresAjuste = seccion.querySelector("[data-caracteres-ajuste]");
+    const contadorAjuste = seccion.querySelector("[data-contador-ajuste]");
+
+    /**
+     * Indica si la casilla "Otro" está marcada.
+     *
+     * @returns {boolean} true si eligió "Otro"
+     */
+    function otroMarcado() {
+        const otro = casillasAjuste.find(casilla => casilla.value === "OTRO");
+        return Boolean(otro && otro.checked);
+    }
+
+    /**
+     * Caso de fallo de RF-09: marcó "Otro" y no describió el ajuste.
+     *
+     * @returns {boolean} true si falta la descripción
+     */
+    function otroSinDetalle() {
+        return otroMarcado() && (!detalleOtro || detalleOtro.value.trim() === "");
+    }
+
+    /**
+     * Actualiza el contador de caracteres de la descripción del ajuste.
+     */
+    function actualizarContadorAjuste() {
+        if (!detalleOtro || !caracteresAjuste) {
+            return;
+        }
+        const largo = detalleOtro.value.length;
+        caracteresAjuste.textContent = String(largo);
+        if (contadorAjuste) {
+            contadorAjuste.classList.toggle("cerca", largo >= 235);
+        }
+    }
+
+    /**
+     * Marca las casillas elegidas, muestra u oculta la descripción de "Otro"
+     * y llena el resumen con los ajustes.
+     */
+    function actualizarAjustes() {
+        casillasAjuste.forEach(casilla => {
+            casilla.closest("label").classList.toggle("elegida", casilla.checked);
+        });
+
+        if (campoOtro) {
+            const mostrar = otroMarcado();
+            if (campoOtro.hidden === mostrar) {
+                campoOtro.hidden = !mostrar;
+                if (mostrar && !reducirMovimiento.matches) {
+                    campoOtro.classList.remove("abriendo");
+                    void campoOtro.offsetWidth;
+                    campoOtro.classList.add("abriendo");
+                }
+            }
+        }
+
+        const elegidos = casillasAjuste
+            .filter(casilla => casilla.checked)
+            .map(casilla => {
+                const detalle = detalleOtro ? detalleOtro.value.trim() : "";
+                return casilla.value === "OTRO" && detalle !== ""
+                    ? `Otro: ${detalle}`
+                    : (casilla.dataset.texto || casilla.value);
+            });
+
+        const paso = formulario.querySelector('[data-paso="ajustes"]');
+        if (paso) {
+            paso.classList.toggle("completo", elegidos.length > 0 && !otroSinDetalle());
+        }
+        if (!otroSinDetalle()) {
+            quitarError("ajustes");
+        }
+
+        const resumen = seccion.querySelector('[data-resumen="ajustes"]');
+        if (resumen) {
+            const texto = elegidos.length > 0 ? elegidos.join(", ") : "Ninguno";
+            if (resumen.textContent !== texto) {
+                resumen.textContent = texto;
+                resumen.classList.remove("actualizado");
+                void resumen.offsetWidth;
+                resumen.classList.add("actualizado");
+            }
+        }
+    }
+
+    casillasAjuste.forEach(casilla => {
+        casilla.addEventListener("change", () => {
+            const etiqueta = casilla.closest("label");
+            if (etiqueta && !reducirMovimiento.matches) {
+                etiqueta.classList.remove("pop");
+                void etiqueta.offsetWidth;
+                etiqueta.classList.add("pop");
+            }
+            actualizarAjustes();
+            const texto = casilla.dataset.texto || casilla.value;
+            anunciar(casilla.checked ? `Marcaste: ${texto}.` : `Quitaste: ${texto}.`);
+
+            // Al marcar "Otro", el cursor pasa al campo para describirlo.
+            if (casilla.value === "OTRO" && casilla.checked && detalleOtro) {
+                setTimeout(() => detalleOtro.focus(), 150);
+            }
+        });
+    });
+
+    if (detalleOtro) {
+        detalleOtro.addEventListener("input", () => {
+            actualizarContadorAjuste();
+            actualizarAjustes();
+        });
+    }
+
+    // 4. Antes de enviar: revisa que todo esté completo.
     formulario.addEventListener("submit", evento => {
         const faltantes = PASOS.filter(paso => valorDe(paso) === "");
+        if (otroSinDetalle()) {
+            faltantes.push("ajustes");
+        }
 
         if (faltantes.length > 0) {
             evento.preventDefault();
             faltantes.forEach(mostrarError);
 
-            const primero = formulario.querySelector(`[data-paso="${faltantes[0]}"]`);
+            const primerPaso = faltantes[0];
+            const primero = formulario.querySelector(`[data-paso="${primerPaso}"]`);
             if (primero) {
                 primero.scrollIntoView({ behavior: reducirMovimiento.matches ? "auto" : "smooth", block: "center" });
-                const foco = primero.querySelector("input:not([type=hidden])");
+                const foco = primerPaso === "ajustes"
+                    ? detalleOtro
+                    : primero.querySelector("input:not([type=hidden])");
                 if (foco) {
                     setTimeout(() => foco.focus({ preventScroll: true }), 300);
                 }
@@ -221,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
         anunciar("Enviando tu solicitud.");
     });
 
-    // 4. Volver a la página anterior si viene de Feeling; si no, a la búsqueda.
+    // 5. Volver a la página anterior si viene de Feeling; si no, a la búsqueda.
     const volver = seccion.querySelector("[data-volver]");
     if (volver) {
         volver.addEventListener("click", evento => {
@@ -233,8 +358,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 5. Estado inicial (por si el servidor devolvió el formulario con datos).
+    // 6. Estado inicial (por si el servidor devolvió el formulario con datos).
     PASOS.forEach(actualizarPaso);
     actualizarProgreso();
     actualizarContadorTema();
+    actualizarContadorAjuste();
+    actualizarAjustes();
 });

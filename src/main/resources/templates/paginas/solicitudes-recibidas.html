@@ -12,6 +12,8 @@
     Basada en el bloque "Solicitudes que has recibido" del mockup del panel del voluntario (SCRUM-13).
     El envío de los formularios, la confirmación al rechazar y la salida de la tarjeta
     los maneja solicitudes.js; el botón "Ver" lo maneja solicitudes-recibidas.js.
+    RF-09 (SCRUM-95): la tarjeta avisa si el estudiante pidió ajustes razonables y el
+    detalle ("Ver") los muestra; en los aceptados se ven siempre.
 -->
 <section class="solicitudes recibidas sin-js" data-solicitudes data-recibidas aria-labelledby="titulo-solicitudes">
 
@@ -107,6 +109,11 @@
                                 Vie, 24 oct 2026 · 3:00 p. m.
                             </span>
                         </p>
+                        <!-- RF-09: aviso de que el estudiante pidió ajustes razonables -->
+                        <p class="recibida__ajustes-aviso" th:unless="${#lists.isEmpty(ajustesPorSolicitud.get(s.id))}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5M12 15l-3 6M12 15l3 6"/></svg>
+                            Pidió ajustes razonables
+                        </p>
                     </div>
 
                     <span class="estado estado--pendiente">Pendiente</span>
@@ -140,6 +147,19 @@
                         <div>
                             <dt>Código de la materia</dt>
                             <dd th:text="${s.materiaCodigo}">MAT101</dd>
+                        </div>
+                        <!-- RF-09: ajustes razonables que pidió el estudiante -->
+                        <div class="recibida__detalle-ajustes" th:unless="${#lists.isEmpty(ajustesPorSolicitud.get(s.id))}">
+                            <dt>Ajustes razonables</dt>
+                            <dd>
+                                <ul class="lista-ajustes">
+                                    <li th:each="a : ${ajustesPorSolicitud.get(s.id)}">
+                                        <span th:text="${a.tipo.etiqueta}">Espacio físico accesible</span><span
+                                              th:if="${a.detalle != null}" class="lista-ajustes__detalle"
+                                              th:text="': ' + ${a.detalle}">: detalle</span>
+                                    </li>
+                                </ul>
+                            </dd>
                         </div>
                         <div th:if="${s.fechaCreacion != null}">
                             <dt>Solicitud enviada</dt>
@@ -179,6 +199,20 @@
                                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
                                 <span th:text="${#strings.capitalize(#temporals.format(s.fechaProgramada, 'EEE, d MMM yyyy', idioma))} + ' · ' + ${#temporals.format(s.fechaProgramada, 'h:mm a', idioma)}">Vie, 24 oct 2026 · 3:00 p. m.</span>
                             </p>
+                            <!-- RF-09: ajustes razonables a tener en cuenta en el acompañamiento -->
+                            <div class="recibida__ajustes" th:unless="${#lists.isEmpty(ajustesPorSolicitud.get(s.id))}">
+                                <p class="recibida__ajustes-aviso">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5M12 15l-3 6M12 15l3 6"/></svg>
+                                    Ajustes razonables
+                                </p>
+                                <ul class="lista-ajustes">
+                                    <li th:each="a : ${ajustesPorSolicitud.get(s.id)}">
+                                        <span th:text="${a.tipo.etiqueta}">Material en formato accesible</span><span
+                                              th:if="${a.detalle != null}" class="lista-ajustes__detalle"
+                                              th:text="': ' + ${a.detalle}">: detalle</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <span class="estado estado--aceptada">Aceptada</span>
                         <div class="recibida__acciones">

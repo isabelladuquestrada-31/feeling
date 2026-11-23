@@ -378,6 +378,54 @@
 
 /* 5. Tabletas: los botones pasan a una segunda fila */
 
+/* Ajustes razonables que pidió el estudiante (RF-09, SCRUM-95) */
+
+.recibida__ajustes-aviso {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #FFF4DD;
+    color: #7A4A00;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.recibida__ajustes-aviso svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.recibida__detalle-ajustes {
+    grid-column: 1 / -1;
+}
+
+.recibida__ajustes .lista-ajustes {
+    margin-top: 6px;
+}
+
+.lista-ajustes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+    padding-left: 18px;
+    color: var(--color-navy);
+    font-weight: 700;
+}
+
+.lista-ajustes__detalle {
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
 @media (max-width: 900px) {
     .recibida {
         grid-template-columns: auto minmax(0, 1fr) auto;

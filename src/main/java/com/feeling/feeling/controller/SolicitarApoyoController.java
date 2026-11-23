@@ -3,7 +3,10 @@ package com.feeling.feeling.controller;
 import com.feeling.feeling.dto.HorarioLibre;
 import com.feeling.feeling.model.Administrador;
 import com.feeling.feeling.model.Estudiante;
+import com.feeling.feeling.model.Solicitud;
+import com.feeling.feeling.model.TipoAjuste;
 import com.feeling.feeling.model.Voluntario;
+import com.feeling.feeling.service.AjusteRazonableService;
 import com.feeling.feeling.service.PanelService;
 import com.feeling.feeling.service.SolicitarApoyoService;
 import jakarta.servlet.http.HttpSession;
@@ -29,9 +32,11 @@ import java.util.Optional;
  * Formulario "Solicitar apoyo" (RF-08, SCRUM-81): el estudiante elige materia, tema,
  * tipo de apoyo, un horario libre del voluntario y la modalidad, y se crea la
  * solicitud en estado PENDIENTE.
+ * Desde la versión 1.1 también recibe los ajustes razonables (RF-09, SCRUM-95),
+ * que se guardan con el servicio de Yeymi (SCRUM-94).
  *
  * @author Daniel Blandón
- * @version 1.0
+ * @version 1.1
  */
 @Controller
 public class SolicitarApoyoController {
@@ -42,18 +47,28 @@ public class SolicitarApoyoController {
     private static final String VISTA = "paginas/solicitar-apoyo";
     private static final String REDIRECCION_BUSQUEDA = "redirect:/voluntarios";
 
+    /** Explicación corta de cada ajuste razonable, para el formulario. */
+    private static final Map<String, String> DESCRIPCIONES_AJUSTE = Map.of(
+            "ESPACIO_ACCESIBLE", "Un lugar sin barreras, por ejemplo con acceso para silla de ruedas.",
+            "MATERIAL_ACCESIBLE", "Material con letra grande, en audio o en un formato digital legible.",
+            "OTRO", "Cuéntale al voluntario qué necesitas.");
+
     private final SolicitarApoyoService solicitarApoyoService;
     private final PanelService panelService;
+    private final AjusteRazonableService ajusteRazonableService;
 
     /**
      * Crea el controlador con los servicios que necesita.
      *
-     * @param solicitarApoyoService horarios libres y creación de la solicitud
-     * @param panelService          nombres de los estudiantes
+     * @param solicitarApoyoService  horarios libres y creación de la solicitud
+     * @param panelService           nombres de los estudiantes
+     * @param ajusteRazonableService validación y registro de los ajustes razonables (RF-09)
      */
-    public SolicitarApoyoController(SolicitarApoyoService solicitarApoyoService, PanelService panelService) {
+    public SolicitarApoyoController(SolicitarApoyoService solicitarApoyoService, PanelService panelService,
+                                    AjusteRazonableService ajusteRazonableService) {
         this.solicitarApoyoService = solicitarApoyoService;
         this.panelService = panelService;
+        this.ajusteRazonableService = ajusteRazonableService;
     }
 
     /**
@@ -88,7 +103,7 @@ public class SolicitarApoyoController {
         Voluntario v = voluntario.get();
         String materia = v.getMaterias().size() == 1 ? v.getMaterias().get(0).getCodigo() : null;
         String tipo = v.getTiposApoyo().size() == 1 ? v.getTiposApoyo().get(0).name() : null;
-        cargarFormulario(model, estudiante, v, materia, null, tipo, null, null);
+        cargarFormulario(model, estudiante, v, materia, null, tipo, null, null, null, null);
         return VISTA;
     }
 
@@ -102,6 +117,8 @@ public class SolicitarApoyoController {
      * @param tipo               tipo de apoyo
      * @param horario            inicio del horario elegido (fecha y hora)
      * @param modalidad          PRESENCIAL o VIRTUAL
+     * @param ajustes            ajustes razonables marcados (RF-09); puede venir vacío
+     * @param detalleAjuste      descripción del ajuste cuando se marca "Otro"
      * @param sesion             sesión con el estudiante
      * @param model              datos para volver a mostrar el formulario
      * @param redirectAttributes mensaje de éxito
@@ -114,6 +131,8 @@ public class SolicitarApoyoController {
                          @RequestParam(required = false) String tipo,
                          @RequestParam(required = false) String horario,
                          @RequestParam(required = false) String modalidad,
+                         @RequestParam(name = "ajustes", required = false) List<String> ajustes,
+                         @RequestParam(required = false) String detalleAjuste,
                          HttpSession sesion, Model model, RedirectAttributes redirectAttributes) {
         Object usuario = sesion.getAttribute("usuario");
         if (!(usuario instanceof Estudiante estudiante)) {
@@ -127,12 +146,17 @@ public class SolicitarApoyoController {
             return REDIRECCION_BUSQUEDA;
         }
 
+        List<TipoAjuste> tiposAjuste = leerAjustes(ajustes);
         try {
-            solicitarApoyoService.solicitar(estudiante.getId(), voluntarioId, materia, tema, tipo, modalidad,
-                    leerHorario(horario), LocalDateTime.now());
+            // Primero se revisan los ajustes: si eligió "Otro" sin describirlo, no se crea la solicitud.
+            ajusteRazonableService.validar(tiposAjuste, detalleAjuste);
+            Solicitud creada = solicitarApoyoService.solicitar(estudiante.getId(), voluntarioId, materia, tema,
+                    tipo, modalidad, leerHorario(horario), LocalDateTime.now());
+            ajusteRazonableService.guardar(creada.getId(), tiposAjuste, detalleAjuste);
         } catch (IllegalArgumentException | IllegalStateException e) {
             model.addAttribute("error", e.getMessage());
-            cargarFormulario(model, estudiante, voluntario.get(), materia, tema, tipo, horario, modalidad);
+            cargarFormulario(model, estudiante, voluntario.get(), materia, tema, tipo, horario, modalidad,
+                    ajustes, detalleAjuste);
             return VISTA;
         }
 
@@ -145,7 +169,8 @@ public class SolicitarApoyoController {
      * Pone en el modelo todo lo que necesita el formulario y lo que el estudiante ya había elegido.
      */
     private void cargarFormulario(Model model, Estudiante estudiante, Voluntario voluntario,
-                                  String materia, String tema, String tipo, String horario, String modalidad) {
+                                  String materia, String tema, String tipo, String horario, String modalidad,
+                                  List<String> ajustes, String detalleAjuste) {
         List<HorarioLibre> horarios = solicitarApoyoService.horariosLibres(voluntario.getId(), LocalDateTime.now());
         Map<LocalDate, List<HorarioLibre>> horariosPorDia = new LinkedHashMap<>();
         horarios.forEach(h -> horariosPorDia.computeIfAbsent(h.inicio().toLocalDate(), d -> new ArrayList<>()).add(h));
@@ -164,6 +189,12 @@ public class SolicitarApoyoController {
         model.addAttribute("horarioElegido", horario);
         model.addAttribute("modalidadElegida", modalidad);
 
+        // RF-09: opciones de ajustes razonables y lo que ya había marcado o escrito.
+        model.addAttribute("tiposAjuste", TipoAjuste.values());
+        model.addAttribute("descripcionesAjuste", DESCRIPCIONES_AJUSTE);
+        model.addAttribute("ajustesElegidos", ajustes == null ? List.of() : ajustes);
+        model.addAttribute("detalleAjusteEscrito", detalleAjuste);
+
         model.addAttribute("paginaActiva", "voluntarios");
         model.addAttribute("usuarioNombre", estudiante.getNombreUsuario());
         model.addAttribute("usuarioRol", "Estudiante");
@@ -176,6 +207,25 @@ public class SolicitarApoyoController {
         Integer id = voluntario.getEstudiante().getId();
         return panelService.nombresDeEstudiantes(List.of(id))
                 .getOrDefault(id, voluntario.getEstudiante().getNombreUsuario());
+    }
+
+    /**
+     * Convierte los ajustes marcados en el formulario a {@link TipoAjuste}.
+     * Ignora valores que no existen, por si alguien modifica el formulario.
+     */
+    private static List<TipoAjuste> leerAjustes(List<String> ajustes) {
+        if (ajustes == null) {
+            return List.of();
+        }
+        List<TipoAjuste> tipos = new ArrayList<>();
+        for (String valor : ajustes) {
+            for (TipoAjuste tipo : TipoAjuste.values()) {
+                if (tipo.name().equals(valor) && !tipos.contains(tipo)) {
+                    tipos.add(tipo);
+                }
+            }
+        }
+        return tipos;
     }
 
     /**
