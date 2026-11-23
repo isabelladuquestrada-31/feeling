@@ -400,6 +400,110 @@
     font-weight: 700;
 }
 
+/* 6b. Ajustes razonables (RF-09, SCRUM-95) */
+
+.paso-solicitud__opcional {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+    font-size: 0.72rem;
+    font-weight: 800;
+    vertical-align: middle;
+}
+
+/* El número del paso opcional va en contorno para diferenciarlo de los obligatorios */
+.paso-solicitud--opcional .paso-solicitud__numero {
+    border: 2px solid var(--color-primary);
+    background-color: var(--color-text-light);
+    color: var(--color-primary);
+}
+
+.paso-solicitud--opcional.completo .paso-solicitud__numero {
+    border-color: var(--color-success);
+    background-color: var(--color-success);
+    color: var(--color-text-light);
+}
+
+.opcion-solicitud--casilla {
+    align-items: flex-start;
+}
+
+/* Casilla cuadrada con chulo, en lugar del círculo de las opciones únicas */
+.opcion-solicitud--casilla .opcion-solicitud__marca {
+    margin-top: 2px;
+    border-radius: 6px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.opcion-solicitud--casilla .opcion-solicitud__marca::after {
+    inset: auto;
+    top: 2px;
+    left: 6px;
+    width: 6px;
+    height: 11px;
+    border: solid var(--color-text-light);
+    border-width: 0 2.5px 2.5px 0;
+    border-radius: 0;
+    background-color: transparent;
+    transform: rotate(45deg) scale(0);
+}
+
+.opcion-solicitud--casilla:has(input:checked) .opcion-solicitud__marca,
+.opcion-solicitud--casilla.elegida .opcion-solicitud__marca {
+    background-color: var(--color-primary);
+}
+
+.opcion-solicitud--casilla:has(input:checked) .opcion-solicitud__marca::after,
+.opcion-solicitud--casilla.elegida .opcion-solicitud__marca::after {
+    transform: rotate(45deg) scale(1);
+}
+
+.campo-ajuste {
+    margin-top: 14px;
+}
+
+.campo-ajuste.abriendo {
+    animation: solicitudes-aparecer 0.35s ease both;
+}
+
+/* Sin JavaScript el campo siempre se ve, para poder describir "Otro" */
+.solicitar.sin-js .campo-ajuste[hidden] {
+    display: block;
+}
+
+.campo-ajuste__etiqueta {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.campo-ajuste textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    color: var(--color-navy);
+    font: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-ajuste textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
+    outline: none;
+}
+
+.paso-solicitud.con-error .campo-ajuste textarea {
+    border-color: var(--color-danger);
+}
+
 /* 7. Horarios disponibles */
 
 .horarios {

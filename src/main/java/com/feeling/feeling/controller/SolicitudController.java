@@ -1,9 +1,11 @@
 package com.feeling.feeling.controller;
 
 import com.feeling.feeling.model.Administrador;
+import com.feeling.feeling.model.AjusteRazonable;
 import com.feeling.feeling.model.Estudiante;
 import com.feeling.feeling.model.Solicitud;
 import com.feeling.feeling.model.Voluntario;
+import com.feeling.feeling.service.AjusteRazonableService;
 import com.feeling.feeling.service.ContactoSolicitudService;
 import com.feeling.feeling.service.PanelService;
 import com.feeling.feeling.service.SolicitudService;
@@ -18,14 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 /**
  * Atiende las acciones sobre las solicitudes de acompañamiento:
  * el estudiante consulta y cancela las suyas (RF-12, RF-13) y el voluntario
  * acepta o rechaza las que recibe (RF-10).
+ * El voluntario también ve los ajustes razonables que pidió el estudiante (RF-09, SCRUM-95).
  * Usa el usuario que inició sesión.
  *
  * @author Daniel Blandón
@@ -59,21 +64,29 @@ public class SolicitudController {
     private final ContactoSolicitudService contactoSolicitudService;
 
     /**
+     * Servicio con los ajustes razonables de cada solicitud (RF-09, SCRUM-94).
+     */
+    private final AjusteRazonableService ajusteRazonableService;
+
+    /**
      * Crea el controlador con los servicios que le entrega Spring.
      *
      * @param solicitudService         servicio de solicitudes
      * @param voluntarioService        servicio de voluntarios
      * @param panelService             nombres de estudiantes y materias
      * @param contactoSolicitudService contacto de WhatsApp de la otra parte
+     * @param ajusteRazonableService   ajustes razonables de cada solicitud
      */
     public SolicitudController(SolicitudService solicitudService,
                                VoluntarioService voluntarioService,
                                PanelService panelService,
-                               ContactoSolicitudService contactoSolicitudService) {
+                               ContactoSolicitudService contactoSolicitudService,
+                               AjusteRazonableService ajusteRazonableService) {
         this.solicitudService = solicitudService;
         this.voluntarioService = voluntarioService;
         this.panelService = panelService;
         this.contactoSolicitudService = contactoSolicitudService;
+        this.ajusteRazonableService = ajusteRazonableService;
     }
 
     /**
@@ -174,6 +187,7 @@ public class SolicitudController {
         model.addAttribute("esVoluntario", voluntario.isPresent());
         model.addAttribute("solicitudesRecibidas", recibidas);
         model.addAttribute("aceptadas", aceptadas);
+        model.addAttribute("ajustesPorSolicitud", ajustesDe(recibidas, aceptadas));
         model.addAttribute("nombresEstudiantes", panelService.nombresDeEstudiantes(estudiantes));
         model.addAttribute("nombresMaterias", panelService.nombresDeMaterias());
         model.addAttribute("etiquetasApoyo", SerVoluntarioController.etiquetasDeApoyo());
@@ -266,5 +280,23 @@ public class SolicitudController {
             }
             return "inicio".equals(volver) ? "redirect:/inicio" : "redirect:/mis-acompanamientos";
         }
+    }
+
+    /**
+     * Junta los ajustes razonables de cada solicitud (RF-09), para que el voluntario
+     * los vea al revisarla. Toda solicitud queda en el mapa, aunque no tenga ajustes.
+     *
+     * @param listas listas de solicitudes que se muestran en la página
+     * @return ajustes por id de solicitud
+     */
+    @SafeVarargs
+    private Map<Integer, List<AjusteRazonable>> ajustesDe(List<Solicitud>... listas) {
+        Map<Integer, List<AjusteRazonable>> ajustes = new HashMap<>();
+        for (List<Solicitud> lista : listas) {
+            for (Solicitud solicitud : lista) {
+                ajustes.computeIfAbsent(solicitud.getId(), ajusteRazonableService::ajustesDeLaSolicitud);
+            }
+        }
+        return ajustes;
     }
 }

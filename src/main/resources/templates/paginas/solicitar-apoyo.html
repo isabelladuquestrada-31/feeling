@@ -10,6 +10,7 @@
 <!--
     RF-08: formulario "Solicitar apoyo" (SCRUM-81).
     El estudiante elige materia, tema, tipo de apoyo, un horario libre del voluntario y la modalidad.
+    RF-09 (SCRUM-95): paso 6 opcional con los ajustes razonables; si marca "Otro" debe describirlo.
     Basado en el mockup "Solicitar Apoyo" (SCRUM-13): tarjeta del voluntario y lista de horarios.
 -->
 <section class="solicitudes solicitar sin-js" data-solicitudes data-solicitar aria-labelledby="titulo-solicitar">
@@ -206,6 +207,45 @@
                     <p class="paso-solicitud__error" data-error="modalidad" hidden>Elige la modalidad.</p>
                 </fieldset>
 
+                <!-- 6. Ajustes razonables (RF-09, SCRUM-95). Es opcional: no cuenta en el progreso. -->
+                <fieldset class="paso-solicitud paso-solicitud--opcional" data-paso="ajustes">
+                    <legend class="paso-solicitud__titulo">
+                        <span class="paso-solicitud__numero" aria-hidden="true">
+                            <span class="paso-solicitud__numero-texto">6</span>
+                            <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                        </span>
+                        <span>
+                            <strong>Ajustes razonables <span class="paso-solicitud__opcional">Opcional</span></strong>
+                            <small>Si necesitas que el voluntario adapte el acompañamiento, márcalo aquí.</small>
+                        </span>
+                    </legend>
+                    <div class="opciones-solicitud opciones-solicitud--ajustes">
+                        <label class="opcion-solicitud opcion-solicitud--casilla" th:each="a : ${tiposAjuste}">
+                            <input type="checkbox" name="ajustes" th:value="${a.name()}"
+                                   th:checked="${ajustesElegidos.contains(a.name())}"
+                                   th:attr="data-texto=${a.etiqueta}" data-ajuste>
+                            <span class="opcion-solicitud__marca" aria-hidden="true"></span>
+                            <span class="opcion-solicitud__texto">
+                                <strong th:text="${a.etiqueta}">Espacio físico accesible</strong>
+                                <small th:text="${descripcionesAjuste.get(a.name())}">Un lugar sin barreras.</small>
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Descripción obligatoria cuando se marca "Otro" -->
+                    <div class="campo-ajuste" data-campo-otro th:hidden="${!ajustesElegidos.contains('OTRO')}">
+                        <label class="campo-ajuste__etiqueta" for="detalle-ajuste">Describe el ajuste que necesitas</label>
+                        <textarea id="detalle-ajuste" name="detalleAjuste" rows="3" maxlength="255"
+                                  placeholder="Ej.: necesito que el material tenga letra grande"
+                                  aria-describedby="contador-ajuste" data-detalle-otro
+                                  th:text="${detalleAjusteEscrito}"></textarea>
+                        <p class="campo-tema__contador" id="contador-ajuste" data-contador-ajuste>
+                            <span data-caracteres-ajuste>0</span> / 255
+                        </p>
+                    </div>
+                    <p class="paso-solicitud__error" data-error="ajustes" hidden>Describe el ajuste razonable que necesitas.</p>
+                </fieldset>
+
                 <div class="solicitar__envio">
                     <button type="submit" class="boton-accion boton-accion--enviar"
                             th:disabled="${#maps.isEmpty(horariosPorDia)}" data-enviar>
@@ -227,6 +267,7 @@
                     <div><dt>Tipo de apoyo</dt><dd data-resumen="tipo">Sin elegir</dd></div>
                     <div><dt>Horario</dt><dd data-resumen="horario">Sin elegir</dd></div>
                     <div><dt>Modalidad</dt><dd data-resumen="modalidad">Sin elegir</dd></div>
+                    <div><dt>Ajustes</dt><dd data-resumen="ajustes">Ninguno</dd></div>
                 </dl>
                 <div class="resumen-solicitud__progreso" aria-hidden="true">
                     <span data-progreso></span>
