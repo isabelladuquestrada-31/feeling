@@ -12,6 +12,7 @@
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/acompanamientos.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/mis-acompanamientos.js}" defer></script>
 
     <!-- Encabezado -->
     <header class="solicitudes__encabezado">
@@ -82,7 +83,8 @@
             <!-- Lista del historial -->
             <ul class="historial__lista">
                 <li th:each="s : ${historial}" class="solicitudes__item"
-                    th:attr="data-estado=${s.estado.name()}">
+                    th:attr="data-estado=${s.estado.name()}"
+                    th:with="realizada=${s.estado.name() == 'REALIZADA'}, calificacion=${calificaciones[s.id]}">
                     <article class="tarjeta-historial" th:attr="aria-labelledby='historial-' + ${s.id}">
 
                         <div class="tarjeta-historial__info">
@@ -117,7 +119,67 @@
                                 <button type="submit" class="boton-accion boton-accion--cancelar"
                                         th:attr="aria-label='Cancelar la solicitud: ' + ${s.tema}">Cancelar</button>
                             </form>
+
+                            <!-- RF-16: solo se califica un acompañamiento realizado que no tenga calificación -->
+                            <button th:if="${realizada and calificacion == null}" type="button"
+                                    class="boton-accion boton-accion--aceptar tarjeta-historial__accion"
+                                    aria-expanded="false" th:attr="aria-controls='calificar-' + ${s.id}"
+                                    data-abrir-calificacion>Calificar</button>
+
+                            <p th:if="${calificacion != null}" class="calificacion-dada"
+                               th:attr="aria-label='Calificaste con ' + ${calificacion.puntuacion} + ' de 5 estrellas'">
+                                <svg th:each="n : ${#numbers.sequence(1, 5)}" viewBox="0 0 24 24" aria-hidden="true"
+                                     class="estrella-icono" th:classappend="${n <= calificacion.puntuacion} ? 'estrella-icono--llena'">
+                                    <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+                                </svg>
+                            </p>
                         </div>
+
+                        <!-- RF-16: comentario de la calificación que ya se dio -->
+                        <p th:if="${calificacion != null and calificacion.comentario != null}"
+                           class="tarjeta-historial__comentario">
+                            <span class="solicitudes__sr-only">Tu comentario: </span>
+                            <span th:text="${calificacion.comentario}">Me explicó muy bien.</span>
+                        </p>
+
+                        <!-- RF-16: formulario para calificar de 1 a 5 estrellas -->
+                        <form th:if="${realizada and calificacion == null}" class="calificar"
+                              th:id="'calificar-' + ${s.id}"
+                              th:action="@{/solicitudes/{id}/calificar(id=${s.id})}" method="post"
+                              hidden data-form-calificacion>
+                            <fieldset class="calificar__estrellas">
+                                <legend>¿Cómo te fue en este acompañamiento?</legend>
+                                <div class="estrellas" data-estrellas>
+                                    <label class="estrella" th:each="n : ${#numbers.sequence(1, 5)}">
+                                        <input type="radio" name="puntuacion" th:value="${n}" required>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>
+                                        </svg>
+                                        <span class="solicitudes__sr-only"
+                                              th:text="${n == 1} ? '1 estrella' : ${n} + ' estrellas'">1 estrella</span>
+                                    </label>
+                                    <span class="estrellas__texto" data-texto-puntuacion aria-hidden="true">Elige de 1 a 5</span>
+                                </div>
+                                <p class="calificar__error" role="alert" data-error-puntuacion hidden>
+                                    Elige de 1 a 5 estrellas para calificar.
+                                </p>
+                            </fieldset>
+                            <label class="calificar__comentario">
+                                <span>Comentario <small>(opcional)</small></span>
+                                <textarea name="comentario" rows="3" th:attr="maxlength=${largoMaximoComentario}"
+                                          placeholder="Ej.: me explicó la regla de la cadena con mucha paciencia."
+                                          data-comentario-calificacion></textarea>
+                            </label>
+                            <p class="calificar__contador">
+                                <span data-caracteres-comentario>0</span> / <span th:text="${largoMaximoComentario}">255</span>
+                            </p>
+                            <div class="calificar__botones">
+                                <button type="button" class="boton-accion boton-accion--secundario"
+                                        data-cancelar-calificacion>Cancelar</button>
+                                <button type="submit" class="boton-accion boton-accion--aceptar"
+                                        data-enviar-calificacion>Enviar calificación</button>
+                            </div>
+                        </form>
 
                     </article>
                 </li>
