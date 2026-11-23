@@ -6,6 +6,7 @@ import com.feeling.feeling.model.Estudiante;
 import com.feeling.feeling.model.Solicitud;
 import com.feeling.feeling.model.Voluntario;
 import com.feeling.feeling.service.AjusteRazonableService;
+import com.feeling.feeling.service.CalificacionService;
 import com.feeling.feeling.service.ContactoSolicitudService;
 import com.feeling.feeling.service.PanelService;
 import com.feeling.feeling.service.SeguimientoService;
@@ -34,7 +35,7 @@ import java.util.Optional;
  * acepta o rechaza las que recibe (RF-10).
  * El voluntario también ve los ajustes razonables que pidió el estudiante (RF-09, SCRUM-95)
  * y marca como realizados los acompañamientos que ya pasaron, con notas y duración
- * (RF-14, SCRUM-97).
+ * (RF-14, SCRUM-97). El estudiante califica los acompañamientos realizados (RF-16, SCRUM-101).
  * Usa el usuario que inició sesión.
  *
  * @author Daniel Blandón
@@ -55,6 +56,11 @@ public class SolicitudController {
 
     /** Largo máximo de las notas del seguimiento. */
     private static final int LARGO_MAXIMO_NOTAS = 1000;
+
+    /** Largo máximo del comentario de la calificación, igual al de la base de datos. */
+    private static final int LARGO_MAXIMO_COMENTARIO = 255;
+
+    private static final String REDIRECCION_ACOMPANAMIENTOS = "redirect:/mis-acompanamientos";
 
     /**
      * Servicio con la lógica de las solicitudes.
@@ -87,6 +93,11 @@ public class SolicitudController {
     private final SeguimientoService seguimientoService;
 
     /**
+     * Servicio para calificar los acompañamientos realizados (RF-16).
+     */
+    private final CalificacionService calificacionService;
+
+    /**
      * Crea el controlador con los servicios que le entrega Spring.
      *
      * @param solicitudService         servicio de solicitudes
@@ -101,13 +112,15 @@ public class SolicitudController {
                                PanelService panelService,
                                ContactoSolicitudService contactoSolicitudService,
                                AjusteRazonableService ajusteRazonableService,
-                               SeguimientoService seguimientoService) {
+                               SeguimientoService seguimientoService,
+                               CalificacionService calificacionService) {
         this.solicitudService = solicitudService;
         this.voluntarioService = voluntarioService;
         this.panelService = panelService;
         this.contactoSolicitudService = contactoSolicitudService;
         this.ajusteRazonableService = ajusteRazonableService;
         this.seguimientoService = seguimientoService;
+        this.calificacionService = calificacionService;
     }
 
     /**
@@ -174,9 +187,45 @@ public class SolicitudController {
         }
         Integer id = estudiante.get().getId();
         model.addAttribute("proximos", solicitudService.proximosDelEstudiante(id));
-        model.addAttribute("historial", solicitudService.historialDelEstudiante(id));
+        List<Solicitud> historial = solicitudService.historialDelEstudiante(id);
+        model.addAttribute("historial", historial);
+        model.addAttribute("calificaciones", calificacionService.calificacionesDe(historial));
+        model.addAttribute("largoMaximoComentario", LARGO_MAXIMO_COMENTARIO);
         datosDelMenu(model, estudiante.get(), "acompanamientos");
         return "paginas/mis-acompanamientos";
+    }
+
+    /**
+     * RF-16: el estudiante califica de 1 a 5 estrellas un acompañamiento realizado
+     * y puede dejar un comentario. Si no está realizado o ya fue calificado,
+     * vuelve a Mis acompañamientos con el motivo.
+     *
+     * @param id                 id de la solicitud que se califica
+     * @param puntuacion         estrellas, de 1 a 5
+     * @param comentario         comentario opcional
+     * @param sesion             sesión con el estudiante
+     * @param redirectAttributes mensaje de éxito o de error
+     * @return redirección a Mis acompañamientos
+     */
+    @PostMapping("/solicitudes/{id}/calificar")
+    public String calificar(@PathVariable Integer id,
+                            @RequestParam(required = false) Integer puntuacion,
+                            @RequestParam(required = false) String comentario,
+                            HttpSession sesion, RedirectAttributes redirectAttributes) {
+        Optional<Estudiante> estudiante = estudianteDeLaSesion(sesion);
+        if (estudiante.isEmpty()) {
+            return redireccionSinEstudiante(sesion);
+        }
+
+        try {
+            calificacionService.calificar(id, estudiante.get().getId(), puntuacion, comentario);
+            String estrellas = puntuacion == 1 ? "1 estrella" : puntuacion + " estrellas";
+            redirectAttributes.addFlashAttribute("mensajeExito",
+                    "Calificaste el acompañamiento con " + estrellas + ". Gracias por tu opinión.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
+        }
+        return REDIRECCION_ACOMPANAMIENTOS;
     }
 
     /**

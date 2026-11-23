@@ -7,6 +7,7 @@ import com.feeling.feeling.model.Voluntario;
 import com.feeling.feeling.repository.ISeguimientoRepository;
 import com.feeling.feeling.repository.SolicitudRepository;
 import com.feeling.feeling.service.AjusteRazonableService;
+import com.feeling.feeling.service.CalificacionService;
 import com.feeling.feeling.service.ContactoSolicitudService;
 import com.feeling.feeling.service.PanelService;
 import com.feeling.feeling.service.SeguimientoService;
@@ -47,7 +48,8 @@ class SeguimientoControllerTest {
             .standaloneSetup(new SolicitudController(solicitudService, voluntarioService,
                     mock(PanelService.class), mock(ContactoSolicitudService.class),
                     mock(AjusteRazonableService.class),
-                    new SeguimientoService(solicitudRepository, seguimientoRepository)))
+                    new SeguimientoService(solicitudRepository, seguimientoRepository),
+                    mock(CalificacionService.class)))
             .build();
 
     /**

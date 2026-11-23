@@ -473,3 +473,250 @@
 .tarjeta-historial__lado .boton-whatsapp {
     order: -1;
 }
+
+/* 12. RF-16 (SCRUM-101): calificar un acompañamiento realizado */
+
+.boton-accion--secundario {
+    color: var(--color-primary);
+    background-color: var(--color-text-light);
+    border-color: var(--color-border);
+}
+
+.boton-accion--secundario:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-soft);
+}
+
+.tarjeta-historial [data-abrir-calificacion][hidden] {
+    display: none;
+}
+
+/* Estrellas de una calificación que ya se dio */
+.calificacion-dada {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.estrella-icono {
+    width: 20px;
+    height: 20px;
+    fill: #D5DEE6;
+}
+
+.estrella-icono--llena {
+    fill: var(--color-warning);
+}
+
+.tarjeta-historial__comentario {
+    grid-column: 1 / -1;
+    padding: 10px 14px;
+    border-left: 3px solid var(--color-warning);
+    border-radius: var(--radius-small);
+    background-color: #FFF9EC;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+    overflow-wrap: anywhere;
+}
+
+/* Formulario para calificar */
+.calificar {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px;
+    border-radius: var(--radius-medium);
+    background-color: #F7FCFD;
+    animation: calificar-abrir 0.3s ease both;
+}
+
+.calificar[hidden] {
+    display: none;
+}
+
+/* Sin JavaScript el formulario siempre se ve y el botón no hace falta */
+.acompanamientos.sin-js .calificar[hidden] {
+    display: flex;
+}
+
+.acompanamientos.sin-js [data-abrir-calificacion] {
+    display: none;
+}
+
+@keyframes calificar-abrir {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.calificar__estrellas {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.calificar__estrellas legend,
+.calificar__comentario > span {
+    margin-bottom: 8px;
+    padding: 0;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.calificar__comentario small {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.estrellas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+.estrella {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.estrella input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.estrella svg {
+    width: 34px;
+    height: 34px;
+    fill: #D5DEE6;
+    transition: fill 0.15s ease, transform 0.15s ease;
+}
+
+.estrella input:focus-visible + svg {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+    border-radius: 6px;
+}
+
+/* La estrella elegida y las anteriores se llenan */
+.estrellas:has(input[value="1"]:checked) .estrella:nth-of-type(-n+1) svg,
+.estrellas:has(input[value="2"]:checked) .estrella:nth-of-type(-n+2) svg,
+.estrellas:has(input[value="3"]:checked) .estrella:nth-of-type(-n+3) svg,
+.estrellas:has(input[value="4"]:checked) .estrella:nth-of-type(-n+4) svg,
+.estrellas:has(input[value="5"]:checked) .estrella:nth-of-type(-n+5) svg {
+    fill: var(--color-warning);
+}
+
+/* Al pasar el mouse se ve cuántas quedarían (gana sobre la elegida) */
+@media (hover: hover) {
+    .estrellas:has(label.estrella:hover) .estrella:nth-of-type(n) svg {
+        fill: #F3C969;
+    }
+
+    .estrellas:has(label.estrella:hover) .estrella:hover ~ .estrella svg {
+        fill: #D5DEE6;
+    }
+
+    .estrella:hover svg {
+        transform: scale(1.12);
+    }
+}
+
+.estrellas__texto {
+    margin-left: 8px;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.calificar__error {
+    margin-top: 6px;
+    color: var(--color-danger);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.calificar__error[hidden] {
+    display: none;
+}
+
+.calificar__comentario {
+    display: flex;
+    flex-direction: column;
+}
+
+.calificar__comentario textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    color: var(--color-navy);
+    font: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.calificar__comentario textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
+    outline: none;
+}
+
+.calificar__contador {
+    margin-top: -8px;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.calificar__botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* solicitudes.css pone .boton-accion a todo el ancho; aquí van lado a lado */
+.calificar__botones .boton-accion {
+    width: auto;
+    min-width: 140px;
+}
+
+@media (max-width: 600px) {
+    .calificar {
+        padding: 14px 12px;
+    }
+
+    .estrella {
+        width: 42px;
+        height: 42px;
+    }
+
+    .estrellas__texto {
+        flex-basis: 100%;
+        margin-left: 4px;
+    }
+
+    .calificar__botones .boton-accion {
+        flex: 1 1 140px;
+        min-width: 0;
+        min-height: 48px;
+    }
+}

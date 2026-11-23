@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -121,5 +124,28 @@ public class CalificacionService {
      */
     public boolean yaFueCalificada(Integer solicitudId) {
         return calificacionRepository.existsById(solicitudId);
+    }
+
+    /**
+     * Busca las calificaciones de los acompañamientos realizados de una lista de solicitudes.
+     * La vista del historial la usa para mostrar las estrellas que ya se dieron
+     * o el botón "Calificar".
+     *
+     * @param solicitudes solicitudes del historial del estudiante
+     * @return calificaciones por id de solicitud; las que no tienen calificación no aparecen
+     */
+    public Map<Integer, Calificacion> calificacionesDe(List<Solicitud> solicitudes) {
+        List<Integer> realizadas = solicitudes.stream()
+                .filter(s -> s.getEstado() == EstadoSolicitud.REALIZADA)
+                .map(Solicitud::getId)
+                .toList();
+        Map<Integer, Calificacion> calificaciones = new HashMap<>();
+        if (realizadas.isEmpty()) {
+            return calificaciones;
+        }
+        for (Calificacion calificacion : calificacionRepository.findAllById(realizadas)) {
+            calificaciones.put(calificacion.getSolicitudId(), calificacion);
+        }
+        return calificaciones;
     }
 }
