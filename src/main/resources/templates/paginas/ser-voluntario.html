@@ -184,6 +184,29 @@
                           th:text="${voluntario.estado.name() == 'ACTIVO'} ? 'Activo' : 'Suspendido'">Activo</span>
                 </div>
 
+                <!-- RF-15: horas de voluntariado acumuladas. Con 0 horas muestra un mensaje informativo. -->
+                <div class="horas-voluntariado"
+                     th:classappend="${horasVoluntariado == 0} ? 'horas-voluntariado--cero'"
+                     th:with="horasTexto=${horasVoluntariado % 1 == 0} ? ${#numbers.formatInteger(horasVoluntariado, 1)} : ${#numbers.formatDecimal(horasVoluntariado, 1, 'POINT', 1, 'COMMA')}">
+                    <span class="horas-voluntariado__icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                    </span>
+                    <div class="horas-voluntariado__texto">
+                        <h3>Horas de voluntariado</h3>
+                        <p class="horas-voluntariado__cifra">
+                            <strong th:text="${horasTexto}">0</strong>
+                            <span th:text="${horasVoluntariado == 1} ? 'hora' : 'horas'">horas</span>
+                        </p>
+                        <p th:if="${horasVoluntariado > 0}" class="horas-voluntariado__nota">
+                            Es la suma de los acompañamientos que marcaste como realizados. ¡Gracias por tu aporte!
+                        </p>
+                        <p th:if="${horasVoluntariado == 0}" class="horas-voluntariado__nota">
+                            Todavía no tienes acompañamientos realizados. Tus horas se suman cuando marcas
+                            un acompañamiento como realizado en <a th:href="@{/solicitudes-recibidas}">Solicitudes recibidas</a>.
+                        </p>
+                    </div>
+                </div>
+
                 <!-- Materias del voluntario, una pastilla por materia. -->
                 <div class="perfil-voluntario__grupo">
                     <h3>Materias que dominas</h3>
@@ -407,4 +430,4 @@
 </section>
 
 </body>
-</html>
+</html>

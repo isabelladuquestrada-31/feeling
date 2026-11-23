@@ -82,6 +82,8 @@ public class PanelController {
             model.addAttribute("voluntario", voluntario);
             model.addAttribute("pendientesRecibidas",
                     solicitudService.solicitudesRecibidas(voluntario.getId()).size());
+            model.addAttribute("horasVoluntariado",
+                    voluntarioService.calcularHorasVoluntariado(voluntario.getId()));
         });
         model.addAttribute("accesoDenegado", "denegado".equals(acceso));
 

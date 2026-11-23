@@ -1344,3 +1344,36 @@
         transition: none !important;
     }
 }
+/* RF-15 (SCRUM-99): horas de voluntariado en la tarjeta del perfil */
+.panel-horas {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-medium);
+    background-color: #F2FAFC;
+}
+
+.panel-horas__cifra {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    color: var(--color-navy);
+    font-weight: 700;
+}
+
+.panel-horas__cifra strong {
+    font-size: 1.6rem;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.panel-horas__texto {
+    color: var(--color-text);
+    font-size: var(--text-small);
+}
+
+.panel-horas--cero {
+    background-color: #F7F9FA;
+}
