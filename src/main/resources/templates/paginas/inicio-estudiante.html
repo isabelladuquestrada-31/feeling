@@ -369,6 +369,16 @@
                               th:classappend="${voluntario.estado.name() == 'ACTIVO'} ? ' estado--activo' : ' estado--suspendido'"
                               th:text="${voluntario.estado.name() == 'ACTIVO'} ? 'Activo' : 'Suspendido'">Activo</span>
                     </div>
+                    <!-- RF-15: horas de voluntariado acumuladas. -->
+                    <p class="panel-horas" th:classappend="${horasVoluntariado == 0} ? 'panel-horas--cero'"
+                       th:with="horasTexto=${horasVoluntariado % 1 == 0} ? ${#numbers.formatInteger(horasVoluntariado, 1)} : ${#numbers.formatDecimal(horasVoluntariado, 1, 'POINT', 1, 'COMMA')}">
+                        <span class="panel-horas__cifra">
+                            <strong th:text="${horasTexto}">0</strong>
+                            <span th:text="${horasVoluntariado == 1} ? 'hora' : 'horas'">horas</span>
+                        </span>
+                        <span class="panel-horas__texto"
+                              th:text="${horasVoluntariado > 0} ? 'de voluntariado acumuladas' : 'Aún no tienes acompañamientos realizados'">de voluntariado acumuladas</span>
+                    </p>
                     <p class="panel-tarjeta__dato">Materias</p>
                     <ul class="panel-chips">
                         <li th:each="m : ${voluntario.materias}" th:text="${m.nombre}">Cálculo</li>
@@ -417,4 +427,4 @@
 </section>
 
 </body>
-</html>
+</html>

@@ -85,8 +85,7 @@ public class SerVoluntarioController {
             return "redirect:/";
         }
 
-        voluntarioService.buscarPorEstudiante(usuario.getId())
-                .ifPresent(voluntario -> model.addAttribute("voluntario", voluntario));
+        agregarPerfilVoluntario(usuario, model);
         cargarOpciones(usuario, model);
         return "paginas/ser-voluntario";
     }
@@ -121,14 +120,28 @@ public class SerVoluntarioController {
             model.addAttribute("materiasElegidas", materias == null ? List.of() : materias);
             model.addAttribute("tiposElegidos", tiposApoyo == null ? List.of()
                     : tiposApoyo.stream().map(TipoApoyo::name).toList());
-            voluntarioService.buscarPorEstudiante(usuario.getId())
-                    .ifPresent(voluntario -> model.addAttribute("voluntario", voluntario));
+            agregarPerfilVoluntario(usuario, model);
             cargarOpciones(usuario, model);
             return "paginas/ser-voluntario";
         }
 
         redirectAttributes.addFlashAttribute("mensaje", "¡Ya eres voluntario! Ahora apareces en la búsqueda.");
         return "redirect:/ser-voluntario";
+    }
+
+    /**
+     * Si el estudiante ya es voluntario, pone en el modelo su perfil y sus
+     * horas de voluntariado acumuladas (RF-15, SCRUM-99).
+     *
+     * @param usuario estudiante que inició sesión
+     * @param model   modelo de la vista
+     */
+    private void agregarPerfilVoluntario(Usuario usuario, Model model) {
+        voluntarioService.buscarPorEstudiante(usuario.getId()).ifPresent(voluntario -> {
+            model.addAttribute("voluntario", voluntario);
+            model.addAttribute("horasVoluntariado",
+                    voluntarioService.calcularHorasVoluntariado(voluntario.getId()));
+        });
     }
 
     /**
