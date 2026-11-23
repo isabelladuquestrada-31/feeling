@@ -36,7 +36,7 @@
                     </h1>
                     <p>
                         Desde aquí administras los usuarios de Feeling: puedes ver cuántos estudiantes
-                        y voluntarios hay y, muy pronto, gestionar su rol y su estado.
+                        y voluntarios hay y gestionar su estado.
                     </p>
                 </div>
 
@@ -100,10 +100,10 @@
                         voluntario cuando sea necesario.
                     </p>
                 </div>
-                <span class="panel-tarjeta__pronto">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                    Muy pronto
-                </span>
+                <!-- RF-17 (SCRUM-103): acceso a la gestión de usuarios -->
+                <a th:href="@{/admin/usuarios}" class="boton-accion boton-accion--panel gestion__boton">
+                    Gestionar usuarios
+                </a>
             </div>
         </div>
 
@@ -118,13 +118,6 @@
                 <p>Cuando suspendas a un voluntario, deja de aparecer en la búsqueda y no recibe solicitudes nuevas.</p>
             </div>
 
-            <div class="panel-tarjeta panel-tarjeta--privado">
-                <span class="panel-tarjeta__icono" aria-hidden="true">
-                    <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-                </span>
-                <h2 class="panel-tarjeta__titulo">Solo para administradores</h2>
-                <p>Si un estudiante intenta entrar a este panel, vuelve a su inicio con el aviso de acceso denegado.</p>
-            </div>
 
             <p class="panel__lema">¡Juntos aprendemos, crecemos y avanzamos! <span aria-hidden="true">♥</span></p>
         </aside>

@@ -1,0 +1,500 @@
+/* ==========================================================
+   Gestión de usuarios (RF-17, SCRUM-103) - Panel del administrador
+   Se apoya en solicitudes.css (encabezado, alertas, botones y
+   animaciones) y en las variables de global.css.
+   ========================================================== */
+
+/* 1. Encabezado con botón para volver */
+
+.gestion-usuarios__encabezado {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.gestion-usuarios__volver {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-top: 2px;
+    border-radius: 50%;
+    background-color: var(--color-soft);
+    color: var(--color-primary);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.gestion-usuarios__volver:hover {
+    background-color: var(--color-surface);
+    transform: translateX(-2px);
+}
+
+.gestion-usuarios__volver svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* 2. Bloques */
+
+.gestion-usuarios__bloque {
+    margin-bottom: 40px;
+}
+
+.gestion-usuarios__bloque-titulo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 12px;
+    margin-bottom: 16px;
+}
+
+.gestion-usuarios__bloque-titulo h2 {
+    font-size: var(--text-subtitle);
+}
+
+.gestion-usuarios__bloque-titulo p {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+}
+
+.gestion-usuarios__vacio {
+    padding: 32px 20px;
+    text-align: center;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-large);
+}
+
+.gestion-usuarios__lista {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    list-style: none;
+}
+
+/* 3. Tarjeta de voluntario */
+
+.tarjeta-usuario {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "avatar info estado acciones" "detalle detalle detalle detalle";
+    align-items: center;
+    gap: 0 18px;
+    padding: 18px 22px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+}
+
+.tarjeta-usuario--suspendida {
+    border-left: 4px solid var(--color-danger);
+}
+
+.tarjeta-usuario__avatar {
+    grid-area: avatar;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #DCEBFB;
+    color: #2F5FA8;
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+.tarjeta-usuario--suspendida .tarjeta-usuario__avatar {
+    background-color: #EEF2F5;
+    color: #5B6B7F;
+}
+
+.tarjeta-usuario__info {
+    grid-area: info;
+    min-width: 0;
+}
+
+.tarjeta-usuario__info h3 {
+    margin-bottom: 2px;
+    font-size: 1.05rem;
+    overflow-wrap: anywhere;
+}
+
+.tarjeta-usuario__materias {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+}
+
+.tarjeta-usuario__suspension {
+    margin-top: 6px;
+    color: #8A2E2E;
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+}
+
+.tarjeta-usuario > .estado {
+    grid-area: estado;
+}
+
+.tarjeta-usuario__acciones {
+    grid-area: acciones;
+    min-width: 140px;
+}
+
+.estado--activo {
+    color: var(--color-success);
+    background-color: #E5F5EE;
+}
+
+.estado--suspendido {
+    color: var(--color-danger);
+    background-color: #FBECEC;
+}
+
+.boton-accion--suspender {
+    color: var(--color-danger);
+    background-color: var(--color-text-light);
+    border-color: var(--color-danger);
+}
+
+.boton-accion--suspender:hover,
+.boton-accion--suspender[aria-expanded="true"] {
+    background-color: #FBECEC;
+}
+
+.boton-accion--suspender[hidden] {
+    display: none;
+}
+
+.boton-accion--secundario {
+    color: var(--color-primary);
+    background-color: var(--color-text-light);
+    border-color: var(--color-border);
+}
+
+.boton-accion--secundario:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-soft);
+}
+
+.boton-accion--confirmar-suspension {
+    color: var(--color-text-light);
+    background-color: var(--color-danger);
+}
+
+.boton-accion--confirmar-suspension:hover {
+    background-color: #A93636;
+}
+
+/* 4. Formulario de suspensión */
+
+.suspender {
+    grid-area: detalle;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: var(--radius-medium);
+    background-color: #FDF6F6;
+    animation: suspender-abrir 0.3s ease both;
+}
+
+.suspender[hidden] {
+    display: none;
+}
+
+/* Sin JavaScript el formulario siempre se ve y el botón no hace falta */
+.gestion-usuarios.sin-js .suspender[hidden] {
+    display: flex;
+}
+
+.gestion-usuarios.sin-js [data-abrir-suspension] {
+    display: none;
+}
+
+@keyframes suspender-abrir {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suspender__aviso {
+    color: #8A2E2E;
+    font-size: var(--text-small);
+    font-weight: 600;
+}
+
+.suspender__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.suspender__campo > span {
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.suspender__campo textarea,
+.suspender__campo input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    color: var(--color-navy);
+    font: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.suspender__campo textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.suspender__campo--fecha input {
+    max-width: 220px;
+    min-height: 46px;
+}
+
+.suspender__campo textarea:focus,
+.suspender__campo input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
+    outline: none;
+}
+
+.suspender__campo [aria-invalid="true"] {
+    border-color: var(--color-danger);
+}
+
+.suspender__contador {
+    margin-top: -6px;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.suspender__error {
+    color: var(--color-danger);
+    font-size: var(--text-small);
+    font-weight: 700;
+}
+
+.suspender__error[hidden] {
+    display: none;
+}
+
+.suspender__botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* solicitudes.css pone .boton-accion a todo el ancho; aquí van lado a lado */
+.suspender__botones .boton-accion {
+    width: auto;
+    min-width: 150px;
+}
+
+/* 5. Tabla de usuarios */
+
+.tabla-usuarios__marco {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-large);
+    background-color: var(--color-text-light);
+    box-shadow: var(--shadow-soft);
+}
+
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+    padding: 12px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tabla-usuarios thead th {
+    background-color: #F2FAFC;
+    color: var(--color-navy);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.tabla-usuarios tbody th {
+    color: var(--color-navy);
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.tabla-usuarios td {
+    color: var(--color-text-secondary);
+}
+
+.tabla-usuarios tbody tr:last-child th,
+.tabla-usuarios tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.rol {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: #EEF2F5;
+    color: #3F5368;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.rol--voluntario {
+    background-color: var(--color-soft);
+    color: var(--color-primary-dark);
+}
+
+.rol--admin {
+    background-color: #EFEDFF;
+    color: #4B3FA8;
+}
+
+/* 6. Tabletas */
+
+@media (max-width: 900px) {
+    .tarjeta-usuario {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-areas:
+            "avatar info estado"
+            "avatar acciones acciones"
+            "detalle detalle detalle";
+        row-gap: 12px;
+    }
+
+    .tarjeta-usuario__avatar {
+        align-self: start;
+    }
+
+    .tarjeta-usuario > .estado {
+        align-self: start;
+    }
+}
+
+/* 7. Celulares */
+
+@media (max-width: 600px) {
+    .tarjeta-usuario {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+            "avatar estado"
+            "info info"
+            "acciones acciones"
+            "detalle detalle";
+        padding: 16px;
+    }
+
+    .tarjeta-usuario > .estado {
+        justify-self: end;
+        align-self: center;
+    }
+
+    .tarjeta-usuario__avatar {
+        width: 46px;
+        height: 46px;
+        font-size: 1.15rem;
+    }
+
+    .tarjeta-usuario__acciones .boton-accion {
+        width: 100%;
+        min-height: 48px;
+    }
+
+    .suspender {
+        padding: 14px 12px;
+    }
+
+    .suspender__campo--fecha input {
+        max-width: none;
+    }
+
+    .suspender__botones .boton-accion {
+        flex: 1 1 100%;
+        min-width: 0;
+        min-height: 48px;
+    }
+
+    /* La tabla pasa a tarjetas: cada celda muestra su etiqueta */
+    .tabla-usuarios thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+
+    .tabla-usuarios,
+    .tabla-usuarios tbody,
+    .tabla-usuarios tr,
+    .tabla-usuarios th,
+    .tabla-usuarios td {
+        display: block;
+    }
+
+    .tabla-usuarios tr {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .tabla-usuarios tbody tr:last-child {
+        border-bottom: 0;
+    }
+
+    .tabla-usuarios th,
+    .tabla-usuarios td {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 4px 0;
+        border-bottom: 0;
+    }
+
+    .tabla-usuarios td::before,
+    .tabla-usuarios tbody th::before {
+        content: attr(data-etiqueta);
+        color: var(--color-text);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+}
+
+/* 8. Movimiento reducido */
+
+@media (prefers-reduced-motion: reduce) {
+    .gestion-usuarios *,
+    .gestion-usuarios *::before,
+    .gestion-usuarios *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

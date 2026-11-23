@@ -1,7 +1,9 @@
 package com.feeling.feeling.controller;
 
 import com.feeling.feeling.model.Administrador;
+import com.feeling.feeling.model.Estudiante;
 import com.feeling.feeling.model.Usuario;
+import com.feeling.feeling.model.Voluntario;
 import com.feeling.feeling.service.GestionUsuariosService;
 import com.feeling.feeling.service.PanelService;
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -26,6 +31,9 @@ import java.time.LocalDate;
  */
 @Controller
 public class AdminController {
+
+    /** Largo máximo del motivo de la suspensión, igual al de la base de datos. */
+    private static final int LARGO_MAXIMO_MOTIVO = 255;
 
     private final PanelService panelService;
     private final GestionUsuariosService  gestionUsuariosService;
@@ -73,8 +81,14 @@ public class AdminController {
     public String gestionUsuarios(HttpSession sesion, Model model) {
         Usuario admin = (Usuario) sesion.getAttribute("usuario");
 
-        model.addAttribute("usuarios", gestionUsuariosService.listarUsuarios());
-        model.addAttribute("voluntarios", gestionUsuariosService.listarVoluntarios());
+        List<Usuario> usuarios = gestionUsuariosService.listarUsuarios();
+        List<Voluntario> voluntarios = gestionUsuariosService.listarVoluntarios();
+        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("voluntarios", voluntarios);
+        model.addAttribute("roles", rolesDe(usuarios));
+        model.addAttribute("suspensiones", gestionUsuariosService.suspensionesVigentes(voluntarios));
+        model.addAttribute("fechaMinimaFin", LocalDate.now().plusDays(1));
+        model.addAttribute("largoMaximoMotivo", LARGO_MAXIMO_MOTIVO);
 
         model.addAttribute("paginaActiva", "usuarios");
         model.addAttribute("usuarioNombre", admin.getNombreUsuario());
@@ -94,11 +108,16 @@ public class AdminController {
      */
     @PostMapping("/admin/usuarios/{voluntarioId}/suspender")
     public String suspender(@PathVariable Integer voluntarioId,
-                            @RequestParam String motivo,
-                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+                            @RequestParam(required = false) String motivo,
+                            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
                             HttpSession sesion,
                             RedirectAttributes redirect) {
         Administrador admin = (Administrador) sesion.getAttribute("usuario");
+        if (motivo != null && motivo.trim().length() > LARGO_MAXIMO_MOTIVO) {
+            redirect.addFlashAttribute("error",
+                    "El motivo puede tener máximo " + LARGO_MAXIMO_MOTIVO + " caracteres.");
+            return "redirect:/admin/usuarios";
+        }
         try {
             gestionUsuariosService.suspenderVoluntario(voluntarioId, admin, motivo, fechaFin);
             redirect.addFlashAttribute("exito", "El voluntario fue suspendido.");
@@ -124,5 +143,25 @@ public class AdminController {
             redirect.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/admin/usuarios";
+    }
+
+    /**
+     * Texto del rol de cada usuario para la tabla de usuarios (RF-17).
+     *
+     * @param usuarios usuarios de la plataforma
+     * @return rol de cada usuario por su id
+     */
+    private Map<Integer, String> rolesDe(List<Usuario> usuarios) {
+        Map<Integer, String> roles = new HashMap<>();
+        for (Usuario usuario : usuarios) {
+            String rol = "Estudiante";
+            if (usuario instanceof Administrador) {
+                rol = "Administrador";
+            } else if (usuario instanceof Estudiante estudiante && estudiante.getVoluntario() != null) {
+                rol = "Estudiante y voluntario";
+            }
+            roles.put(usuario.getId(), rol);
+        }
+        return roles;
     }
 }
