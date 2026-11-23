@@ -14,6 +14,8 @@
     los maneja solicitudes.js; el botón "Ver" lo maneja solicitudes-recibidas.js.
     RF-09 (SCRUM-95): la tarjeta avisa si el estudiante pidió ajustes razonables y el
     detalle ("Ver") los muestra; en los aceptados se ven siempre.
+    RF-14 (SCRUM-97): sección "Por marcar como realizados" con los aceptados cuya fecha
+    ya pasó; el botón "Marcar como realizado" abre el formulario de duración y notas.
 -->
 <section class="solicitudes recibidas sin-js" data-solicitudes data-recibidas aria-labelledby="titulo-solicitudes">
 
@@ -171,6 +173,77 @@
             </li>
         </ul>
 
+        <!-- RF-14: acompañamientos aceptados cuya fecha ya pasó, para registrar el seguimiento -->
+        <div class="recibidas__por-cerrar" role="region" aria-labelledby="titulo-por-cerrar"
+             th:unless="${#lists.isEmpty(porCerrar)}">
+            <h2 id="titulo-por-cerrar">Por marcar como realizados</h2>
+            <p class="recibidas__aceptadas-texto">
+                Cuéntanos cómo te fue: registra la duración y unas notas para cerrar cada acompañamiento.
+            </p>
+
+            <ul class="recibidas__lista">
+                <li th:each="s : ${porCerrar}" class="solicitudes__item"
+                    th:with="nombre=${nombresEstudiantes.get(s.estudianteId) != null ? nombresEstudiantes.get(s.estudianteId) : 'Estudiante'},
+                             materia=${nombresMaterias.get(s.materiaCodigo) != null ? nombresMaterias.get(s.materiaCodigo) : s.materiaCodigo}">
+                    <article class="recibida recibida--por-cerrar" th:attr="aria-labelledby='por-cerrar-' + ${s.id}">
+                        <span class="recibida__avatar" aria-hidden="true"
+                              th:classappend="' recibida__avatar--' + ${s.estudianteId % 4}"
+                              th:text="${#strings.toUpperCase(#strings.substring(nombre, 0, 1))}">E</span>
+                        <div class="recibida__info">
+                            <h3 th:id="'por-cerrar-' + ${s.id}" th:text="${nombre}">Estudiante</h3>
+                            <p class="recibida__tema">
+                                <strong th:text="${materia}">Cálculo</strong>
+                                <span aria-hidden="true">–</span>
+                                <span th:text="${s.tema}">Derivadas</span>
+                            </p>
+                            <p class="recibida__fecha">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+                                <span th:text="${#strings.capitalize(#temporals.format(s.fechaProgramada, 'EEE, d MMM yyyy', idioma))} + ' · ' + ${#temporals.format(s.fechaProgramada, 'h:mm a', idioma)}">Vie, 24 oct 2026 · 3:00 p. m.</span>
+                            </p>
+                        </div>
+                        <span class="estado estado--por-cerrar">Por cerrar</span>
+                        <div class="recibida__acciones">
+                            <button type="button" class="boton-accion boton-accion--aceptar"
+                                    aria-expanded="false" th:attr="aria-controls='seguimiento-' + ${s.id}"
+                                    data-abrir-seguimiento>Marcar como realizado</button>
+                        </div>
+
+                        <!-- Formulario de seguimiento: duración y notas -->
+                        <form class="seguimiento" th:id="'seguimiento-' + ${s.id}"
+                              th:action="@{/solicitudes/{id}/realizada(id=${s.id})}" method="post"
+                              hidden data-form-seguimiento>
+                            <fieldset class="seguimiento__duracion">
+                                <legend>¿Cuánto duró el acompañamiento?</legend>
+                                <div class="seguimiento__opciones">
+                                    <label class="chip-duracion" th:each="d : ${duraciones}">
+                                        <input type="radio" name="duracionMinutos" th:value="${d.key}"
+                                               th:checked="${d.key == 60}">
+                                        <span th:text="${d.value}">1 hora</span>
+                                    </label>
+                                </div>
+                            </fieldset>
+                            <label class="seguimiento__notas">
+                                <span>Notas del acompañamiento <small>(opcional)</small></span>
+                                <textarea name="notas" rows="3" th:attr="maxlength=${largoMaximoNotas}"
+                                          placeholder="Ej.: repasamos la regla de la cadena; le falta practicar ejercicios con logaritmos."
+                                          data-notas-seguimiento></textarea>
+                            </label>
+                            <p class="seguimiento__contador">
+                                <span data-caracteres-notas>0</span> / <span th:text="${largoMaximoNotas}">1000</span>
+                            </p>
+                            <div class="seguimiento__botones">
+                                <button type="button" class="boton-accion boton-accion--ver"
+                                        data-cancelar-seguimiento>Cancelar</button>
+                                <button type="submit" class="boton-accion boton-accion--aceptar" data-guardar-seguimiento>
+                                    Guardar como realizado
+                                </button>
+                            </div>
+                        </form>
+                    </article>
+                </li>
+            </ul>
+        </div>
+
         <!-- RF-11: acompañamientos que el voluntario ya aceptó, con el contacto del estudiante -->
         <div class="recibidas__aceptadas" role="region" aria-labelledby="titulo-aceptadas">
             <h2 id="titulo-aceptadas">Acompañamientos aceptados</h2>
@@ -213,6 +286,8 @@
                                     </li>
                                 </ul>
                             </div>
+                            <!-- RF-14: todavía no se puede marcar como realizado -->
+                            <p class="recibida__nota-cierre">Podrás marcarlo como realizado cuando pase la fecha.</p>
                         </div>
                         <span class="estado estado--aceptada">Aceptada</span>
                         <div class="recibida__acciones">

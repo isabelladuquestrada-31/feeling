@@ -426,6 +426,165 @@
     overflow-wrap: anywhere;
 }
 
+/* Por marcar como realizados (RF-14, SCRUM-97) */
+
+.recibidas__por-cerrar {
+    margin-top: 32px;
+    animation: solicitudes-aparecer 0.6s ease 0.1s both;
+}
+
+.recibidas__por-cerrar h2 {
+    margin-bottom: 4px;
+    font-size: var(--text-subtitle);
+}
+
+.recibida--por-cerrar {
+    border-left: 4px solid #B7791F;
+}
+
+.estado--por-cerrar {
+    background-color: #FFF4DD;
+    color: #7A4A00;
+}
+
+.recibida__nota-cierre {
+    margin-top: 6px;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+
+.seguimiento {
+    grid-area: detalle;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: var(--radius-medium);
+    background-color: #F7FCFD;
+    animation: recibidas-abrir 0.3s ease both;
+}
+
+.seguimiento[hidden] {
+    display: none;
+}
+
+/* Sin JavaScript el formulario siempre se ve */
+.recibidas.sin-js .seguimiento[hidden] {
+    display: flex;
+}
+
+.seguimiento__duracion {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.seguimiento__duracion legend,
+.seguimiento__notas > span {
+    margin-bottom: 8px;
+    padding: 0;
+    color: var(--color-navy);
+    font-size: var(--text-small);
+    font-weight: 800;
+}
+
+.seguimiento__notas small {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.seguimiento__opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip-duracion {
+    position: relative;
+    cursor: pointer;
+}
+
+.chip-duracion input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.chip-duracion span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 999px;
+    background-color: var(--color-text-light);
+    color: var(--color-navy);
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.chip-duracion:hover span {
+    border-color: rgba(8, 126, 150, 0.5);
+}
+
+.chip-duracion input:checked + span {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+}
+
+.chip-duracion input:focus-visible + span {
+    outline: 3px solid var(--color-primary-light);
+    outline-offset: 2px;
+}
+
+.seguimiento__notas {
+    display: flex;
+    flex-direction: column;
+}
+
+.seguimiento__notas textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-medium);
+    background-color: var(--color-text-light);
+    color: var(--color-navy);
+    font: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.seguimiento__notas textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
+    outline: none;
+}
+
+.seguimiento__contador {
+    margin-top: -8px;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.seguimiento__botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* solicitudes.css pone .boton-accion a todo el ancho; aquí van lado a lado */
+.seguimiento__botones .boton-accion {
+    width: auto;
+    min-width: 140px;
+}
+
 @media (max-width: 900px) {
     .recibida {
         grid-template-columns: auto minmax(0, 1fr) auto;
@@ -483,9 +642,15 @@
         grid-column: 1 / -1;
     }
 
-    .recibida__acciones .boton-whatsapp {
+    .recibida__acciones .boton-whatsapp,
+    .recibida__acciones [data-abrir-seguimiento] {
         grid-column: 1 / -1;
         width: 100%;
+    }
+
+    .seguimiento__botones .boton-accion {
+        flex: 1 1 140px;
+        min-height: 48px;
     }
 
     .recibida__acciones .boton-accion {

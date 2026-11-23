@@ -8,6 +8,7 @@ import com.feeling.feeling.model.Voluntario;
 import com.feeling.feeling.service.AjusteRazonableService;
 import com.feeling.feeling.service.ContactoSolicitudService;
 import com.feeling.feeling.service.PanelService;
+import com.feeling.feeling.service.SeguimientoService;
 import com.feeling.feeling.service.SolicitudService;
 import com.feeling.feeling.service.VoluntarioService;
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -30,7 +32,9 @@ import java.util.Optional;
  * Atiende las acciones sobre las solicitudes de acompañamiento:
  * el estudiante consulta y cancela las suyas (RF-12, RF-13) y el voluntario
  * acepta o rechaza las que recibe (RF-10).
- * El voluntario también ve los ajustes razonables que pidió el estudiante (RF-09, SCRUM-95).
+ * El voluntario también ve los ajustes razonables que pidió el estudiante (RF-09, SCRUM-95)
+ * y marca como realizados los acompañamientos que ya pasaron, con notas y duración
+ * (RF-14, SCRUM-97).
  * Usa el usuario que inició sesión.
  *
  * @author Daniel Blandón
@@ -42,6 +46,15 @@ public class SolicitudController {
     private static final Locale ESPANOL = Locale.forLanguageTag("es-CO");
 
     private static final String REDIRECCION_RECIBIDAS = "redirect:/solicitudes-recibidas";
+
+    /**
+     * Duraciones que el voluntario puede elegir al cerrar un acompañamiento (RF-14),
+     * en minutos y con el texto que se muestra.
+     */
+    private static final Map<Integer, String> DURACIONES = duraciones();
+
+    /** Largo máximo de las notas del seguimiento. */
+    private static final int LARGO_MAXIMO_NOTAS = 1000;
 
     /**
      * Servicio con la lógica de las solicitudes.
@@ -69,6 +82,11 @@ public class SolicitudController {
     private final AjusteRazonableService ajusteRazonableService;
 
     /**
+     * Servicio que registra el seguimiento y marca el acompañamiento como realizado (RF-14, SCRUM-96).
+     */
+    private final SeguimientoService seguimientoService;
+
+    /**
      * Crea el controlador con los servicios que le entrega Spring.
      *
      * @param solicitudService         servicio de solicitudes
@@ -76,17 +94,20 @@ public class SolicitudController {
      * @param panelService             nombres de estudiantes y materias
      * @param contactoSolicitudService contacto de WhatsApp de la otra parte
      * @param ajusteRazonableService   ajustes razonables de cada solicitud
+     * @param seguimientoService       registro del seguimiento de los acompañamientos
      */
     public SolicitudController(SolicitudService solicitudService,
                                VoluntarioService voluntarioService,
                                PanelService panelService,
                                ContactoSolicitudService contactoSolicitudService,
-                               AjusteRazonableService ajusteRazonableService) {
+                               AjusteRazonableService ajusteRazonableService,
+                               SeguimientoService seguimientoService) {
         this.solicitudService = solicitudService;
         this.voluntarioService = voluntarioService;
         this.panelService = panelService;
         this.contactoSolicitudService = contactoSolicitudService;
         this.ajusteRazonableService = ajusteRazonableService;
+        this.seguimientoService = seguimientoService;
     }
 
     /**
@@ -181,13 +202,20 @@ public class SolicitudController {
         List<Solicitud> aceptadas = voluntario
                 .map(v -> solicitudService.proximosAceptadosDelVoluntario(v.getId()))
                 .orElse(List.of());
+        List<Solicitud> porCerrar = voluntario
+                .map(v -> solicitudService.pendientesDeSeguimiento(v.getId()))
+                .orElse(List.of());
         List<Integer> estudiantes = new ArrayList<>(recibidas.stream().map(Solicitud::getEstudianteId).toList());
         aceptadas.forEach(s -> estudiantes.add(s.getEstudianteId()));
+        porCerrar.forEach(s -> estudiantes.add(s.getEstudianteId()));
 
         model.addAttribute("esVoluntario", voluntario.isPresent());
         model.addAttribute("solicitudesRecibidas", recibidas);
         model.addAttribute("aceptadas", aceptadas);
-        model.addAttribute("ajustesPorSolicitud", ajustesDe(recibidas, aceptadas));
+        model.addAttribute("porCerrar", porCerrar);
+        model.addAttribute("duraciones", DURACIONES);
+        model.addAttribute("largoMaximoNotas", LARGO_MAXIMO_NOTAS);
+        model.addAttribute("ajustesPorSolicitud", ajustesDe(recibidas, aceptadas, porCerrar));
         model.addAttribute("nombresEstudiantes", panelService.nombresDeEstudiantes(estudiantes));
         model.addAttribute("nombresMaterias", panelService.nombresDeMaterias());
         model.addAttribute("etiquetasApoyo", SerVoluntarioController.etiquetasDeApoyo());
@@ -253,6 +281,50 @@ public class SolicitudController {
     }
 
     /**
+     * RF-14 (SCRUM-97): el voluntario registra las notas y la duración y marca el
+     * acompañamiento como realizado. El servicio de Yeymi (SCRUM-96) no lo permite si
+     * la solicitud no está aceptada o si su fecha todavía no llega.
+     *
+     * @param id                 id de la solicitud
+     * @param duracionMinutos    duración elegida, en minutos
+     * @param notas              notas del acompañamiento (opcionales)
+     * @param sesion             sesión con el voluntario
+     * @param redirectAttributes mensaje de éxito o del motivo del error
+     * @return la redirección a Solicitudes recibidas
+     */
+    @PostMapping("/solicitudes/{id}/realizada")
+    public String marcarRealizada(@PathVariable Integer id,
+                                  @RequestParam(required = false) Integer duracionMinutos,
+                                  @RequestParam(required = false) String notas,
+                                  HttpSession sesion, RedirectAttributes redirectAttributes) {
+        Optional<Estudiante> estudiante = estudianteDeLaSesion(sesion);
+        if (estudiante.isEmpty()) {
+            return redireccionSinEstudiante(sesion);
+        }
+        Optional<Voluntario> voluntario = voluntarioService.buscarPorEstudiante(estudiante.get().getId());
+        if (voluntario.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensajeError",
+                    "Solo los voluntarios pueden registrar el seguimiento.");
+            return REDIRECCION_RECIBIDAS;
+        }
+        if (notas != null && notas.length() > LARGO_MAXIMO_NOTAS) {
+            redirectAttributes.addFlashAttribute("mensajeError",
+                    "Las notas pueden tener máximo " + LARGO_MAXIMO_NOTAS + " caracteres.");
+            return REDIRECCION_RECIBIDAS;
+        }
+
+        try {
+            seguimientoService.marcarComoRealizada(id, voluntario.get().getId(), notas, duracionMinutos);
+            String duracion = DURACIONES.getOrDefault(duracionMinutos, duracionMinutos + " min");
+            redirectAttributes.addFlashAttribute("mensajeExito", "Registraste el acompañamiento como realizado ("
+                    + duracion + "). Ya suma a tus horas de voluntariado.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("mensajeError", e.getMessage());
+        }
+        return REDIRECCION_RECIBIDAS;
+    }
+
+    /**
      * RF-11: abre el chat de WhatsApp con la otra parte de una solicitud aceptada.
      * El número no se escribe en la página: solo se entrega aquí, después de revisar
      * que la solicitud esté aceptada y que la pida una de las dos partes (RNF-01).
@@ -298,5 +370,18 @@ public class SolicitudController {
             }
         }
         return ajustes;
+    }
+
+    /**
+     * Opciones de duración, en el orden en que se muestran.
+     */
+    private static Map<Integer, String> duraciones() {
+        Map<Integer, String> opciones = new LinkedHashMap<>();
+        opciones.put(30, "30 min");
+        opciones.put(60, "1 hora");
+        opciones.put(90, "1 h 30 min");
+        opciones.put(120, "2 horas");
+        opciones.put(180, "3 horas");
+        return opciones;
     }
 }

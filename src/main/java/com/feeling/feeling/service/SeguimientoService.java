@@ -97,6 +97,9 @@ public class SeguimientoService {
         seguimientoRepository.save(seguimiento);
 
         solicitud.setEstado(EstadoSolicitud.REALIZADA);
+        // La duración también queda en la solicitud, porque de ahí se suman las
+        // horas de voluntariado (RF-15, VoluntarioService.calcularHorasVoluntariado).
+        solicitud.setDuracionMinutos(duracionMinutos);
         solicitudRepository.save(solicitud);
 
         return seguimiento;
@@ -119,4 +122,4 @@ public class SeguimientoService {
                 return "Este acompañamiento no se puede marcar como realizado.";
         }
     }
-}
+}
