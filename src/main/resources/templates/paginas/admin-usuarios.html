@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/layout-interno :: layout('Gestión de usuarios | Feeling', ~{::section})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de usuarios | Feeling</title>
+</head>
+<body>
+<!--
+    RF-17: gestión de usuarios del administrador (SCRUM-103).
+    - Voluntarios con su estado; se suspenden con motivo y fecha de fin, y se reactivan.
+    - Tabla con todos los usuarios, su rol y su fecha de registro.
+    Sigue el estilo del mockup "Gestión de usuarios" (SCRUM-13).
+-->
+<section class="solicitudes gestion-usuarios sin-js" data-solicitudes aria-labelledby="titulo-gestion-usuarios">
+
+    <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-usuarios.css}">
+    <script th:src="@{/js/solicitudes.js}" defer></script>
+    <script th:src="@{/js/admin-usuarios.js}" defer></script>
+
+    <!-- Encabezado -->
+    <header class="solicitudes__encabezado gestion-usuarios__encabezado">
+        <a th:href="@{/admin}" class="gestion-usuarios__volver" aria-label="Volver al panel del administrador">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </a>
+        <div>
+            <span class="solicitudes__etiqueta">Panel del administrador</span>
+            <h1 id="titulo-gestion-usuarios">Gestión de usuarios</h1>
+            <p>Consulta los usuarios de Feeling y suspende o reactiva a los voluntarios cuando sea necesario.</p>
+        </div>
+    </header>
+
+    <!-- Mensajes después de suspender o reactivar -->
+    <div th:if="${exito}" class="solicitudes__alerta solicitudes__alerta--exito" role="status" data-alerta>
+        <span th:text="${exito}">El voluntario fue suspendido.</span>
+        <button type="button" class="solicitudes__alerta-cerrar" aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+    <div th:if="${error}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
+        <span th:text="${error}">Debe indicar el motivo de la suspensión.</span>
+        <button type="button" class="solicitudes__alerta-cerrar" aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
+    </div>
+
+    <!-- Avisos para lectores de pantalla -->
+    <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
+
+    <!-- Voluntarios: suspender y reactivar -->
+    <div class="gestion-usuarios__bloque" role="region" aria-labelledby="titulo-voluntarios">
+        <div class="gestion-usuarios__bloque-titulo">
+            <h2 id="titulo-voluntarios">Voluntarios</h2>
+            <p>
+                <span th:text="${#lists.size(voluntarios)}">3</span> en total ·
+                <th:block th:with="suspendidos=${#lists.size(voluntarios.?[estado.name() == 'SUSPENDIDO'])}">
+                    <span th:text="${suspendidos}">0</span>
+                    <span th:text="${suspendidos == 1} ? 'suspendido' : 'suspendidos'">suspendidos</span>
+                </th:block>
+            </p>
+        </div>
+
+        <div th:if="${#lists.isEmpty(voluntarios)}" class="gestion-usuarios__vacio">
+            <h3>Todavía no hay voluntarios</h3>
+            <p>Cuando un estudiante se active como voluntario, aparecerá aquí.</p>
+        </div>
+
+        <ul th:unless="${#lists.isEmpty(voluntarios)}" class="gestion-usuarios__lista">
+            <li th:each="v : ${voluntarios}" class="solicitudes__item"
+                th:with="suspendido=${v.estado.name() == 'SUSPENDIDO'}, suspension=${suspensiones[v.id]}">
+                <article class="tarjeta-usuario" th:classappend="${suspendido} ? 'tarjeta-usuario--suspendida'"
+                         th:attr="aria-labelledby='voluntario-' + ${v.id}">
+
+                    <span class="tarjeta-usuario__avatar" aria-hidden="true"
+                          th:text="${#strings.toUpperCase(#strings.substring(v.estudiante.nombreUsuario, 0, 1))}">V</span>
+
+                    <div class="tarjeta-usuario__info">
+                        <h3 th:id="'voluntario-' + ${v.id}" th:text="${v.estudiante.nombreUsuario}">voluntario1</h3>
+                        <p class="tarjeta-usuario__materias"
+                           th:text="${#lists.isEmpty(v.materias)} ? 'Sin materias' : ${#strings.listJoin(v.materias.![nombre], ', ')}">
+                            Cálculo Diferencial, Física Mecánica
+                        </p>
+                        <p th:if="${suspendido and suspension != null}" class="tarjeta-usuario__suspension">
+                            Suspendido hasta el
+                            <strong th:text="${#temporals.format(suspension.fechaFin, 'dd/MM/yyyy')}">30/11/2026</strong>.
+                            Motivo: <span th:text="${suspension.motivo}">Faltó a dos acompañamientos.</span>
+                        </p>
+                    </div>
+
+                    <span class="estado" th:classappend="${suspendido} ? 'estado--suspendido' : 'estado--activo'"
+                          th:text="${suspendido} ? 'Suspendido' : 'Activo'">Activo</span>
+
+                    <div class="tarjeta-usuario__acciones">
+                        <button th:unless="${suspendido}" type="button" class="boton-accion boton-accion--suspender"
+                                aria-expanded="false" th:attr="aria-controls='suspender-' + ${v.id}"
+                                data-abrir-suspension>Suspender</button>
+
+                        <form th:if="${suspendido}" th:action="@{/admin/usuarios/{id}/reactivar(id=${v.id})}"
+                              method="post" data-accion="reactivar">
+                            <button type="submit" class="boton-accion boton-accion--aceptar"
+                                    th:attr="aria-label='Reactivar a ' + ${v.estudiante.nombreUsuario}">Reactivar</button>
+                        </form>
+                    </div>
+
+                    <!-- Formulario de suspensión: motivo y fecha de fin -->
+                    <form th:unless="${suspendido}" class="suspender" th:id="'suspender-' + ${v.id}"
+                          th:action="@{/admin/usuarios/{id}/suspender(id=${v.id})}" method="post"
+                          hidden novalidate data-form-suspension>
+                        <p class="suspender__aviso">
+                            Mientras esté suspendido no aparece en la búsqueda ni recibe solicitudes nuevas.
+                        </p>
+                        <label class="suspender__campo">
+                            <span>Motivo de la suspensión</span>
+                            <textarea name="motivo" rows="3" required th:attr="maxlength=${largoMaximoMotivo}"
+                                      placeholder="Ej.: no asistió a dos acompañamientos aceptados."
+                                      data-motivo-suspension></textarea>
+                        </label>
+                        <p class="suspender__contador">
+                            <span data-caracteres-motivo>0</span> / <span th:text="${largoMaximoMotivo}">255</span>
+                        </p>
+                        <label class="suspender__campo suspender__campo--fecha">
+                            <span>Suspendido hasta</span>
+                            <input type="date" name="fechaFin" required
+                                   th:attr="min=${fechaMinimaFin}" data-fecha-suspension>
+                        </label>
+                        <p class="suspender__error" role="alert" data-error-suspension hidden></p>
+                        <div class="suspender__botones">
+                            <button type="button" class="boton-accion boton-accion--secundario"
+                                    data-cancelar-suspension>Cancelar</button>
+                            <button type="submit" class="boton-accion boton-accion--confirmar-suspension"
+                                    data-enviar-suspension>Confirmar suspensión</button>
+                        </div>
+                    </form>
+                </article>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Todos los usuarios -->
+    <div class="gestion-usuarios__bloque" role="region" aria-labelledby="titulo-usuarios">
+        <div class="gestion-usuarios__bloque-titulo">
+            <h2 id="titulo-usuarios">Todos los usuarios</h2>
+            <p><span th:text="${#lists.size(usuarios)}">5</span> registrados</p>
+        </div>
+
+        <div class="tabla-usuarios__marco">
+            <table class="tabla-usuarios">
+                <caption class="solicitudes__sr-only">Usuarios de Feeling con su rol, su fecha de registro y el estado de la cuenta</caption>
+                <thead>
+                <tr>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Registro</th>
+                    <th scope="col">Cuenta</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${usuarios}">
+                    <th scope="row" data-etiqueta="Usuario" th:text="${u.nombreUsuario}">estudiante1</th>
+                    <td data-etiqueta="Rol">
+                        <span class="rol" th:classappend="${roles[u.id] == 'Administrador'} ? 'rol--admin' : (${roles[u.id] == 'Estudiante'} ? '' : 'rol--voluntario')"
+                              th:text="${roles[u.id]}">Estudiante</span>
+                    </td>
+                    <td data-etiqueta="Registro"
+                        th:text="${u.fechaRegistro != null} ? ${#temporals.format(u.fechaRegistro, 'dd/MM/yyyy')} : '—'">16/11/2026</td>
+                    <td data-etiqueta="Cuenta" th:text="${u.activo} ? 'Activa' : 'Inactiva'">Activa</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+</body>
+</html>

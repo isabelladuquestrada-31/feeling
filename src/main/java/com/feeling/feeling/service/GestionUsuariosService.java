@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lógica de la gestión de usuarios del administrador (RF-17):
@@ -109,5 +111,24 @@ public class GestionUsuariosService {
 
         voluntario.setEstado(EstadoVoluntario.ACTIVO);
         voluntarioRepository.save(voluntario);
+    }
+
+    /**
+     * Busca la suspensión vigente de cada voluntario suspendido, para mostrar
+     * en la gestión de usuarios el motivo y hasta cuándo va (RF-17).
+     *
+     * @param voluntarios voluntarios de la plataforma
+     * @return la última suspensión de cada voluntario suspendido, por id de voluntario
+     */
+    @Transactional(readOnly = true)
+    public Map<Integer, Suspension> suspensionesVigentes(List<Voluntario> voluntarios) {
+        Map<Integer, Suspension> suspensiones = new HashMap<>();
+        for (Voluntario voluntario : voluntarios) {
+            if (voluntario.getEstado() == EstadoVoluntario.SUSPENDIDO) {
+                suspensionRepository.findFirstByVoluntarioIdOrderByIdDesc(voluntario.getId())
+                        .ifPresent(suspension -> suspensiones.put(voluntario.getId(), suspension));
+            }
+        }
+        return suspensiones;
     }
 }
