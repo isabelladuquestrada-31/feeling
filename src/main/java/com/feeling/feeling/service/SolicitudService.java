@@ -207,6 +207,22 @@ public class SolicitudService {
     }
 
     /**
+     * RF-14 (SCRUM-97): acompañamientos aceptados del voluntario cuya fecha ya pasó.
+     * Son los que puede marcar como realizados registrando el seguimiento.
+     *
+     * @param voluntarioId id del voluntario
+     * @return aceptados con fecha pasada, del más antiguo al más reciente
+     */
+    public List<Solicitud> pendientesDeSeguimiento(Integer voluntarioId) {
+        LocalDateTime ahora = LocalDateTime.now();
+        return solicitudRepository.findByVoluntarioIdAndEstadoOrderByFechaProgramadaAsc(
+                        voluntarioId, EstadoSolicitud.ACEPTADA)
+                .stream()
+                .filter(s -> s.getFechaProgramada() != null && s.getFechaProgramada().isBefore(ahora))
+                .toList();
+    }
+
+    /**
      * RF-10: devuelve las solicitudes pendientes que ha recibido el voluntario,
      * de la más cercana a la más lejana.
      *

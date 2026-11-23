@@ -2,6 +2,8 @@
    Solicitudes recibidas (RF-10, SCRUM-83)
    - Botón "Ver": abre y cierra el detalle de la solicitud.
    - Efecto de presión al tocar una solicitud en pantallas táctiles.
+   - "Marcar como realizado" (RF-14, SCRUM-97): abre el formulario de
+     duración y notas, cuenta los caracteres y muestra la carga al guardar.
    Aceptar, Rechazar (con confirmación), la salida de la tarjeta,
    el contador y las alertas los maneja solicitudes.js.
    ========================================================== */
@@ -52,7 +54,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }).observe(contador, { childList: true, characterData: true, subtree: true });
     }
 
-    // 3. Efecto de presión al tocar una solicitud (solo pantallas táctiles).
+    // 3. "Marcar como realizado" abre y cierra el formulario de seguimiento (RF-14).
+    seccion.querySelectorAll("[data-abrir-seguimiento]").forEach(boton => {
+        const formulario = document.getElementById(boton.getAttribute("aria-controls"));
+        if (!formulario) {
+            return;
+        }
+        const notas = formulario.querySelector("[data-notas-seguimiento]");
+        const caracteres = formulario.querySelector("[data-caracteres-notas]");
+        const cancelar = formulario.querySelector("[data-cancelar-seguimiento]");
+        const guardar = formulario.querySelector("[data-guardar-seguimiento]");
+
+        function abrirFormulario(abrir) {
+            formulario.hidden = !abrir;
+            boton.hidden = abrir;
+            boton.setAttribute("aria-expanded", String(abrir));
+            if (abrir) {
+                const elegida = formulario.querySelector("input[name='duracionMinutos']:checked")
+                    || formulario.querySelector("input[name='duracionMinutos']");
+                if (elegida) {
+                    elegida.focus();
+                }
+                anunciar("Formulario para marcar el acompañamiento como realizado.");
+            } else {
+                boton.focus();
+            }
+        }
+
+        boton.addEventListener("click", () => abrirFormulario(true));
+        if (cancelar) {
+            cancelar.addEventListener("click", () => abrirFormulario(false));
+        }
+
+        if (notas && caracteres) {
+            notas.addEventListener("input", () => {
+                caracteres.textContent = String(notas.value.length);
+            });
+        }
+
+        // Muestra la carga y evita el doble envío.
+        formulario.addEventListener("submit", () => {
+            if (guardar) {
+                guardar.disabled = true;
+                guardar.setAttribute("aria-busy", "true");
+                guardar.textContent = "Guardando...";
+            }
+            anunciar("Guardando el seguimiento.");
+        });
+    });
+
+    // 4. Efecto de presión al tocar una solicitud (solo pantallas táctiles).
     seccion.querySelectorAll(".recibida").forEach(tarjeta => {
         tarjeta.addEventListener("pointerdown", evento => {
             if (evento.pointerType === "touch" && !evento.target.closest("button")) {
