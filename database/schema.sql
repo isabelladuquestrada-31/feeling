@@ -30,14 +30,6 @@ alto_contraste boolean not null default false,
 foreign key (usuario_id) references usuario(id)
 );
 
-create table sesion (
-id int auto_increment primary key,
-usuario_id int not null,
-token varchar(255) not null unique,
-fecha_expiracion datetime not null,
-foreign key (usuario_id) references usuario(id)
-);
-
 create table estudiante (
 usuario_id int primary key,
 programa_academico varchar(100) not null,
@@ -97,9 +89,18 @@ modalidad varchar(20) not null,
 estado varchar(20) not null default 'PENDIENTE',
 fecha_creacion datetime not null default current_timestamp,
 fecha_programada datetime not null,
+duracion_minutos int,
 foreign key (estudiante_id) references estudiante(usuario_id),
 foreign key (voluntario_id) references voluntario(id),
 foreign key (materia_codigo) references materia(codigo)
+);
+
+create table seguimiento (
+solicitud_id int primary key,
+notas text,
+duracion_minutos int not null,
+fecha datetime not null,
+foreign key (solicitud_id) references solicitud(id)
 );
 
 create table ajuste_razonable (
@@ -110,8 +111,6 @@ detalle varchar(255),
 foreign key (solicitud_id) references solicitud(id)
 );
 
-
-
 create table calificacion (
 solicitud_id int primary key,
 puntuacion int not null check (puntuacion between 1 and 5),
@@ -119,7 +118,3 @@ comentario varchar(255),
 fecha datetime not null default current_timestamp,
 foreign key (solicitud_id) references solicitud(id)
 );
-
-use feeling;
-alter table usuario add programa_academico varchar(100) after rol;
-
