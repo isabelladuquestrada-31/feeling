@@ -10,8 +10,8 @@
     MÓDULO: Inicio del estudiante (pantallas de inicio por rol)
 
     AUTOR: Yulipaola Domínguez
-    VERSIÓN: 1.1.0
-    FECHA DE DOCUMENTACIÓN: 2026-11-22
+    VERSIÓN: 1.2.0
+    FECHA DE ÚLTIMA MODIFICACIÓN: 2026-11-25
     ESTADO: Finalizado
     TICKET: SCRUM-53 (RF-02)
 
@@ -87,9 +87,12 @@
     - 1.1.0 (2026-11-22): documentación completa. El título cambió de
       Inicio a Inicio del estudiante para distinguirlo de la página
       principal (index.html).
+       - 1.2.0 (2026-11-25): se quitó la tarjeta Ajustes razonables
+      (Muy pronto), porque esa funcionalidad ya está implementada, y
+      el emoji de la mano del saludo. No cambiaron textos ni
+      funcionalidades del resto de la pantalla.
 
     OBSERVACIONES:
-    - El favicon no se define aquí: lo aporta layouts/layout-interno.
     - Las etiquetas link y script están dentro de la sección porque el
       layout solo recibe ese fragmento. Lo ideal sería cargarlas desde
       el head del layout.
@@ -160,10 +163,6 @@
                  pastilla informativa. A la derecha va una ilustración decorativa. -->
             <div class="panel-hero">
                 <div class="panel-hero__texto">
-                    <h1 id="titulo-panel">
-                        ¡Hola, <span th:text="${nombre}">Yuli</span>!
-                        <span class="panel-hero__mano" aria-hidden="true">👋</span>
-                    </h1>
                     <p>
                         Aquí puedes encontrar estudiantes voluntarios que te apoyen en lo que necesitas.
                         Recuerda que también puedes ser voluntario y ayudar a otros.
@@ -346,17 +345,6 @@
                 </svg>
             </div>
 
-            <!-- Aviso de ajustes razonables. La función aún no está disponible,
-                 por eso muestra la etiqueta Muy pronto. -->
-            <div class="panel-tarjeta panel-tarjeta--ajustes">
-                <h2 class="panel-tarjeta__titulo">Ajustes razonables</h2>
-                <p>Si necesitas algún ajuste para tu acompañamiento, podrás indicarlo en tu perfil.</p>
-                <span class="panel-tarjeta__pronto">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                    Muy pronto
-                </span>
-            </div>
-
             <!-- Perfil de voluntariado: muestra una de dos versiones según si el
                  usuario ya es voluntario o todavía no. -->
             <div class="panel-tarjeta panel-tarjeta--voluntariado">
@@ -427,4 +415,4 @@
 </section>
 
 </body>
-</html>
+</html>
