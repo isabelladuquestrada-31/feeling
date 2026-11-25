@@ -2,7 +2,102 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layouts/layout-interno :: layout('Mi disponibilidad | Feeling', ~{::section})}">
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: disponibilidad.html
+    UBICACIÓN: src/main/resources/templates/paginas/disponibilidad.html
+    MÓDULO: Mi disponibilidad (panel del voluntario)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.1.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-25
+    ESTADO: Finalizado
+    TICKET: SCRUM-77 (RF-06)
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la pantalla donde el voluntario registra las franjas de
+    días y horas en que puede dar acompañamiento. Los estudiantes solo pueden
+    pedirle apoyo dentro de esas franjas. Basada en el bloque "Mi
+    disponibilidad" del mockup del panel del voluntario (SCRUM-13).
+
+    FUNCIONALIDADES:
+    - Formulario para agregar una franja: día, hora de inicio y hora de fin,
+      con la duración calculada mientras se eligen las horas.
+    - Lista de franjas registradas con su contador.
+    - Botón Editar que abre el formulario de edición debajo de la franja.
+    - Botón Eliminar que pide un segundo toque para confirmar.
+    - Resalta la franja recién agregada o editada.
+    - Columna lateral con el resumen de la semana y consejos de uso.
+    - Aviso para quien todavía no es voluntario, con enlace para activarse.
+    - Mensajes de éxito y error enviados por el servidor.
+
+    ESTRUCTURA DE LA PÁGINA:
+    - Aviso para lectores de pantalla.
+    - Encabezado con botón de volver, etiqueta, título y descripción.
+    - Alertas del servidor.
+    - Aviso de "Todavía no eres voluntario" (si no lo es).
+    - Si es voluntario: columna principal (formulario y lista de franjas) y
+      columna lateral (tu semana y consejos).
+
+    TECNOLOGÍAS:
+    - HTML5: estructura, formularios y accesibilidad (ARIA).
+    - Thymeleaf: layout, condicionales, iteración, rutas, horas y textos.
+    - CSS3: presentación y diseño adaptable.
+    - JavaScript: validación, duración, edición y eliminación con confirmación.
+
+    DEPENDENCIAS:
+    - layouts/layout-interno: aporta el head del documento, el menú y el pie.
+      Este archivo solo entrega la sección de contenido y el título.
+    - /css/solicitudes.css y /css/disponibilidad.css.
+    - /js/solicitudes.js y /js/disponibilidad.js.
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - esVoluntario: indica si el usuario ya es voluntario.
+    - dias: mapa del día (LUNES, MARTES...) a su nombre.
+    - franjas: lista de franjas del voluntario.
+    - franjasPorDia: mapa del día a sus franjas, para el resumen de la semana.
+    - editandoId: id de la franja que se estaba editando cuando hubo un error.
+    - diaEscrito, inicioEscrito y finEscrito: datos que se habían escrito,
+      para no perderlos cuando hay un error.
+    - resaltar: día y hora de la franja recién agregada o editada.
+    - idioma: configuración regional para formatear las horas.
+    - mensajeExito y mensajeError: mensajes después de una acción.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /ser-voluntario: perfil del voluntario y activación.
+    - /disponibilidad: agrega una franja (POST).
+    - /disponibilidad/{id}/editar: edita una franja (POST).
+    - /disponibilidad/{id}/eliminar: elimina una franja (POST).
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-solicitudes: lo usa solicitudes.js para la entrada de tarjetas y las alertas.
+    - data-disponibilidad: lo usa disponibilidad.js para detectar la pantalla.
+    - data-formulario-franja, data-hora, data-duracion y data-error-franja:
+      formularios de agregar y editar.
+    - data-dia, data-id, data-inicio y data-fin: datos de cada franja para
+      revisar cruces.
+    - data-editar y data-cancelar-edicion: edición de una franja.
+    - data-eliminar: formulario para eliminar una franja.
+    - data-aviso: zona de avisos para lectores de pantalla.
+    - data-alerta y data-cerrar-alerta: alertas que se pueden cerrar.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación de Mi disponibilidad (SCRUM-77, RF-06).
+    - 1.1.0 (2026-11-25): documentación completa. No cambia la estructura ni los textos.
+
+    OBSERVACIONES:
+    - El servidor vuelve a revisar las franjas al guardarlas; la validación
+      del navegador solo evita envíos con errores evidentes.
+    - Las etiquetas link y script están dentro de la sección porque el layout
+      solo recibe ese fragmento.
+    - Los comentarios HTML llegan al navegador. Para que no se envíen, se pueden
+      escribir como comentarios de Thymeleaf.
+    -->
+
     <meta charset="UTF-8">
+    <!-- Título de respaldo para ver el archivo sin servidor. El título real
+         se envía al layout en el atributo th:replace de la etiqueta html. -->
     <title>Mi disponibilidad | Feeling</title>
 </head>
 <body>
@@ -15,6 +110,8 @@
 <section class="solicitudes disponibilidad sin-js" data-solicitudes data-disponibilidad
          aria-labelledby="titulo-disponibilidad">
 
+    <!-- Hojas de estilo y scripts de la pantalla. Los scripts usan defer para
+         ejecutarse cuando el documento ya fue analizado. -->
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/disponibilidad.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
@@ -25,6 +122,7 @@
 
     <!-- Encabezado -->
     <header class="disponibilidad__encabezado">
+        <!-- Botón para volver al perfil del voluntario. -->
         <a th:href="@{/ser-voluntario}" class="disponibilidad__volver" aria-label="Volver a mi perfil de voluntario">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
         </a>
@@ -62,6 +160,7 @@
         <a th:href="@{/ser-voluntario}" class="boton-accion boton-accion--franja">Quiero ser voluntario</a>
     </div>
 
+    <!-- Contenido para el voluntario: columna principal y columna lateral. -->
     <div th:if="${esVoluntario}" class="disponibilidad__grid">
 
         <div class="disponibilidad__principal">
@@ -74,6 +173,8 @@
                     <p>Elige el día y las horas en las que puedes acompañar a otros estudiantes.</p>
                 </div>
 
+                <!-- Días de la semana como botones de opción; se muestran las tres primeras
+                     letras y el lector de pantalla lee el nombre completo. -->
                 <fieldset class="franja-nueva__dias">
                     <legend>Día</legend>
                     <label class="dia-opcion" th:each="d : ${dias}">
@@ -83,6 +184,8 @@
                     </label>
                 </fieldset>
 
+                <!-- Horas de inicio y de fin en pasos de 15 minutos. Si hubo un error,
+                     se conservan las horas que se habían escrito. -->
                 <div class="franja-nueva__horas">
                     <label class="campo-hora">
                         <span>Hora de inicio</span>
@@ -98,6 +201,7 @@
                     <span class="franja-nueva__duracion" data-duracion aria-live="polite"></span>
                 </div>
 
+                <!-- Mensaje de error del formulario. -->
                 <p class="franja-nueva__error" data-error-franja hidden></p>
 
                 <button type="submit" class="boton-accion boton-accion--franja" data-enviar-franja>
@@ -110,10 +214,12 @@
             <div class="franjas" role="region" aria-labelledby="titulo-franjas">
                 <div class="franjas__cabecera">
                     <h2 id="titulo-franjas">Tus franjas</h2>
+                    <!-- Contador de franjas (singular o plural). -->
                     <span class="franjas__contador" data-contador-franjas
                           th:text="${#lists.size(franjas) == 1} ? '1 franja' : ${#lists.size(franjas)} + ' franjas'">0 franjas</span>
                 </div>
 
+                <!-- Estado vacío cuando todavía no hay franjas. -->
                 <div th:if="${#lists.isEmpty(franjas)}" class="franjas__vacio">
                     <span class="franjas__vacio-icono" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -125,6 +231,8 @@
                 </div>
 
                 <ul th:unless="${#lists.isEmpty(franjas)}" class="franjas__lista">
+                    <!-- Una fila por franja. Se resalta la recién agregada o editada, y se guardan
+                         sus datos para que el JavaScript revise los cruces. -->
                     <li th:each="f : ${franjas}" class="solicitudes__item franja"
                         th:with="clave=${f.dia.name()} + '-' + ${#temporals.format(f.horaInicio, 'HH:mm')}"
                         th:classappend="${resaltar == clave} ? ' franja--nueva' : ''"
@@ -134,16 +242,19 @@
                             <span class="franja__icono" aria-hidden="true">
                                 <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
                             </span>
+                            <!-- Día y horas de la franja. -->
                             <strong class="franja__dia" th:text="${dias.get(f.dia.name())}">Lunes</strong>
                             <span class="franja__horas"
                                   th:text="${#temporals.format(f.horaInicio, 'h:mm a', idioma)} + ' – ' + ${#temporals.format(f.horaFin, 'h:mm a', idioma)}">8:00 a. m. – 10:00 a. m.</span>
                             <span class="franja__estado">Disponible</span>
                             <div class="franja__acciones">
+                                <!-- Botón que abre la edición; queda abierto si hubo un error al editar. -->
                                 <button type="button" class="franja__boton" data-editar
                                         th:attr="aria-controls='editar-' + ${f.id}, aria-label='Editar la franja del ' + ${dias.get(f.dia.name())}"
                                         th:aria-expanded="${editandoId == f.id}">
                                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                                 </button>
+                                <!-- Formulario para eliminar la franja; pide un segundo toque. -->
                                 <form th:action="@{/disponibilidad/{id}/eliminar(id=${f.id})}" method="post" data-eliminar>
                                     <button type="submit" class="franja__boton franja__boton--eliminar"
                                             th:attr="aria-label='Eliminar la franja del ' + ${dias.get(f.dia.name())}">
@@ -155,6 +266,7 @@
                         </div>
 
                         <!-- Edición de la franja -->
+                        <!-- Se muestra abierta solo si hubo un error al editar esta franja. -->
                         <form class="franja__edicion" th:id="'editar-' + ${f.id}"
                               th:action="@{/disponibilidad/{id}/editar(id=${f.id})}" method="post" novalidate
                               th:hidden="${editandoId != f.id}" data-formulario-franja data-editando>
@@ -192,6 +304,7 @@
                 <h2>Tu semana</h2>
                 <p>Así ven los estudiantes tus horarios.</p>
                 <ol class="semana__dias">
+                    <!-- Un elemento por día de la semana con sus bloques de horas, o "Sin franjas". -->
                     <li th:each="d : ${franjasPorDia}" class="semana__dia"
                         th:classappend="${#lists.isEmpty(d.value)} ? ' semana__dia--libre' : ''">
                         <span class="semana__nombre" th:text="${#strings.substring(dias.get(d.key), 0, 3)}">Lun</span>
@@ -204,6 +317,7 @@
                 </ol>
             </div>
 
+            <!-- Reglas de uso de las franjas. -->
             <div class="disponibilidad__consejo">
                 <h2>¿Cómo se usa?</h2>
                 <ul>

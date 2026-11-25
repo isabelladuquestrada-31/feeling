@@ -1,15 +1,59 @@
-/* ==========================================================
-   Mis acompañamientos (RF-12 y RF-13) - Panel del estudiante
-   Se apoya en solicitudes.css (tarjetas, botones, alertas y
-   animaciones) y en las variables de global.css
-   ========================================================== */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: acompanamientos.css
+ * UBICACIÓN: src/main/resources/static/css/acompanamientos.css
+ * MÓDULO: Mis acompañamientos (panel del estudiante)
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.3.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: RF-12 y RF-13, con ampliaciones de SCRUM-85 (RF-11) y SCRUM-101 (RF-16)
+ *
+ * DESCRIPCIÓN:
+ * Hoja de estilos de la pantalla mis-acompanamientos.html. Da el diseño a
+ * los próximos acompañamientos (tarjetas con la fecha destacada), a los
+ * filtros y al historial de solicitudes con sus estados, al botón para
+ * cancelar, a los mensajes cuando no hay datos, al botón de WhatsApp en
+ * los acompañamientos aceptados y al formulario para calificar con
+ * estrellas un acompañamiento realizado.
+ *
+ * DEPENDENCIAS:
+ * - solicitudes.css: tarjetas, botones de acción, alertas, etiqueta de
+ *   estado, botón de WhatsApp y animaciones compartidas.
+ * - global.css: variables de color, tamaños de texto, radios y sombras.
+ * - mis-acompanamientos.js y solicitudes.js: agregan las clases que
+ *   abren el formulario de calificación, filtran y confirman la cancelación.
+ *
+ * ESTRUCTURA DEL ARCHIVO:
+ * - 1. Bloques de la página.
+ * - 2. Próximos acompañamientos.
+ * - 3. Filtros del historial.
+ * - 4. Historial de solicitudes y botón Cancelar.
+ * - 5. Colores de cada estado.
+ * - 6. Mensajes cuando no hay datos y botón enlace.
+ * - 7 a 9. Tabletas, celulares y celulares muy pequeños.
+ * - 10. Pantallas táctiles.
+ * - 11. Movimiento reducido.
+ * - Botón de WhatsApp (RF-11).
+ * - 12. Calificar un acompañamiento realizado (RF-16).
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: próximos acompañamientos, historial y cancelación (RF-12 y RF-13).
+ * - 1.1.0: botón de WhatsApp en los acompañamientos aceptados (SCRUM-85, RF-11).
+ * - 1.2.0: formulario para calificar con estrellas (SCRUM-101, RF-16).
+ * - 1.3.0 (2026-11-25): documentación completa. No cambia ningún estilo.
+ */
+
 
 /* 1. Bloques de la página */
 
+/* Cada bloque de la página (próximos e historial) con espacio debajo. */
 .acompanamientos__bloque {
     margin-bottom: 40px;
 }
 
+/* Título del bloque con su descripción al lado. */
 .acompanamientos__bloque-titulo {
     display: flex;
     align-items: center;
@@ -19,10 +63,12 @@
     margin-bottom: 18px;
 }
 
+/* Título del bloque. */
 .acompanamientos__bloque-titulo h2 {
     font-size: var(--text-subtitle);
 }
 
+/* Descripción del bloque. */
 .acompanamientos__bloque-titulo p {
     color: var(--color-text-secondary);
     font-size: var(--text-small);
@@ -30,6 +76,7 @@
 
 /* 2. Próximos acompañamientos */
 
+/* Cuadrícula de tarjetas de próximos acompañamientos. */
 .proximos__lista {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
@@ -37,6 +84,7 @@
     list-style: none;
 }
 
+/* Tarjeta de un próximo acompañamiento: fecha a la izquierda y datos a la derecha. */
 .tarjeta-proximo {
     display: flex;
     align-items: stretch;
@@ -49,11 +97,13 @@
     transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
+/* Al pasar el cursor la tarjeta sube un poco. */
 .tarjeta-proximo:hover {
     transform: translateY(-4px);
     border-color: var(--color-primary-light);
 }
 
+/* Efecto al tocar la tarjeta en el celular. */
 .tarjeta-proximo.presionada {
     transform: scale(0.985);
 }
@@ -64,6 +114,7 @@
     background: linear-gradient(135deg, var(--color-text-light) 60%, var(--color-soft));
 }
 
+/* Recuadro con el día y el mes sobre el color principal. */
 .tarjeta-proximo__fecha {
     flex-shrink: 0;
     display: flex;
@@ -78,12 +129,14 @@
     text-align: center;
 }
 
+/* Número del día. */
 .tarjeta-proximo__dia {
     font-size: 1.9rem;
     font-weight: 800;
     line-height: 1;
 }
 
+/* Mes abreviado en mayúsculas. */
 .tarjeta-proximo__mes {
     margin-top: 4px;
     font-size: 0.8rem;
@@ -92,6 +145,7 @@
     letter-spacing: 0.05em;
 }
 
+/* Datos del acompañamiento: materia, voluntario, hora y modalidad. */
 .tarjeta-proximo__info {
     min-width: 0;
     display: flex;
@@ -99,11 +153,13 @@
     gap: 6px;
 }
 
+/* Título de la tarjeta (materia). */
 .tarjeta-proximo__info h3 {
     font-size: 1.07rem;
     overflow-wrap: anywhere;
 }
 
+/* Detalle de hora y modalidad en una fila. */
 .tarjeta-proximo__detalle {
     display: flex;
     flex-wrap: wrap;
@@ -112,6 +168,7 @@
     font-size: 0.9rem;
 }
 
+/* Etiqueta "Siguiente" del acompañamiento más cercano. */
 .tarjeta-proximo__siguiente {
     align-self: flex-start;
     padding: 3px 10px;
@@ -124,6 +181,7 @@
 
 /* 3. Filtros del historial */
 
+/* Fila de botones de filtro del historial. */
 .filtros {
     display: flex;
     flex-wrap: wrap;
@@ -131,6 +189,7 @@
     margin-bottom: 18px;
 }
 
+/* Botón de filtro con forma de píldora. */
 .filtro {
     display: inline-flex;
     align-items: center;
@@ -149,15 +208,18 @@
                 border-color 0.25s ease, transform 0.2s ease;
 }
 
+/* Al pasar el cursor el filtro toma el color principal. */
 .filtro:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
 }
 
+/* Efecto de presión al hacer clic. */
 .filtro:active {
     transform: scale(0.95);
 }
 
+/* Filtro activo: fondo de color principal y texto blanco. */
 .filtro--activo,
 .filtro--activo:hover {
     border-color: var(--color-primary);
@@ -165,6 +227,7 @@
     color: var(--color-text-light);
 }
 
+/* Cantidad de solicitudes de cada filtro dentro de un círculo. */
 .filtro__cantidad {
     display: inline-flex;
     align-items: center;
@@ -179,17 +242,20 @@
     font-weight: 800;
 }
 
+/* La cantidad del filtro activo se ve sobre el fondo de color. */
 .filtro--activo .filtro__cantidad {
     background-color: rgba(255, 255, 255, 0.25);
     color: var(--color-text-light);
 }
 
+/* Los filtros sin solicitudes se ocultan. */
 .filtro[hidden] {
     display: none;
 }
 
 /* 4. Historial de solicitudes */
 
+/* Lista del historial, una tarjeta debajo de la otra. */
 .historial__lista {
     display: flex;
     flex-direction: column;
@@ -197,10 +263,12 @@
     list-style: none;
 }
 
+/* Las tarjetas que no coinciden con el filtro se ocultan. */
 .solicitudes__item[hidden] {
     display: none;
 }
 
+/* Tarjeta del historial: datos a la izquierda; estado y botones a la derecha. */
 .tarjeta-historial {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -214,25 +282,30 @@
     transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
+/* Al pasar el cursor la tarjeta sube un poco. */
 .tarjeta-historial:hover {
     transform: translateY(-2px);
     border-color: var(--color-primary-light);
 }
 
+/* Efecto al tocar la tarjeta en el celular. */
 .tarjeta-historial.presionada {
     transform: scale(0.99);
 }
 
+/* Bloque de datos de la solicitud. */
 .tarjeta-historial__info {
     min-width: 0;
 }
 
+/* Título de la tarjeta (materia). */
 .tarjeta-historial__info h3 {
     margin-bottom: 4px;
     font-size: 1.05rem;
     overflow-wrap: anywhere;
 }
 
+/* Detalle de la solicitud en una fila. */
 .tarjeta-historial__detalle {
     display: flex;
     flex-wrap: wrap;
@@ -249,20 +322,24 @@
     gap: 16px;
 }
 
+/* Formulario o botón de acción de la tarjeta. */
 .tarjeta-historial__accion {
     min-width: 150px;
 }
 
+/* Botón Cancelar con borde rojo y fondo blanco. */
 .boton-accion--cancelar {
     color: var(--color-danger);
     background-color: var(--color-text-light);
     border-color: var(--color-danger);
 }
 
+/* Al pasar el cursor el botón toma un fondo rojo claro. */
 .boton-accion--cancelar:hover {
     background-color: #FBECEC;
 }
 
+/* Segundo toque para confirmar la cancelación: fondo rojo y latido. */
 .boton-accion--cancelar.confirmando {
     color: var(--color-text-light);
     background-color: var(--color-danger);
@@ -271,21 +348,25 @@
 
 /* 5. Colores de cada estado */
 
+/* Estado aceptada en verde. */
 .estado--aceptada {
     color: var(--color-success);
     background-color: #E5F5EE;
 }
 
+/* Estado rechazada en rojo. */
 .estado--rechazada {
     color: var(--color-danger);
     background-color: #FBECEC;
 }
 
+/* Estado cancelada en gris. */
 .estado--cancelada {
     color: #5B6B7F;
     background-color: #EEF2F5;
 }
 
+/* Estado realizada en azul. */
 .estado--realizada {
     color: var(--color-navy);
     background-color: var(--color-surface);
@@ -293,6 +374,7 @@
 
 /* 6. Mensajes cuando no hay datos */
 
+/* Tarjeta que se muestra cuando no hay acompañamientos o solicitudes. */
 .acompanamientos__vacio {
     padding: 32px 20px;
     text-align: center;
@@ -301,23 +383,28 @@
     background-color: var(--color-text-light);
 }
 
+/* Título del mensaje. */
 .acompanamientos__vacio h3 {
     margin-bottom: 6px;
     font-size: 1.05rem;
 }
 
+/* Texto del mensaje. */
 .acompanamientos__vacio p {
     color: var(--color-text-secondary);
 }
 
+/* Separación del botón dentro del mensaje. */
 .acompanamientos__vacio .boton-enlace {
     margin-top: 16px;
 }
 
+/* Cuando el mensaje está oculto no se muestra. */
 .acompanamientos__vacio[hidden] {
     display: none;
 }
 
+/* Enlace con apariencia de botón principal (por ejemplo, Buscar voluntarios). */
 .boton-enlace {
     display: inline-flex;
     align-items: center;
@@ -333,6 +420,7 @@
     transition: background-color 0.25s ease, transform 0.2s ease;
 }
 
+/* Al pasar el cursor el botón se oscurece y sube un poco. */
 .boton-enlace:hover {
     background-color: var(--color-primary-dark);
     color: var(--color-text-light);
@@ -340,12 +428,14 @@
     transform: translateY(-2px);
 }
 
+/* Efecto de presión al hacer clic. */
 .boton-enlace:active {
     transform: scale(0.96);
 }
 
 /* 7. Tabletas */
 
+/* En tabletas la tarjeta del historial pasa a una sola columna. */
 @media (max-width: 900px) {
     .tarjeta-historial {
         grid-template-columns: 1fr;
@@ -363,6 +453,7 @@
 
 /* 8. Celulares */
 
+/* En celulares se reducen tamaños y espacios. */
 @media (max-width: 600px) {
     .acompanamientos__bloque {
         margin-bottom: 32px;
@@ -407,6 +498,8 @@
 
 /* 9. Celulares muy pequeños */
 
+/* En celulares muy pequeños la fecha pasa arriba de los datos
+   y el estado queda encima de los botones. */
 @media (max-width: 380px) {
     .tarjeta-proximo {
         flex-direction: column;
@@ -441,6 +534,7 @@
 
 /* 10. Pantallas táctiles */
 
+/* En pantallas táctiles se quitan los efectos de pasar el cursor. */
 @media (hover: none) {
     .tarjeta-proximo:hover,
     .tarjeta-historial:hover,
@@ -456,6 +550,7 @@
 
 /* 11. Movimiento reducido */
 
+/* Si el usuario pidió menos movimiento, las animaciones se reducen al mínimo. */
 @media (prefers-reduced-motion: reduce) {
     .acompanamientos *,
     .acompanamientos *::before,
@@ -466,27 +561,33 @@
 }
 
 /* RF-11 (SCRUM-85): botón de WhatsApp en las tarjetas de próximos acompañamientos */
+/* Espacio para el botón de WhatsApp dentro de la tarjeta de próximos. */
 .tarjeta-proximo__contacto {
     margin-top: 12px;
 }
 
+/* En el historial, el botón de WhatsApp va antes que el estado. */
 .tarjeta-historial__lado .boton-whatsapp {
     order: -1;
 }
 
 /* 12. RF-16 (SCRUM-101): calificar un acompañamiento realizado */
 
+/* Botón secundario (Cancelar del formulario de calificación) con borde
+   y fondo blanco. */
 .boton-accion--secundario {
     color: var(--color-primary);
     background-color: var(--color-text-light);
     border-color: var(--color-border);
 }
 
+/* Al pasar el cursor el botón secundario toma un fondo suave. */
 .boton-accion--secundario:hover {
     border-color: var(--color-primary);
     background-color: var(--color-soft);
 }
 
+/* El botón Calificar se oculta mientras el formulario está abierto. */
 .tarjeta-historial [data-abrir-calificacion][hidden] {
     display: none;
 }
@@ -497,16 +598,19 @@
     gap: 2px;
 }
 
+/* Ícono de cada estrella; vacía en gris. */
 .estrella-icono {
     width: 20px;
     height: 20px;
     fill: #D5DEE6;
 }
 
+/* Estrella llena en amarillo. */
 .estrella-icono--llena {
     fill: var(--color-warning);
 }
 
+/* Comentario que dejó el estudiante al calificar. */
 .tarjeta-historial__comentario {
     grid-column: 1 / -1;
     padding: 10px 14px;
@@ -520,6 +624,7 @@
 }
 
 /* Formulario para calificar */
+/* Tarjeta del formulario dentro de la tarjeta del historial; ocupa todo el ancho. */
 .calificar {
     grid-column: 1 / -1;
     display: flex;
@@ -531,6 +636,7 @@
     animation: calificar-abrir 0.3s ease both;
 }
 
+/* Cuando el formulario está cerrado no se muestra. */
 .calificar[hidden] {
     display: none;
 }
@@ -540,10 +646,12 @@
     display: flex;
 }
 
+/* Sin JavaScript se oculta el botón Calificar. */
 .acompanamientos.sin-js [data-abrir-calificacion] {
     display: none;
 }
 
+/* Apertura del formulario de calificación. */
 @keyframes calificar-abrir {
     from {
         opacity: 0;
@@ -555,6 +663,7 @@
     }
 }
 
+/* Grupo de las cinco estrellas. */
 .calificar__estrellas {
     min-width: 0;
     margin: 0;
@@ -562,6 +671,7 @@
     border: 0;
 }
 
+/* Textos del grupo de estrellas y del comentario. */
 .calificar__estrellas legend,
 .calificar__comentario > span {
     margin-bottom: 8px;
@@ -571,11 +681,13 @@
     font-weight: 800;
 }
 
+/* Texto "(opcional)" del comentario. */
 .calificar__comentario small {
     color: var(--color-text-secondary);
     font-weight: 600;
 }
 
+/* Fila de estrellas y texto de la calificación elegida. */
 .estrellas {
     display: flex;
     flex-wrap: wrap;
@@ -583,6 +695,7 @@
     gap: 4px;
 }
 
+/* Cada estrella es un radio oculto con un ícono visible; mide 44 px para tocarla. */
 .estrella {
     position: relative;
     display: inline-flex;
@@ -594,12 +707,14 @@
     cursor: pointer;
 }
 
+/* El radio real se oculta, pero sigue disponible para el teclado. */
 .estrella input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Ícono de la estrella, vacía por defecto. */
 .estrella svg {
     width: 34px;
     height: 34px;
@@ -607,6 +722,7 @@
     transition: fill 0.15s ease, transform 0.15s ease;
 }
 
+/* Contorno visible cuando la estrella recibe el foco con el teclado. */
 .estrella input:focus-visible + svg {
     outline: 3px solid var(--color-primary-light);
     outline-offset: 2px;
@@ -637,6 +753,7 @@
     }
 }
 
+/* Texto con la calificación elegida (por ejemplo, "Buena"). */
 .estrellas__texto {
     margin-left: 8px;
     color: var(--color-text-secondary);
@@ -644,6 +761,7 @@
     font-weight: 700;
 }
 
+/* Mensaje de error si se intenta enviar sin elegir estrellas. */
 .calificar__error {
     margin-top: 6px;
     color: var(--color-danger);
@@ -651,15 +769,18 @@
     font-weight: 700;
 }
 
+/* Cuando no hay error, el mensaje no se muestra. */
 .calificar__error[hidden] {
     display: none;
 }
 
+/* Etiqueta y campo del comentario, uno encima del otro. */
 .calificar__comentario {
     display: flex;
     flex-direction: column;
 }
 
+/* Campo del comentario; solo se puede agrandar hacia abajo. */
 .calificar__comentario textarea {
     width: 100%;
     min-height: 80px;
@@ -673,12 +794,14 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Borde y sombra de color principal cuando el campo tiene el foco. */
 .calificar__comentario textarea:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
     outline: none;
 }
 
+/* Contador de caracteres del comentario, alineado a la derecha. */
 .calificar__contador {
     margin-top: -8px;
     color: var(--color-text-secondary);
@@ -686,6 +809,7 @@
     text-align: right;
 }
 
+/* Botones Enviar y Cancelar del formulario. */
 .calificar__botones {
     display: flex;
     flex-wrap: wrap;
@@ -699,6 +823,7 @@
     min-width: 140px;
 }
 
+/* En celulares el formulario es más compacto y los botones ocupan la fila. */
 @media (max-width: 600px) {
     .calificar {
         padding: 14px 12px;

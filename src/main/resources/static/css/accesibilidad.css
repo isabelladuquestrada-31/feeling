@@ -1,17 +1,46 @@
-/* ==========================================================
-   Preferencias de accesibilidad (RF-04)
-   Las clases se ponen en <html> desde layout-interno.html con
-   las preferencias guardadas del usuario, y se aplican en
-   todas las páginas internas.
-   - letra-grande: agranda todo el texto.
-   - alto-contraste: colores con contraste de al menos 7:1
-     (WCAG nivel AAA para texto; el mínimo AA es 4.5:1).
-   ========================================================== */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: accesibilidad.css
+ * UBICACIÓN: src/main/resources/static/css/accesibilidad.css
+ * MÓDULO: Preferencias de accesibilidad (todas las páginas internas)
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.1.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: SCRUM-93 (RF-04)
+ *
+ * DESCRIPCIÓN:
+ * Estilos de las preferencias de accesibilidad que el usuario activa en
+ * Mi perfil. layout-interno.html pone las clases en la etiqueta html según
+ * las preferencias guardadas, así que se aplican en todas las páginas
+ * internas:
+ * - letra-grande: agranda todo el texto.
+ * - alto-contraste: colores con contraste de al menos 7:1 (WCAG nivel AAA
+ *   para texto; el mínimo AA es 4.5:1), bordes más gruesos, enlaces
+ *   subrayados y foco del teclado más visible.
+ *
+ * DEPENDENCIAS:
+ * - global.css: este archivo reemplaza sus variables de color.
+ * - layouts/layout-interno.html: agrega las clases letra-grande y
+ *   alto-contraste a la etiqueta html.
+ *
+ * ESTRUCTURA DEL ARCHIVO:
+ * - 1. Letra grande.
+ * - 2. Alto contraste: variables de color, bordes, enlaces, foco,
+ *   textos de ejemplo y mensajes.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: letra grande y alto contraste (SCRUM-93, RF-04).
+ * - 1.1.0 (2026-11-25): documentación completa. No cambia ningún estilo.
+ */
+
 
 /* 1. Letra grande
    Casi todos los tamaños del proyecto están en rem (global.css),
    así que basta con agrandar la letra de la raíz: 1rem pasa de 16px a 20px. */
 
+/* La letra de la raíz pasa al 125 %. */
 html.letra-grande {
     font-size: 125%;
 }
@@ -20,6 +49,7 @@ html.letra-grande {
    Se reemplazan las variables de color de global.css; como todas las
    páginas usan esas variables, el cambio llega a todo el sitio. */
 
+/* Colores más oscuros y fondo blanco; sin sombras. */
 html.alto-contraste {
     --color-primary: #00566A;
     --color-primary-light: #00566A;
@@ -76,10 +106,12 @@ html.alto-contraste .solicitudes__alerta {
     border-width: 2px;
 }
 
+/* Borde verde en los mensajes de éxito. */
 html.alto-contraste .solicitudes__alerta--exito {
     border-color: var(--color-success);
 }
 
+/* Borde rojo en los mensajes de error. */
 html.alto-contraste .solicitudes__alerta--error {
     border-color: var(--color-danger);
 }

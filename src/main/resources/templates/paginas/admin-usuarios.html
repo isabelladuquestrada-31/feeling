@@ -2,7 +2,96 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layouts/layout-interno :: layout('Gestión de usuarios | Feeling', ~{::section})}">
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: admin-usuarios.html
+    UBICACIÓN: src/main/resources/templates/paginas/admin-usuarios.html
+    MÓDULO: Gestión de usuarios (panel del administrador)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.1.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-25
+    ESTADO: Finalizado
+    TICKET: SCRUM-103 (RF-17)
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la pantalla donde el administrador gestiona a los
+    usuarios de Feeling. Muestra a los voluntarios con su estado para
+    suspenderlos (con motivo y fecha de fin) o reactivarlos, y una tabla con
+    todos los usuarios, su rol, su fecha de registro y el estado de la
+    cuenta. Sigue el estilo del mockup "Gestión de usuarios" (SCRUM-13).
+
+    FUNCIONALIDADES:
+    - Botón para volver al panel del administrador.
+    - Mensajes de éxito y error después de suspender o reactivar.
+    - Lista de voluntarios con el número total y de suspendidos.
+    - Tarjeta de cada voluntario con sus materias, su estado y, si está
+      suspendido, la fecha de fin y el motivo.
+    - Botón Suspender que abre un formulario con motivo, contador de
+      caracteres y fecha de fin.
+    - Botón Reactivar para los voluntarios suspendidos.
+    - Tabla de todos los usuarios con su rol (Estudiante, Voluntario o
+      Administrador).
+
+    ESTRUCTURA DE LA PÁGINA:
+    - Encabezado con botón de volver, etiqueta, título y descripción.
+    - Alertas del servidor y aviso para lectores de pantalla.
+    - Bloque Voluntarios: estado vacío o lista de tarjetas con su formulario.
+    - Bloque Todos los usuarios: tabla.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura y accesibilidad (ARIA).
+    - Thymeleaf: layout, condicionales, iteración, rutas, fechas y textos.
+    - CSS3: presentación y diseño adaptable.
+    - JavaScript: formulario de suspensión y confirmación al reactivar.
+
+    DEPENDENCIAS:
+    - layouts/layout-interno: aporta el head del documento, el menú y el pie.
+      Este archivo solo entrega la sección de contenido y el título.
+    - /css/solicitudes.css y /css/admin-usuarios.css.
+    - /js/solicitudes.js y /js/admin-usuarios.js.
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - voluntarios: lista de voluntarios con su estudiante, materias y estado.
+    - suspensiones: mapa del id del voluntario a su suspensión vigente.
+    - usuarios: lista de todos los usuarios registrados.
+    - roles: mapa del id del usuario a su rol (Estudiante, Voluntario o Administrador).
+    - fechaMinimaFin: fecha mínima permitida para el fin de la suspensión.
+    - largoMaximoMotivo: máximo de caracteres del motivo.
+    - exito y error: mensajes después de una acción.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /admin: panel del administrador.
+    - /admin/usuarios/{id}/suspender: suspende a un voluntario (POST).
+    - /admin/usuarios/{id}/reactivar: reactiva a un voluntario (POST).
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-solicitudes: lo usan solicitudes.js y admin-usuarios.js para detectar la pantalla.
+    - data-aviso: zona de avisos para lectores de pantalla.
+    - data-alerta y data-cerrar-alerta: alertas que se pueden cerrar.
+    - data-abrir-suspension: botón Suspender.
+    - data-form-suspension, data-motivo-suspension, data-caracteres-motivo,
+      data-fecha-suspension, data-error-suspension, data-cancelar-suspension
+      y data-enviar-suspension: formulario de suspensión.
+    - data-accion="reactivar": formulario para reactivar.
+    - data-etiqueta: nombre de la columna que se muestra en celulares.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación de Gestión de usuarios (SCRUM-103, RF-17).
+    - 1.1.0 (2026-11-25): documentación completa. No cambia la estructura ni los textos.
+
+    OBSERVACIONES:
+    - Solo el administrador puede entrar; AdminInterceptor protege las rutas /admin/**.
+    - Las etiquetas link y script están dentro de la sección porque el layout
+      solo recibe ese fragmento.
+    - Los comentarios HTML llegan al navegador. Para que no se envíen, se pueden
+      escribir como comentarios de Thymeleaf.
+    -->
+
     <meta charset="UTF-8">
+    <!-- Título de respaldo para ver el archivo sin servidor. El título real
+         se envía al layout en el atributo th:replace de la etiqueta html. -->
     <title>Gestión de usuarios | Feeling</title>
 </head>
 <body>
@@ -12,8 +101,12 @@
     - Tabla con todos los usuarios, su rol y su fecha de registro.
     Sigue el estilo del mockup "Gestión de usuarios" (SCRUM-13).
 -->
+<!-- El layout recibe esta sección como su contenido. La clase sin-js la quita
+     solicitudes.js cuando el JavaScript está activo. -->
 <section class="solicitudes gestion-usuarios sin-js" data-solicitudes aria-labelledby="titulo-gestion-usuarios">
 
+    <!-- Hojas de estilo y scripts de la pantalla. Los scripts usan defer para
+         ejecutarse cuando el documento ya fue analizado. -->
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/admin-usuarios.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
@@ -21,6 +114,7 @@
 
     <!-- Encabezado -->
     <header class="solicitudes__encabezado gestion-usuarios__encabezado">
+        <!-- Botón para volver al panel del administrador. -->
         <a th:href="@{/admin}" class="gestion-usuarios__volver" aria-label="Volver al panel del administrador">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </a>
@@ -32,10 +126,12 @@
     </header>
 
     <!-- Mensajes después de suspender o reactivar -->
+    <!-- Mensaje de éxito. -->
     <div th:if="${exito}" class="solicitudes__alerta solicitudes__alerta--exito" role="status" data-alerta>
         <span th:text="${exito}">El voluntario fue suspendido.</span>
         <button type="button" class="solicitudes__alerta-cerrar" aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
+    <!-- Mensaje de error. -->
     <div th:if="${error}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
         <span th:text="${error}">Debe indicar el motivo de la suspensión.</span>
         <button type="button" class="solicitudes__alerta-cerrar" aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
@@ -49,6 +145,7 @@
         <div class="gestion-usuarios__bloque-titulo">
             <h2 id="titulo-voluntarios">Voluntarios</h2>
             <p>
+                <!-- Total de voluntarios y cuántos están suspendidos (singular o plural). -->
                 <span th:text="${#lists.size(voluntarios)}">3</span> en total ·
                 <th:block th:with="suspendidos=${#lists.size(voluntarios.?[estado.name() == 'SUSPENDIDO'])}">
                     <span th:text="${suspendidos}">0</span>
@@ -57,26 +154,31 @@
             </p>
         </div>
 
+        <!-- Estado vacío cuando todavía no hay voluntarios. -->
         <div th:if="${#lists.isEmpty(voluntarios)}" class="gestion-usuarios__vacio">
             <h3>Todavía no hay voluntarios</h3>
             <p>Cuando un estudiante se active como voluntario, aparecerá aquí.</p>
         </div>
 
         <ul th:unless="${#lists.isEmpty(voluntarios)}" class="gestion-usuarios__lista">
+            <!-- Una tarjeta por voluntario. Se calcula si está suspendido y su suspensión vigente. -->
             <li th:each="v : ${voluntarios}" class="solicitudes__item"
                 th:with="suspendido=${v.estado.name() == 'SUSPENDIDO'}, suspension=${suspensiones[v.id]}">
                 <article class="tarjeta-usuario" th:classappend="${suspendido} ? 'tarjeta-usuario--suspendida'"
                          th:attr="aria-labelledby='voluntario-' + ${v.id}">
 
+                    <!-- Avatar con la inicial del nombre de usuario. -->
                     <span class="tarjeta-usuario__avatar" aria-hidden="true"
                           th:text="${#strings.toUpperCase(#strings.substring(v.estudiante.nombreUsuario, 0, 1))}">V</span>
 
                     <div class="tarjeta-usuario__info">
                         <h3 th:id="'voluntario-' + ${v.id}" th:text="${v.estudiante.nombreUsuario}">voluntario1</h3>
+                        <!-- Materias que ofrece el voluntario, separadas por comas. -->
                         <p class="tarjeta-usuario__materias"
                            th:text="${#lists.isEmpty(v.materias)} ? 'Sin materias' : ${#strings.listJoin(v.materias.![nombre], ', ')}">
                             Cálculo Diferencial, Física Mecánica
                         </p>
+                        <!-- Si está suspendido, se muestran la fecha de fin y el motivo. -->
                         <p th:if="${suspendido and suspension != null}" class="tarjeta-usuario__suspension">
                             Suspendido hasta el
                             <strong th:text="${#temporals.format(suspension.fechaFin, 'dd/MM/yyyy')}">30/11/2026</strong>.
@@ -84,14 +186,17 @@
                         </p>
                     </div>
 
+                    <!-- Etiqueta del estado: Activo o Suspendido. -->
                     <span class="estado" th:classappend="${suspendido} ? 'estado--suspendido' : 'estado--activo'"
                           th:text="${suspendido} ? 'Suspendido' : 'Activo'">Activo</span>
 
                     <div class="tarjeta-usuario__acciones">
+                        <!-- Si está activo, botón que abre el formulario de suspensión. -->
                         <button th:unless="${suspendido}" type="button" class="boton-accion boton-accion--suspender"
                                 aria-expanded="false" th:attr="aria-controls='suspender-' + ${v.id}"
                                 data-abrir-suspension>Suspender</button>
 
+                        <!-- Si está suspendido, formulario para reactivarlo. -->
                         <form th:if="${suspendido}" th:action="@{/admin/usuarios/{id}/reactivar(id=${v.id})}"
                               method="post" data-accion="reactivar">
                             <button type="submit" class="boton-accion boton-accion--aceptar"
@@ -103,6 +208,7 @@
                     <form th:unless="${suspendido}" class="suspender" th:id="'suspender-' + ${v.id}"
                           th:action="@{/admin/usuarios/{id}/suspender(id=${v.id})}" method="post"
                           hidden novalidate data-form-suspension>
+                        <!-- Aviso de lo que pasa al suspender. -->
                         <p class="suspender__aviso">
                             Mientras esté suspendido no aparece en la búsqueda ni recibe solicitudes nuevas.
                         </p>
@@ -112,6 +218,7 @@
                                       placeholder="Ej.: no asistió a dos acompañamientos aceptados."
                                       data-motivo-suspension></textarea>
                         </label>
+                        <!-- Contador de caracteres del motivo. -->
                         <p class="suspender__contador">
                             <span data-caracteres-motivo>0</span> / <span th:text="${largoMaximoMotivo}">255</span>
                         </p>
@@ -120,6 +227,7 @@
                             <input type="date" name="fechaFin" required
                                    th:attr="min=${fechaMinimaFin}" data-fecha-suspension>
                         </label>
+                        <!-- Mensaje de error del formulario. -->
                         <p class="suspender__error" role="alert" data-error-suspension hidden></p>
                         <div class="suspender__botones">
                             <button type="button" class="boton-accion boton-accion--secundario"
@@ -142,6 +250,7 @@
 
         <div class="tabla-usuarios__marco">
             <table class="tabla-usuarios">
+                <!-- Descripción de la tabla para lectores de pantalla. -->
                 <caption class="solicitudes__sr-only">Usuarios de Feeling con su rol, su fecha de registro y el estado de la cuenta</caption>
                 <thead>
                 <tr>
@@ -152,12 +261,15 @@
                 </tr>
                 </thead>
                 <tbody>
+                <!-- Una fila por usuario. Cada celda lleva su etiqueta para la vista en celulares. -->
                 <tr th:each="u : ${usuarios}">
                     <th scope="row" data-etiqueta="Usuario" th:text="${u.nombreUsuario}">estudiante1</th>
                     <td data-etiqueta="Rol">
+                        <!-- La etiqueta del rol cambia de color según si es administrador, estudiante o voluntario. -->
                         <span class="rol" th:classappend="${roles[u.id] == 'Administrador'} ? 'rol--admin' : (${roles[u.id] == 'Estudiante'} ? '' : 'rol--voluntario')"
                               th:text="${roles[u.id]}">Estudiante</span>
                     </td>
+                    <!-- Fecha de registro, o una raya si no tiene. -->
                     <td data-etiqueta="Registro"
                         th:text="${u.fechaRegistro != null} ? ${#temporals.format(u.fechaRegistro, 'dd/MM/yyyy')} : '—'">16/11/2026</td>
                     <td data-etiqueta="Cuenta" th:text="${u.activo} ? 'Activa' : 'Inactiva'">Activa</td>

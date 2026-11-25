@@ -2,13 +2,98 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layouts/layout-interno :: layout('Buscar voluntarios | Feeling', ~{::section})}">
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: buscar-voluntarios.html
+    UBICACIÓN: src/main/resources/templates/paginas/buscar-voluntarios.html
+    MÓDULO: Buscar voluntarios (panel del estudiante)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.2.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-25
+    ESTADO: Finalizado
+    TICKET: RF-07 (búsqueda de voluntarios), con enlace a SCRUM-81 (RF-08)
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la pantalla donde el estudiante busca voluntarios por
+    materia, tipo de apoyo y programa académico. Muestra los voluntarios
+    disponibles en tarjetas con sus materias, tipos de apoyo y días, y un
+    botón para solicitarles acompañamiento. No muestra el WhatsApp del
+    voluntario, como pide RF-07.
+
+    FUNCIONALIDADES:
+    - Filtros por materia, tipo de apoyo y programa que se aplican solos al
+      cambiar una opción; el botón Buscar sirve si no hay JavaScript.
+    - Buscador con sugerencias para las listas de materias y programas.
+    - Botón Limpiar cuando hay algún filtro aplicado.
+    - Número de voluntarios encontrados.
+    - Estado sin resultados con un botón para ver todos los voluntarios.
+    - Tarjeta de cada voluntario con su inicial, nombre, programa, materias,
+      tipos de apoyo y días disponibles.
+    - Botón Solicitar acompañamiento que lleva al formulario de RF-08.
+
+    ESTRUCTURA DE LA PÁGINA:
+    - Encabezado con etiqueta, título y descripción.
+    - Alerta de error y aviso para lectores de pantalla.
+    - Formulario de filtros.
+    - Resultados: resumen, estado sin resultados o lista de tarjetas.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura y accesibilidad (ARIA).
+    - Thymeleaf: layout, condicionales, iteración, rutas y textos.
+    - CSS3: presentación y diseño adaptable.
+    - JavaScript: envío automático de los filtros y buscador con sugerencias.
+
+    DEPENDENCIAS:
+    - layouts/layout-interno: aporta el head del documento, el menú y el pie.
+      Este archivo solo entrega la sección de contenido y el título.
+    - /css/solicitudes.css y /css/voluntarios.css.
+    - /js/solicitudes.js y /js/buscador-select.js.
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - voluntarios: lista de voluntarios encontrados con sus datos.
+    - materias y tiposApoyo: opciones de los filtros (valor y etiqueta).
+    - programas: mapa de la facultad a la lista de sus programas.
+    - materiaSeleccionada, tipoSeleccionado y programaSeleccionado: filtros aplicados.
+    - mensajeError: mensaje cuando no se pudo abrir el formulario de solicitud.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /voluntarios: búsqueda con los filtros (GET).
+    - /solicitudes/nueva?voluntario={id}: formulario para solicitar apoyo (RF-08).
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-solicitudes: lo usa solicitudes.js para la entrada de tarjetas y las alertas.
+    - data-busqueda, data-autoenviar y data-resultados: envío automático de los filtros.
+    - data-buscador y data-buscador-placeholder: listas que se convierten en buscador.
+    - data-aviso: zona de avisos para lectores de pantalla.
+    - data-alerta y data-cerrar-alerta: alertas que se pueden cerrar.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación de Buscar voluntarios (RF-07).
+    - 1.1.0: buscador con sugerencias y enlace a Solicitar apoyo (SCRUM-81, RF-08).
+    - 1.2.0 (2026-11-25): documentación completa. No cambia la estructura ni los textos.
+
+    OBSERVACIONES:
+    - Las etiquetas link y script están dentro de la sección porque el layout
+      solo recibe ese fragmento.
+    - Los comentarios HTML llegan al navegador. Para que no se envíen, se pueden
+      escribir como comentarios de Thymeleaf.
+    -->
+
     <meta charset="UTF-8">
+    <!-- Título de respaldo para ver el archivo sin servidor. El título real
+         se envía al layout en el atributo th:replace de la etiqueta html. -->
     <title>Buscar voluntarios | Feeling</title>
 </head>
 <body>
 
+<!-- RF-07: búsqueda de voluntarios. El layout recibe esta sección como su contenido.
+     La clase sin-js la quita solicitudes.js cuando el JavaScript está activo. -->
 <section class="solicitudes busqueda sin-js" data-solicitudes aria-labelledby="titulo-busqueda">
 
+    <!-- Hojas de estilo y scripts de la pantalla. Los scripts usan defer para
+         ejecutarse cuando el documento ya fue analizado. -->
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/voluntarios.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
@@ -39,6 +124,7 @@
     <form class="busqueda__filtros" th:action="@{/voluntarios}" method="get"
           role="search" aria-label="Filtrar voluntarios" data-busqueda>
 
+        <!-- Filtro por materia, con buscador de sugerencias. -->
         <div class="busqueda__campo">
             <label for="filtro-materia">Materia</label>
             <select id="filtro-materia" name="materia" data-autoenviar
@@ -51,6 +137,7 @@
             </select>
         </div>
 
+        <!-- Filtro por tipo de apoyo (lista corta, sin buscador). -->
         <div class="busqueda__campo">
             <label for="filtro-tipo">Tipo de apoyo</label>
             <select id="filtro-tipo" name="tipo" data-autoenviar>
@@ -62,6 +149,7 @@
             </select>
         </div>
 
+        <!-- Filtro por programa, agrupado por facultad y con buscador de sugerencias. -->
         <div class="busqueda__campo">
             <label for="filtro-programa">Programa del voluntario</label>
             <select id="filtro-programa" name="programa" data-autoenviar
@@ -76,6 +164,7 @@
             </select>
         </div>
 
+        <!-- Buscar sirve sin JavaScript; Limpiar solo aparece si hay un filtro aplicado. -->
         <div class="busqueda__acciones">
             <button type="submit" class="boton-accion boton-accion--buscar">Buscar</button>
             <a th:if="${materiaSeleccionada != '' or tipoSeleccionado != '' or programaSeleccionado != ''}"
@@ -86,6 +175,7 @@
     <!-- Resultados -->
     <div class="busqueda__resultados" data-resultados>
 
+        <!-- Número de voluntarios encontrados (singular o plural). -->
         <p th:unless="${#lists.isEmpty(voluntarios)}" class="busqueda__resumen" role="status">
             <strong th:text="${#lists.size(voluntarios)}">0</strong>
             <span th:text="${#lists.size(voluntarios) == 1} ? 'voluntario disponible' : 'voluntarios disponibles'">voluntarios disponibles</span>
@@ -104,6 +194,7 @@
             <li th:each="v : ${voluntarios}" class="solicitudes__item">
                 <article class="tarjeta-voluntario" th:attr="aria-labelledby='voluntario-' + ${v.id}">
 
+                    <!-- Cabecera de la tarjeta: inicial, nombre y programa. -->
                     <div class="tarjeta-voluntario__cabecera">
                         <span class="tarjeta-voluntario__avatar" aria-hidden="true"
                               th:text="${#strings.toUpperCase(#strings.substring(v.nombre, 0, 1))}">V</span>
@@ -113,6 +204,7 @@
                         </div>
                     </div>
 
+                    <!-- Materias que ofrece el voluntario. -->
                     <div class="tarjeta-voluntario__grupo">
                         <h3>Materias</h3>
                         <ul class="etiquetas">
@@ -121,6 +213,7 @@
                         </ul>
                     </div>
 
+                    <!-- Tipos de apoyo que ofrece el voluntario. -->
                     <div class="tarjeta-voluntario__grupo">
                         <h3>Tipo de apoyo</h3>
                         <ul class="etiquetas">
@@ -129,6 +222,7 @@
                         </ul>
                     </div>
 
+                    <!-- Días en que tiene franjas de disponibilidad, o un aviso si no tiene. -->
                     <div class="tarjeta-voluntario__grupo">
                         <h3>Días disponibles</h3>
                         <ul class="etiquetas">
