@@ -8,22 +8,138 @@
 <body>
 
 <!--
-    RF-08: formulario "Solicitar apoyo" (SCRUM-81).
-    El estudiante elige materia, tema, tipo de apoyo, un horario libre del voluntario y la modalidad.
-    RF-09 (SCRUM-95): paso 6 opcional con los ajustes razonables; si marca "Otro" debe describirlo.
-    Basado en el mockup "Solicitar Apoyo" (SCRUM-13): tarjeta del voluntario y lista de horarios.
+    PROYECTO: Feeling
+    ARCHIVO: solicitar-apoyo.html
+    UBICACIÓN: src/main/resources/templates/paginas/solicitar-apoyo.html
+    MÓDULO: Solicitudes de acompañamiento
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.0.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-25
+    ESTADO: Finalizado
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la vista que permite a un estudiante solicitar
+    acompañamiento a un voluntario seleccionado desde la búsqueda
+    de voluntarios. En esta pantalla se muestra la información del
+    voluntario y se recopilan los datos necesarios para enviar
+    la solicitud.
+
+    OBJETIVO:
+    Facilitar el registro de una solicitud de apoyo, permitiendo
+    que el estudiante indique la materia, el tema, el tipo de apoyo,
+    el horario y la modalidad que prefiere.
+
+    REQUERIMIENTOS RELACIONADOS:
+    - RF-08 (SCRUM-81): formulario para solicitar apoyo a un voluntario.
+    - RF-09 (SCRUM-95): selección opcional de ajustes razonables
+      para adaptar el acompañamiento a las necesidades del estudiante.
+
+    FUNCIONALIDADES:
+    - Mostrar los datos del voluntario seleccionado.
+    - Consultar las materias que ofrece el voluntario.
+    - Escribir el tema específico que se desea trabajar.
+    - Seleccionar uno de los tipos de apoyo disponibles.
+    - Consultar y seleccionar horarios libres del voluntario.
+    - Elegir entre modalidad presencial o virtual por WhatsApp.
+    - Indicar ajustes razonables cuando sean necesarios.
+    - Solicitar una descripción adicional cuando se selecciona "Otro".
+    - Mostrar un resumen que se actualiza mientras se completa el formulario.
+    - Indicar el avance de los cinco pasos obligatorios.
+    - Mostrar mensajes de error y permitir cerrar las alertas.
+    - Enviar la información al servidor mediante una petición POST.
+
+    ESTRUCTURA DE LA VISTA:
+    - Encabezado: título y enlace para volver a la búsqueda de voluntarios.
+    - Información del voluntario: nombre, programa, materias y tipos de apoyo.
+    - Formulario: contiene los cinco pasos obligatorios y el paso opcional.
+    - Resumen: presenta los datos seleccionados durante el diligenciamiento.
+    - Información posterior: explica qué sucede después de enviar la solicitud.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura del formulario y organización del contenido.
+    - Thymeleaf: datos dinámicos, condiciones, recorridos y rutas.
+    - CSS3: presentación visual y adaptación de la vista.
+    - JavaScript: validaciones, contadores, progreso y actualización del resumen.
+    - Spring Boot: integración de la plantilla con el controlador de solicitudes.
+
+    DEPENDENCIAS:
+    - /css/solicitudes.css
+    - /css/solicitar-apoyo.css
+    - /js/solicitudes.js
+    - /js/solicitar-apoyo.js
+    - layouts/layout-interno
+
+    DATOS RECIBIDOS DESDE EL SERVIDOR:
+    - nombreVoluntario: nombre del voluntario seleccionado.
+    - voluntario: información del estudiante, materias y tipos de apoyo.
+    - etiquetasApoyo: nombres que se muestran para cada tipo de apoyo.
+    - materiaElegida: materia seleccionada previamente, si existe.
+    - temaEscrito: tema escrito anteriormente, si existe.
+    - largoMaximoTema: cantidad máxima de caracteres permitidos para el tema.
+    - tipoElegido: tipo de apoyo seleccionado, si existe.
+    - horariosPorDia: horarios disponibles organizados por fecha.
+    - diasDeHorarios: cantidad de días consultados para mostrar disponibilidad.
+    - horarioElegido: horario seleccionado previamente, si existe.
+    - modalidadElegida: modalidad seleccionada, si existe.
+    - tiposAjuste: opciones de ajustes razonables disponibles.
+    - ajustesElegidos: ajustes seleccionados previamente.
+    - descripcionesAjuste: descripción de cada tipo de ajuste.
+    - detalleAjusteEscrito: descripción escrita para la opción "Otro".
+    - idioma: configuración de idioma utilizada para mostrar las fechas.
+
+    RUTAS UTILIZADAS:
+    - /voluntarios: regresar a la búsqueda de voluntarios.
+    - /solicitudes/nueva: enviar la información del formulario.
+
+    OBSERVACIONES:
+    El formulario utiliza el método POST y envía los datos al servidor
+    mediante los nombres de campo definidos en sus controles.
+
+    Los datos dinámicos se muestran mediante Thymeleaf. Por esta razón,
+    las variables utilizadas en la plantilla deben coincidir con las
+    que entrega el controlador.
+
+    Los identificadores y atributos data-* también son utilizados
+    por JavaScript para reconocer los campos, mostrar errores,
+    actualizar el resumen y controlar el envío del formulario.
+
+    El paso de ajustes razonables es opcional y no hace parte
+    del cálculo de los cinco pasos obligatorios.
+-->
+
+<!--
+    CONTENIDO DE LA VISTA
+    Esta sección contiene los elementos propios de la pantalla
+    de solicitud de apoyo. El diseño y las interacciones se apoyan
+    en los archivos CSS y JavaScript relacionados con solicitudes.
 -->
 <section class="solicitudes solicitar sin-js" data-solicitudes data-solicitar aria-labelledby="titulo-solicitar">
 
+    <!--
+        RECURSOS DE LA VISTA
+        Se cargan los estilos generales de solicitudes, los estilos
+        específicos de esta pantalla y los scripts encargados
+        de sus interacciones.
+    -->
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/solicitar-apoyo.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
     <script th:src="@{/js/solicitar-apoyo.js}" defer></script>
 
-    <!-- Avisos para lectores de pantalla -->
+    <!--
+        AVISOS ACCESIBLES
+        Esta región permite comunicar mensajes que aparecen o cambian
+        durante el uso del formulario. El atributo aria-live ayuda
+        a que los lectores de pantalla anuncien esos cambios.
+    -->
     <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
 
-    <!-- Encabezado -->
+    <!--
+        ENCABEZADO DE LA PANTALLA
+        Presenta el nombre de la vista y un enlace para regresar
+        al listado de voluntarios disponibles.
+    -->
     <header class="solicitar__encabezado">
         <a th:href="@{/voluntarios}" class="solicitar__volver" data-volver aria-label="Volver a la búsqueda">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
@@ -35,18 +151,40 @@
         </div>
     </header>
 
-    <!-- Error del servidor (falta un campo o el horario ya se ocupó) -->
+    <!--
+        ALERTA DEL SERVIDOR
+        Se muestra únicamente cuando el controlador envía un mensaje
+        de error. Puede utilizarse, por ejemplo, si el horario elegido
+        dejó de estar disponible antes de guardar la solicitud.
+
+        El botón permite cerrar la alerta y data-cerrar-alerta
+        sirve como referencia para el JavaScript.
+    -->
     <div th:if="${error}" class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
         <span th:text="${error}">El horario que elegiste ya no está disponible.</span>
         <button type="button" class="solicitudes__alerta-cerrar"
                 aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
 
+    <!--
+        DISTRIBUCIÓN PRINCIPAL
+        Organiza la pantalla en dos columnas: a la izquierda se encuentra
+        la información del voluntario y el formulario; a la derecha,
+        el resumen de los datos que se van seleccionando.
+    -->
     <div class="solicitar__grid">
 
         <div class="solicitar__principal">
 
-            <!-- Voluntario elegido -->
+            <!--
+                VOLUNTARIO SELECCIONADO
+                Muestra la información del estudiante al que se enviará
+                la solicitud. Los datos se reciben desde el modelo
+                que prepara el controlador.
+
+                Las materias y los tipos de apoyo se recorren con
+                th:each para mostrar todas las opciones disponibles.
+            -->
             <article class="voluntario-elegido" aria-labelledby="nombre-voluntario">
                 <span class="voluntario-elegido__avatar" aria-hidden="true"
                       th:text="${#strings.toUpperCase(#strings.substring(nombreVoluntario, 0, 1))}">D</span>
@@ -63,11 +201,34 @@
                 </div>
             </article>
 
+            <!--
+                FORMULARIO DE SOLICITUD
+                Aquí se reúnen los datos que el estudiante debe proporcionar.
+                La información se envía al controlador mediante POST
+                a la ruta /solicitudes/nueva.
+
+                novalidate permite que las validaciones se gestionen
+                desde JavaScript y desde el servidor, en lugar de depender
+                únicamente de los mensajes predeterminados del navegador.
+            -->
             <form class="solicitar__formulario" th:action="@{/solicitudes/nueva}" method="post"
                   novalidate data-formulario-solicitud>
+
+                <!-- Se envía el identificador del voluntario seleccionado.
+                     Es un campo oculto porque el estudiante no necesita
+                     modificarlo desde esta pantalla. -->
                 <input type="hidden" name="voluntario" th:value="${voluntario.id}">
 
-                <!-- 1. Materia -->
+                <!--
+                    PASO 1. MATERIA
+                    Presenta las materias que ofrece el voluntario.
+                    El estudiante debe escoger una para indicar
+                    en cuál necesita acompañamiento.
+
+                    Cada opción se genera a partir de voluntario.materias.
+                    data-texto permite que JavaScript utilice el nombre
+                    de la materia al actualizar el resumen.
+                -->
                 <fieldset class="paso-solicitud" data-paso="materia">
                     <legend class="paso-solicitud__titulo">
                         <span class="paso-solicitud__numero" aria-hidden="true">
@@ -90,7 +251,15 @@
                     <p class="paso-solicitud__error" data-error="materia" hidden>Elige una materia.</p>
                 </fieldset>
 
-                <!-- 2. Tema -->
+                <!--
+                    PASO 2. TEMA
+                    Permite escribir el tema específico que el estudiante
+                    quiere trabajar durante el acompañamiento.
+
+                    El límite de caracteres se recibe desde el servidor
+                    mediante largoMaximoTema. El contador muestra cuánto
+                    espacio queda disponible para escribir.
+                -->
                 <div class="paso-solicitud" data-paso="tema" role="group" aria-labelledby="titulo-tema">
                     <p class="paso-solicitud__titulo" id="titulo-tema">
                         <span class="paso-solicitud__numero" aria-hidden="true">
@@ -105,13 +274,30 @@
                                placeholder="Ej.: derivadas con la regla de la cadena" autocomplete="off"
                                aria-describedby="contador-tema" data-campo-tema>
                     </label>
+
+                    <!--
+                        CONTADOR DEL TEMA
+                        Muestra la cantidad de caracteres escritos y el máximo
+                        permitido. JavaScript actualiza el valor del contador
+                        a medida que el estudiante escribe.
+                    -->
                     <p class="campo-tema__contador" id="contador-tema" data-contador-tema>
                         <span data-caracteres>0</span> / <span th:text="${largoMaximoTema}">150</span>
                     </p>
                     <p class="paso-solicitud__error" data-error="tema" hidden>Escribe el tema que quieres trabajar.</p>
                 </div>
 
-                <!-- 3. Tipo de apoyo -->
+                <!--
+                    PASO 3. TIPO DE APOYO
+                    Muestra las modalidades de apoyo que ofrece el voluntario.
+                    Las opciones se generan desde voluntario.tiposApoyo,
+                    por lo que no se presentan tipos que ese estudiante
+                    no tenga registrados.
+
+                    El valor enviado corresponde al nombre del tipo de apoyo,
+                    mientras que data-texto contiene la etiqueta que se muestra
+                    en el resumen de la solicitud.
+                -->
                 <fieldset class="paso-solicitud" data-paso="tipo">
                     <legend class="paso-solicitud__titulo">
                         <span class="paso-solicitud__numero" aria-hidden="true">
@@ -133,7 +319,16 @@
                     <p class="paso-solicitud__error" data-error="tipo" hidden>Elige un tipo de apoyo.</p>
                 </fieldset>
 
-                <!-- 4. Horario (de la disponibilidad del voluntario) -->
+                <!--
+                    PASO 4. HORARIOS DISPONIBLES
+                    Presenta los espacios de tiempo que tiene libres
+                    el voluntario. Los horarios llegan organizados por día
+                    desde el servidor y cada uno puede seleccionarse
+                    mediante una opción de tipo radio.
+
+                    Si no hay horarios disponibles, se muestra un mensaje
+                    en lugar de la lista de opciones.
+                -->
                 <fieldset class="paso-solicitud" data-paso="horario">
                     <legend class="paso-solicitud__titulo">
                         <span class="paso-solicitud__numero" aria-hidden="true">
@@ -146,10 +341,19 @@
                         </span>
                     </legend>
 
+                    <!-- Mensaje que se presenta cuando el voluntario no tiene
+                         espacios disponibles dentro del periodo consultado. -->
                     <p th:if="${#maps.isEmpty(horariosPorDia)}" class="horarios__vacio">
                         Este voluntario no tiene horarios libres en los próximos días. Prueba con otro voluntario.
                     </p>
 
+                    <!--
+                        LISTADO DE HORARIOS
+                        th:each recorre los días recibidos en horariosPorDia.
+                        Dentro de cada día se muestran sus respectivos horarios.
+                        La fecha y las horas se presentan con el formato
+                        definido mediante las expresiones de Thymeleaf.
+                    -->
                     <div class="horarios" th:unless="${#maps.isEmpty(horariosPorDia)}">
                         <div class="horarios__dia" th:each="dia : ${horariosPorDia}">
                             <p class="horarios__fecha"
@@ -169,7 +373,15 @@
                     <p class="paso-solicitud__error" data-error="horario" hidden>Elige uno de los horarios.</p>
                 </fieldset>
 
-                <!-- 5. Modalidad -->
+                <!--
+                    PASO 5. MODALIDAD
+                    Permite indicar cómo se realizará el acompañamiento.
+                    Se ofrecen dos alternativas: presencial en la universidad
+                    o virtual mediante WhatsApp.
+
+                    El valor de cada opción es el que se envía al servidor.
+                    data-texto contiene el nombre que se presenta en el resumen.
+                -->
                 <fieldset class="paso-solicitud" data-paso="modalidad">
                     <legend class="paso-solicitud__titulo">
                         <span class="paso-solicitud__numero" aria-hidden="true">
@@ -207,7 +419,19 @@
                     <p class="paso-solicitud__error" data-error="modalidad" hidden>Elige la modalidad.</p>
                 </fieldset>
 
-                <!-- 6. Ajustes razonables (RF-09, SCRUM-95). Es opcional: no cuenta en el progreso. -->
+                <!--
+                    PASO 6. AJUSTES RAZONABLES
+                    Corresponde al RF-09 (SCRUM-95) y permite que el estudiante
+                    indique si necesita alguna adaptación para realizar
+                    el acompañamiento.
+
+                    Este paso es opcional y no se incluye en el cálculo
+                    del progreso de los cinco pasos obligatorios.
+
+                    Las opciones se generan desde tiposAjuste.
+                    Si se selecciona "Otro", aparece un campo para explicar
+                    qué ajuste necesita el estudiante.
+                -->
                 <fieldset class="paso-solicitud paso-solicitud--opcional" data-paso="ajustes">
                     <legend class="paso-solicitud__titulo">
                         <span class="paso-solicitud__numero" aria-hidden="true">
@@ -232,7 +456,16 @@
                         </label>
                     </div>
 
-                    <!-- Descripción obligatoria cuando se marca "Otro" -->
+                    <!--
+                        DESCRIPCIÓN DE LA OPCIÓN "OTRO"
+                        Este campo se muestra cuando el estudiante selecciona
+                        el ajuste identificado como OTRO. Permite explicar
+                        una necesidad que no aparece entre las opciones
+                        disponibles.
+
+                        El texto tiene un máximo de 255 caracteres y cuenta
+                        con un contador que se actualiza desde JavaScript.
+                    -->
                     <div class="campo-ajuste" data-campo-otro th:hidden="${!ajustesElegidos.contains('OTRO')}">
                         <label class="campo-ajuste__etiqueta" for="detalle-ajuste">Describe el ajuste que necesitas</label>
                         <textarea id="detalle-ajuste" name="detalleAjuste" rows="3" maxlength="255"
@@ -246,6 +479,15 @@
                     <p class="paso-solicitud__error" data-error="ajustes" hidden>Describe el ajuste razonable que necesitas.</p>
                 </fieldset>
 
+                <!--
+                    ENVÍO DE LA SOLICITUD
+                    El botón permite enviar la información después de completar
+                    el formulario. Se deshabilita desde Thymeleaf cuando
+                    el voluntario no tiene horarios disponibles.
+
+                    data-enviar y data-enviar-texto permiten que JavaScript
+                    identifique el botón y actualice el texto durante el envío.
+                -->
                 <div class="solicitar__envio">
                     <button type="submit" class="boton-accion boton-accion--enviar"
                             th:disabled="${#maps.isEmpty(horariosPorDia)}" data-enviar>
@@ -256,7 +498,13 @@
             </form>
         </div>
 
-        <!-- Columna lateral: resumen que se llena mientras se elige -->
+        <!--
+            RESUMEN LATERAL
+            Presenta los datos de la solicitud mientras el estudiante
+            completa el formulario. Los elementos data-resumen son
+            referencias utilizadas por JavaScript para actualizar
+            cada valor sin tener que recargar la página.
+        -->
         <aside class="solicitar__lateral" aria-label="Resumen de tu solicitud">
             <div class="resumen-solicitud">
                 <h2>Resumen de tu solicitud</h2>
@@ -269,12 +517,27 @@
                     <div><dt>Modalidad</dt><dd data-resumen="modalidad">Sin elegir</dd></div>
                     <div><dt>Ajustes</dt><dd data-resumen="ajustes">Ninguno</dd></div>
                 </dl>
+
+                <!--
+                    INDICADOR DE PROGRESO
+                    Representa visualmente cuánto ha avanzado el estudiante
+                    en los cinco pasos obligatorios. La actualización
+                    del indicador y del número de pasos completados
+                    se realiza desde solicitar-apoyo.js.
+                -->
                 <div class="resumen-solicitud__progreso" aria-hidden="true">
                     <span data-progreso></span>
                 </div>
                 <p class="resumen-solicitud__pasos"><span data-pasos-listos>0</span> de 5 pasos listos</p>
             </div>
 
+            <!--
+                INFORMACIÓN DESPUÉS DEL ENVÍO
+                Explica de manera breve qué ocurre una vez que se envía
+                la solicitud: queda pendiente, el voluntario responde
+                y el estudiante puede consultar el resultado en
+                la sección Mis acompañamientos.
+            -->
             <div class="despues-solicitud">
                 <h2>¿Qué pasa después?</h2>
                 <ol>

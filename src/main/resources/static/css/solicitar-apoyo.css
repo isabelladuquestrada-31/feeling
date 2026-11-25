@@ -1,12 +1,174 @@
-/* ==========================================================
-   Solicitar apoyo (RF-08, SCRUM-81) - Panel del estudiante
+
+/*
+   PROYECTO: Feeling
+   ARCHIVO: solicitar-apoyo.css
+   UBICACIÓN: src/main/resources/static/css/solicitar-apoyo.css
+   MÓDULO: Solicitar apoyo (panel del estudiante)
+
+   AUTOR: Yulipaola Domínguez
+   VERSIÓN: 1.1.0
+   FECHA DE DOCUMENTACIÓN: 2026-11-25
+   ESTADO: Finalizado
+   TICKET: SCRUM-81 (RF-08)
+   REQUISITO RELACIONADO: SCRUM-95 (RF-09)
+
+   DESCRIPCIÓN:
+   Define los estilos de la pantalla en la que un estudiante puede
+   solicitar el acompañamiento de un voluntario.
+
+   La distribución principal tiene el formulario en la parte izquierda
+   y un resumen de la solicitud en la parte derecha. También incluye
+   los estilos de las tarjetas, opciones, horarios, campos de texto,
+   mensajes de error, botones y elementos de progreso.
+
+   - Organiza el formulario y el resumen en dos columnas.
+   - Presenta la información del voluntario seleccionado.
+   - Diferencia visualmente los pasos obligatorios y los opcionales.
+   - Resalta las opciones seleccionadas y los pasos completados.
+   - Muestra los errores de validación en los pasos correspondientes.
+   - Da formato a los contadores de caracteres del tema y de los
+     ajustes razonables.
+   - Permite distinguir los horarios seleccionados.
+   - Presenta el resumen y la barra de progreso de la solicitud.
+   - Adapta la distribución para tabletas y celulares.
+   - Incluye animaciones propias y respeta la preferencia del usuario
+     de reducir el movimiento.
+
+   ESTRUCTURA DE ESTILOS:
+   1. Distribución general del formulario y el resumen.
+   2. Encabezado y botón para regresar.
+   3. Tarjeta con la información del voluntario.
+   4. Tarjetas y títulos de los pasos del formulario.
+   5. Opciones de materia, tipo de apoyo y modalidad.
+   6. Campo para escribir el tema.
+   7. Ajustes razonables y campo para describir "Otro".
+   8. Opciones de horarios disponibles.
+   9. Botón para enviar la solicitud.
+   10. Resumen y explicación de los pasos siguientes.
+   11. Animaciones propias de esta pantalla.
+   12. Adaptación para tabletas.
+   13. Adaptación para celulares.
+   14. Ajustes para pantallas táctiles y reducción de movimiento.
+
+   CLASES PRINCIPALES:
+   - solicitar__grid: organiza el contenido principal y la columna lateral.
+   - solicitar__principal: contiene el encabezado, la información del
+     voluntario y el formulario.
+   - solicitar__encabezado: organiza el título y el botón para volver.
+   - solicitar__volver: da estilo al botón de regreso.
+   - voluntario-elegido: presenta la información del voluntario elegido.
+   - solicitar__formulario: organiza los pasos del formulario.
+   - paso-solicitud: representa cada tarjeta o paso de la solicitud.
+   - paso-solicitud.completo: muestra que un paso ya tiene su información.
+   - paso-solicitud.con-error: resalta un paso que necesita corrección.
+   - opcion-solicitud: representa una opción seleccionable.
+   - opcion-solicitud.elegida: resalta una opción seleccionada.
+   - campo-tema: contiene el campo para escribir el tema.
+   - campo-ajuste: contiene la descripción del ajuste razonable "Otro".
+   - horarios: organiza los horarios disponibles.
+   - horario: representa cada horario que puede seleccionarse.
+   - solicitar__envio: contiene el botón para enviar.
+   - solicitar__lateral: organiza el resumen y la información adicional.
+   - resumen-solicitud: muestra los datos seleccionados.
+   - despues-solicitud: explica qué ocurre después de enviar la solicitud.
+
+   CLASES QUE SE RELACIONAN CON JAVASCRIPT:
+   - completo: cambia la apariencia de un paso cuando está listo.
+   - con-error: resalta los pasos que tienen información faltante.
+   - elegida: identifica visualmente las opciones seleccionadas.
+   - pop: aplica una animación al seleccionar una opción.
+   - cerca: cambia el color del contador cuando se acerca al límite.
+   - abriendo: anima la aparición del campo de descripción de "Otro".
+   - pendiente: diferencia los datos que todavía no se han completado.
+   - actualizado: resalta temporalmente los cambios en el resumen.
+   - boton-accion__cargando: representa el indicador de carga del botón.
+
+   VARIABLES CSS UTILIZADAS:
+   - --text-title, --text-small: tamaños de texto definidos globalmente.
+   - --color-primary, --color-primary-dark y --color-primary-light:
+     colores principales de la interfaz.
+   - --color-soft y --color-surface: fondos suaves para tarjetas y opciones.
+   - --color-border: color de los bordes.
+   - --color-navy: color utilizado en títulos y textos destacados.
+   - --color-text y --color-text-secondary: colores para textos generales
+     y secundarios.
+   - --color-text-light: color claro utilizado en fondos y elementos.
+   - --color-success: color para indicar que un paso está completo.
+   - --color-danger: color para errores de validación.
+   - --radius-medium y --radius-large: redondeo de los elementos.
+   - --shadow-soft: sombra suave de tarjetas y botones.
+
+   ANIMACIONES:
+   - solicitudes-aparecer: animación compartida para mostrar elementos.
+   - solicitar-pop: pequeño efecto al seleccionar una opción.
+   - solicitar-sacudir: movimiento que resalta un paso con error.
+   - solicitar-resaltar: destaca temporalmente un dato actualizado
+     en el resumen.
+
+   DISEÑO RESPONSIVE:
+   - Hasta 1100 px: el resumen deja de estar al lado del formulario
+     y pasa a una distribución de dos columnas debajo del contenido.
+   - Hasta 600 px: las tarjetas se ajustan a una sola columna, los
+     horarios ocupan el ancho disponible y el botón de envío queda
+     fijo en la parte inferior mientras se desplaza la pantalla.
+   - En dispositivos sin hover: se evitan algunos cambios visuales
+     que normalmente se activarían al pasar el cursor.
+   - Con prefers-reduced-motion: se desactivan las animaciones y
+     transiciones de los elementos de esta pantalla.
+
+   DEPENDENCIAS:
+   - global.css: proporciona las variables generales de colores,
+     tamaños de texto, bordes redondeados y sombras.
+   - solicitudes.css: comparte estilos de alertas, botones y animaciones.
+   - solicitar-apoyo.html: contiene la estructura y las clases utilizadas.
+   - solicitar-apoyo.js: agrega o quita clases según las selecciones,
+     los errores y el avance del formulario.
+   - solicitudes.js: maneja comportamientos compartidos de las solicitudes.
+
+   HISTORIAL DE VERSIONES:
+   - 1.0.0: implementación inicial de los estilos de la pantalla
+     Solicitar apoyo (SCRUM-81, RF-08).
+   - 1.1.0 (2026-11-25): documentación de las secciones, clases,
+     variables, animaciones y adaptación responsive. No se modifican
+     los estilos originales.
+
+   OBSERVACIONES:
+   - Los nombres de las clases deben coincidir con los que utiliza
+     solicitar-apoyo.html. Si se cambia una clase en el HTML, se debe
+     revisar también este archivo.
+   - Las clases completo, con-error, elegida, pop, cerca, abriendo,
+     pendiente y actualizado se relacionan con el comportamiento
+     dinámico de solicitar-apoyo.js.
+   - Los colores, tamaños, bordes y sombras se apoyan en las variables
+     de global.css. Así se mantiene una apariencia coherente con
+     el resto de Feeling.
+   - Las animaciones solicitudes-aparecer y las clases de los botones
+     se comparten con solicitudes.css.
+   - El selector :has() permite aplicar estilos según el estado de
+     los campos seleccionables. Las clases elegida también permiten
+     representar la selección desde JavaScript.
+   - El campo de ajustes razonables tiene una regla para que siga
+     visible cuando JavaScript no está disponible y el formulario
+     utiliza la clase solicitar sin-js.
+   - La distribución cambia según el ancho de pantalla para que el
+     formulario siga siendo cómodo de utilizar en computadores,
+     tabletas y celulares.
+   - La regla prefers-reduced-motion evita las animaciones y
+     transiciones cuando el usuario ha indicado que prefiere reducir
+     el movimiento.
+*/
+
+/* Solicitar apoyo (RF-08, SCRUM-81) - Panel del estudiante
    Se apoya en solicitudes.css (alertas, botones, animaciones)
    y en las variables de global.css.
    Basado en el mockup "Solicitar Apoyo".
-   ========================================================== */
+   */
 
 /* 1. Distribución: formulario a la izquierda y resumen a la derecha */
 
+/* Organiza el contenido principal en dos columnas:
+   el formulario ocupa el espacio disponible y el resumen tiene
+   un ancho definido de 300 px. */
 .solicitar__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
@@ -14,6 +176,8 @@
     align-items: start;
 }
 
+/* Agrupa el encabezado, la tarjeta del voluntario y los pasos.
+   min-width: 0 evita que el contenido interno desborde la columna. */
 .solicitar__principal {
     display: flex;
     min-width: 0;
@@ -23,6 +187,7 @@
 
 /* 2. Encabezado con botón para volver */
 
+/* Coloca el botón de regreso junto al título y la descripción. */
 .solicitar__encabezado {
     display: flex;
     align-items: flex-start;
@@ -31,16 +196,19 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Ajusta el tamaño del título principal de la pantalla. */
 .solicitar__encabezado h1 {
     margin-bottom: 8px;
     font-size: var(--text-title);
 }
 
+/* Limita el ancho de la descripción para facilitar su lectura. */
 .solicitar__encabezado p {
     max-width: 620px;
     color: var(--color-text-secondary);
 }
 
+/* Botón circular para regresar a la pantalla anterior. */
 .solicitar__volver {
     display: inline-flex;
     flex-shrink: 0;
@@ -56,16 +224,21 @@
     transition: transform 0.2s ease, background-color 0.25s ease;
 }
 
+/* Cambia el fondo y desplaza un poco el botón cuando se pasa el cursor. */
 .solicitar__volver:hover {
     background-color: var(--color-surface);
     transform: translateX(-3px);
 }
 
+/* Da una pequeña respuesta visual al presionar el botón. */
 .solicitar__volver:active {
     transform: scale(0.92);
 }
 
 /* Íconos de línea de la página */
+
+/* Mantiene el mismo estilo de trazo para los íconos utilizados
+   en el botón de regreso, los pasos, las opciones y los horarios. */
 .solicitar__volver svg,
 .paso-solicitud__numero svg,
 .opcion-solicitud__icono svg,
@@ -78,6 +251,7 @@
     stroke-linejoin: round;
 }
 
+/* Define el tamaño del ícono del botón para volver. */
 .solicitar__volver svg {
     width: 22px;
     height: 22px;
@@ -85,6 +259,8 @@
 
 /* 3. Tarjeta del voluntario elegido */
 
+/* Presenta la información del voluntario antes de comenzar
+   a completar los datos de la solicitud. */
 .voluntario-elegido {
     display: flex;
     align-items: center;
@@ -97,6 +273,7 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Círculo donde se muestra el avatar o las iniciales del voluntario. */
 .voluntario-elegido__avatar {
     display: inline-flex;
     flex-shrink: 0;
@@ -112,10 +289,12 @@
     box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.9), var(--shadow-soft);
 }
 
+/* Permite que la información del voluntario ocupe el espacio restante. */
 .voluntario-elegido__info {
     min-width: 0;
 }
 
+/* Texto pequeño que identifica el rol del usuario mostrado. */
 .voluntario-elegido__rol {
     color: var(--color-primary);
     font-size: 0.8rem;
@@ -124,16 +303,19 @@
     letter-spacing: 0.04em;
 }
 
+/* Nombre del voluntario seleccionado. */
 .voluntario-elegido h2 {
     font-size: 1.5rem;
 }
 
+/* Programa académico del voluntario. */
 .voluntario-elegido__programa {
     margin-bottom: 10px;
     color: var(--color-text-secondary);
     font-size: var(--text-small);
 }
 
+/* Organiza las materias y los tipos de apoyo en pequeñas etiquetas. */
 .voluntario-elegido__chips {
     display: flex;
     flex-wrap: wrap;
@@ -141,6 +323,7 @@
     list-style: none;
 }
 
+/* Estilo general de cada etiqueta de información. */
 .voluntario-elegido__chips li {
     padding: 4px 10px;
     border-radius: 50px;
@@ -150,6 +333,7 @@
     font-weight: 700;
 }
 
+/* Diferencia las etiquetas que corresponden a tipos de apoyo. */
 .voluntario-elegido__chips .chip-apoyo {
     background-color: #EEF2FA;
     color: var(--color-navy);
@@ -157,12 +341,15 @@
 
 /* 4. Pasos del formulario */
 
+/* Coloca las tarjetas de los pasos una debajo de otra. */
 .solicitar__formulario {
     display: flex;
     flex-direction: column;
     gap: 18px;
 }
 
+/* Cada paso tiene su propia tarjeta para separar las preguntas
+   y mantener un orden visual durante el diligenciamiento. */
 .paso-solicitud {
     min-width: 0;
     margin: 0;
@@ -175,6 +362,7 @@
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Resalta la tarjeta cuando JavaScript detecta un error en ese paso. */
 .paso-solicitud.con-error {
     border-color: var(--color-danger);
     box-shadow: 0 0 0 3px rgba(201, 67, 67, 0.12);
@@ -192,22 +380,26 @@
     padding: 0;
 }
 
+/* Evita que el contenido siguiente quede al lado del título flotante. */
 .paso-solicitud__titulo + * {
     clear: both;
 }
 
+/* Texto principal del título de cada paso. */
 .paso-solicitud__titulo strong {
     display: block;
     color: var(--color-navy);
     font-size: 1.05rem;
 }
 
+/* Texto secundario que explica qué debe hacer el estudiante. */
 .paso-solicitud__titulo small {
     display: block;
     color: var(--color-text);
     font-size: var(--text-small);
 }
 
+/* Círculo numerado que identifica el orden de cada paso. */
 .paso-solicitud__numero {
     position: relative;
     display: inline-flex;
@@ -223,6 +415,7 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+/* Ícono que se muestra cuando el paso está completo. */
 .paso-solicitud__numero svg {
     position: absolute;
     width: 20px;
@@ -232,20 +425,24 @@
     transition: opacity 0.25s ease, transform 0.3s ease;
 }
 
+/* Cuando el paso está completo, el círculo cambia al color de éxito. */
 .paso-solicitud.completo .paso-solicitud__numero {
     background-color: var(--color-success);
     transform: scale(1.05);
 }
 
+/* Oculta el número para dejar espacio al ícono de confirmación. */
 .paso-solicitud.completo .paso-solicitud__numero-texto {
     opacity: 0;
 }
 
+/* Muestra el ícono de confirmación cuando el paso está completo. */
 .paso-solicitud.completo .paso-solicitud__numero svg {
     opacity: 1;
     transform: scale(1);
 }
 
+/* Mensaje que aparece debajo de un paso cuando hay un error. */
 .paso-solicitud__error {
     margin-top: 10px;
     color: var(--color-danger);
@@ -255,16 +452,20 @@
 
 /* 5. Opciones (materia, tipo de apoyo, modalidad) */
 
+/* Organiza las opciones en columnas que se ajustan al espacio disponible. */
 .opciones-solicitud {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
     gap: 10px;
 }
 
+/* La modalidad utiliza tarjetas un poco más anchas para mostrar
+   cómodamente su contenido. */
 .opciones-solicitud--modalidad {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
 }
 
+/* Tarjeta individual de una opción seleccionable. */
 .opcion-solicitud {
     position: relative;
     display: flex;
@@ -280,14 +481,18 @@
     transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
 }
 
+/* Cambia el borde al pasar el cursor sobre una opción. */
 .opcion-solicitud:hover {
     border-color: rgba(8, 126, 150, 0.5);
 }
 
+/* Reduce ligeramente la tarjeta mientras se presiona. */
 .opcion-solicitud:active {
     transform: scale(0.98);
 }
 
+/* Oculta visualmente los controles originales para utilizar
+   los indicadores personalizados que aparecen en las tarjetas. */
 .opcion-solicitud input,
 .horario input {
     position: absolute;
@@ -295,6 +500,7 @@
     pointer-events: none;
 }
 
+/* Círculo que representa visualmente una opción de tipo radio. */
 .opcion-solicitud__marca {
     position: relative;
     flex-shrink: 0;
@@ -306,6 +512,7 @@
     transition: border-color 0.2s ease;
 }
 
+/* Punto interior que aparece cuando la opción está seleccionada. */
 .opcion-solicitud__marca::after {
     content: "";
     position: absolute;
@@ -316,39 +523,48 @@
     transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.6, 1);
 }
 
+/* Cambia el borde y el fondo cuando la opción está seleccionada.
+   :has() detecta el estado del input y .elegida permite aplicar
+   el mismo estilo mediante la clase que agrega JavaScript. */
 .opcion-solicitud:has(input:checked),
 .opcion-solicitud.elegida {
     border-color: var(--color-primary);
     background-color: #F2FBFC;
 }
 
+/* Cambia el borde del indicador circular de la opción seleccionada. */
 .opcion-solicitud:has(input:checked) .opcion-solicitud__marca,
 .opcion-solicitud.elegida .opcion-solicitud__marca {
     border-color: var(--color-primary);
 }
 
+/* Muestra el punto interior cuando la opción está seleccionada. */
 .opcion-solicitud:has(input:checked) .opcion-solicitud__marca::after,
 .opcion-solicitud.elegida .opcion-solicitud__marca::after {
     transform: scale(1);
 }
 
+/* Muestra un contorno cuando el usuario llega a la opción con el teclado. */
 .opcion-solicitud:has(input:focus-visible),
 .horario:has(input:focus-visible) {
     outline: 3px solid var(--color-primary-light);
     outline-offset: 2px;
 }
 
+/* Texto principal de cada opción. */
 .opcion-solicitud__texto strong {
     display: block;
     color: var(--color-navy);
     font-size: 0.95rem;
 }
 
+/* Descripción secundaria de la opción, cuando existe. */
 .opcion-solicitud__texto small {
     color: var(--color-text);
     font-size: 0.8rem;
 }
 
+/* Círculo que contiene el ícono de cada opción. */
 .opcion-solicitud__icono {
     display: inline-flex;
     flex-shrink: 0;
@@ -361,17 +577,20 @@
     color: var(--color-primary);
 }
 
+/* Tamaño de los íconos dentro de las opciones. */
 .opcion-solicitud__icono svg {
     width: 20px;
     height: 20px;
 }
 
+/* Animación que se activa cuando JavaScript agrega la clase pop. */
 .opcion-solicitud.pop {
     animation: solicitar-pop 0.35s ease;
 }
 
 /* 6. Tema */
 
+/* Campo donde el estudiante escribe el tema sobre el que necesita apoyo. */
 .campo-tema input {
     width: 100%;
     min-height: 50px;
@@ -382,12 +601,14 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Resalta el campo cuando está seleccionado para escribir. */
 .campo-tema input:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
     outline: none;
 }
 
+/* Ubica el contador de caracteres debajo del campo y alineado a la derecha. */
 .campo-tema__contador {
     margin-top: 6px;
     color: var(--color-text);
@@ -395,6 +616,7 @@
     text-align: right;
 }
 
+/* Cambia el color del contador cuando se acerca al máximo permitido. */
 .campo-tema__contador.cerca {
     color: #8A5A00;
     font-weight: 700;
@@ -402,6 +624,7 @@
 
 /* 6b. Ajustes razonables (RF-09, SCRUM-95) */
 
+/* Etiqueta que indica que este paso no es obligatorio. */
 .paso-solicitud__opcional {
     display: inline-block;
     margin-left: 6px;
@@ -421,12 +644,15 @@
     color: var(--color-primary);
 }
 
+/* Cuando el paso opcional está completo, utiliza el color de éxito. */
 .paso-solicitud--opcional.completo .paso-solicitud__numero {
     border-color: var(--color-success);
     background-color: var(--color-success);
     color: var(--color-text-light);
 }
 
+/* Alinea las opciones con casillas desde la parte superior,
+   ya que pueden tener textos de varias líneas. */
 .opcion-solicitud--casilla {
     align-items: flex-start;
 }
@@ -438,6 +664,7 @@
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
+/* Dibuja el chulo dentro de la casilla cuando se selecciona. */
 .opcion-solicitud--casilla .opcion-solicitud__marca::after {
     inset: auto;
     top: 2px;
@@ -451,20 +678,24 @@
     transform: rotate(45deg) scale(0);
 }
 
+/* Cambia el fondo de la casilla cuando está marcada. */
 .opcion-solicitud--casilla:has(input:checked) .opcion-solicitud__marca,
 .opcion-solicitud--casilla.elegida .opcion-solicitud__marca {
     background-color: var(--color-primary);
 }
 
+/* Hace visible el chulo de la casilla seleccionada. */
 .opcion-solicitud--casilla:has(input:checked) .opcion-solicitud__marca::after,
 .opcion-solicitud--casilla.elegida .opcion-solicitud__marca::after {
     transform: rotate(45deg) scale(1);
 }
 
+/* Separa el campo de descripción de las opciones de ajustes razonables. */
 .campo-ajuste {
     margin-top: 14px;
 }
 
+/* Anima la aparición del campo cuando se selecciona la opción "Otro". */
 .campo-ajuste.abriendo {
     animation: solicitudes-aparecer 0.35s ease both;
 }
@@ -474,6 +705,7 @@
     display: block;
 }
 
+/* Texto que identifica el campo para escribir la descripción del ajuste. */
 .campo-ajuste__etiqueta {
     display: block;
     margin-bottom: 6px;
@@ -482,6 +714,7 @@
     font-weight: 700;
 }
 
+/* Área de texto para explicar el ajuste razonable seleccionado. */
 .campo-ajuste textarea {
     width: 100%;
     min-height: 90px;
@@ -494,24 +727,28 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Resalta el área de texto mientras el estudiante escribe. */
 .campo-ajuste textarea:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
     outline: none;
 }
 
+/* También marca el campo de descripción cuando el paso tiene un error. */
 .paso-solicitud.con-error .campo-ajuste textarea {
     border-color: var(--color-danger);
 }
 
 /* 7. Horarios disponibles */
 
+/* Organiza los grupos de horarios en una columna. */
 .horarios {
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
+/* Título que identifica el día al que pertenecen los horarios. */
 .horarios__fecha {
     margin-bottom: 8px;
     color: var(--color-navy);
@@ -519,12 +756,14 @@
     font-weight: 800;
 }
 
+/* Distribuye las opciones de horario y permite que pasen a otra línea. */
 .horarios__opciones {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
+/* Cada horario se presenta como una etiqueta redondeada seleccionable. */
 .horario {
     position: relative;
     display: inline-flex;
@@ -544,20 +783,25 @@
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
+/* Define el tamaño de los íconos que acompañan los horarios. */
 .horario svg {
     width: 18px;
     height: 18px;
 }
 
+/* Cambia el aspecto del horario cuando se pasa el cursor. */
 .horario:hover {
     border-color: var(--color-primary);
     background-color: var(--color-soft);
 }
 
+/* Reduce un poco el tamaño del horario mientras se presiona. */
 .horario:active {
     transform: scale(0.96);
 }
 
+/* Cuando se selecciona un horario, cambia el fondo y el texto
+   para que sea fácil reconocerlo. */
 .horario:has(input:checked),
 .horario.elegida {
     border-color: var(--color-primary);
@@ -567,10 +811,12 @@
     box-shadow: var(--shadow-soft);
 }
 
+/* Aplica la animación de selección al horario. */
 .horario.pop {
     animation: solicitar-pop 0.35s ease;
 }
 
+/* Mensaje que se muestra cuando no hay horarios disponibles. */
 .horarios__vacio {
     padding: 14px 16px;
     border: 1px dashed var(--color-border);
@@ -580,11 +826,14 @@
 
 /* 8. Botón de enviar */
 
+/* Alinea el botón de envío hacia el lado derecho del formulario. */
 .solicitar__envio {
     display: flex;
     justify-content: flex-end;
 }
 
+/* Ajusta el botón compartido para utilizarlo como botón de envío
+   de esta pantalla. */
 .boton-accion--enviar {
     display: inline-flex;
     width: auto;
@@ -597,26 +846,32 @@
     box-shadow: var(--shadow-soft);
 }
 
+/* Oscurece el fondo cuando se pasa el cursor por el botón. */
 .boton-accion--enviar:hover {
     background-color: var(--color-primary-dark);
 }
 
+/* Define el tamaño y el movimiento de la flecha del botón. */
 .boton-accion--enviar .boton-accion__flecha {
     width: 20px;
     height: 20px;
     transition: transform 0.2s ease;
 }
 
+/* Desplaza la flecha ligeramente cuando se pasa el cursor. */
 .boton-accion--enviar:hover .boton-accion__flecha {
     transform: translateX(4px);
 }
 
+/* Indica visualmente que el botón no está disponible para presionarse. */
 .boton-accion--enviar:disabled {
     cursor: not-allowed;
 }
 
 /* 9. Columna lateral: resumen y siguientes pasos */
 
+/* Mantiene el resumen visible mientras se desplaza el formulario
+   en pantallas donde todavía hay espacio para las dos columnas. */
 .solicitar__lateral {
     position: sticky;
     top: 20px;
@@ -625,6 +880,8 @@
     gap: 16px;
 }
 
+/* Estilos compartidos por la tarjeta del resumen y la tarjeta
+   que explica qué ocurre después de enviar la solicitud. */
 .resumen-solicitud,
 .despues-solicitud {
     padding: 20px;
@@ -635,28 +892,33 @@
     animation: solicitudes-aparecer 0.6s ease 0.1s both;
 }
 
+/* El resumen utiliza un fondo suave para diferenciarlo del resto. */
 .resumen-solicitud {
     background: linear-gradient(160deg, #FFFFFF 0%, var(--color-soft) 100%);
 }
 
+/* Títulos de las dos tarjetas laterales. */
 .resumen-solicitud h2,
 .despues-solicitud h2 {
     margin-bottom: 12px;
     font-size: 1rem;
 }
 
+/* Organiza los datos del resumen en una columna. */
 .resumen-solicitud dl {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+/* Etiquetas que identifican cada dato del resumen. */
 .resumen-solicitud dt {
     color: var(--color-text);
     font-size: 0.75rem;
     font-weight: 700;
 }
 
+/* Valores correspondientes a cada dato del resumen. */
 .resumen-solicitud dd {
     color: var(--color-navy);
     font-size: var(--text-small);
@@ -664,16 +926,19 @@
     overflow-wrap: anywhere;
 }
 
+/* Diferencia los datos que todavía no han sido seleccionados o escritos. */
 .resumen-solicitud dd.pendiente {
     color: var(--color-text);
     font-weight: 600;
     font-style: italic;
 }
 
+/* Resalta brevemente un dato cuando JavaScript actualiza el resumen. */
 .resumen-solicitud dd.actualizado {
     animation: solicitar-resaltar 0.6s ease;
 }
 
+/* Fondo de la barra que representa el avance de la solicitud. */
 .resumen-solicitud__progreso {
     overflow: hidden;
     height: 8px;
@@ -682,6 +947,8 @@
     background-color: var(--color-border);
 }
 
+/* Parte de la barra que crece según los pasos completados.
+   JavaScript modifica su ancho durante el diligenciamiento. */
 .resumen-solicitud__progreso span {
     display: block;
     width: 0;
@@ -691,16 +958,20 @@
     transition: width 0.4s ease;
 }
 
+/* Texto que muestra cuántos pasos se han completado. */
 .resumen-solicitud__pasos {
     margin-top: 6px;
     color: var(--color-text);
     font-size: 0.8rem;
 }
 
+/* Retrasa un poco la aparición de la tarjeta de información adicional. */
 .despues-solicitud {
     animation-delay: 0.2s;
 }
 
+/* Organiza la lista de pasos que explican qué ocurre después
+   de enviar la solicitud. */
 .despues-solicitud ol {
     display: flex;
     flex-direction: column;
@@ -712,18 +983,21 @@
 
 /* 10. Animaciones propias */
 
+/* Efecto corto para las opciones que se seleccionan. */
 @keyframes solicitar-pop {
     0% { transform: scale(1); }
     40% { transform: scale(1.04); }
     100% { transform: scale(1); }
 }
 
+/* Movimiento lateral para llamar la atención sobre un paso con error. */
 @keyframes solicitar-sacudir {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-6px); }
     75% { transform: translateX(6px); }
 }
 
+/* Resaltado temporal para los datos que cambian en el resumen. */
 @keyframes solicitar-resaltar {
     0% { background-color: rgba(8, 126, 150, 0.18); }
     100% { background-color: transparent; }
@@ -731,6 +1005,9 @@
 
 /* 11. Tabletas: el resumen pasa arriba del botón, en dos columnas */
 
+/* Cuando el ancho de pantalla ya no permite mantener cómodamente
+   las dos columnas, el resumen pasa debajo del formulario.
+   Sus dos tarjetas se organizan una al lado de la otra. */
 @media (max-width: 1100px) {
     .solicitar__grid {
         grid-template-columns: minmax(0, 1fr);
@@ -745,6 +1022,8 @@
 
 /* 12. Celulares */
 
+/* Ajustes para pantallas pequeñas: la información del voluntario
+   se centra y los elementos se distribuyen en una sola columna. */
 @media (max-width: 600px) {
     .voluntario-elegido {
         flex-direction: column;
@@ -776,6 +1055,7 @@
         z-index: 3;
     }
 
+    /* El botón ocupa todo el ancho disponible en el celular. */
     .boton-accion--enviar {
         width: 100%;
         min-height: 52px;
@@ -784,6 +1064,8 @@
 
 /* 13. Pantallas táctiles y menos movimiento */
 
+/* En dispositivos que no utilizan cursor, evita algunos efectos hover
+   que no son necesarios al interactuar directamente con la pantalla. */
 @media (hover: none) {
     .opcion-solicitud:hover {
         border-color: var(--color-border);
@@ -795,6 +1077,8 @@
     }
 }
 
+/* Si el usuario tiene activada la opción de reducir movimiento,
+   se desactivan las animaciones y transiciones de esta pantalla. */
 @media (prefers-reduced-motion: reduce) {
     .solicitar *,
     .solicitar *::before,
