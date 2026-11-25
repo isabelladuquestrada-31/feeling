@@ -1,10 +1,49 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layouts/layout-interno :: layout('Administración | Feeling', ~{::section})}">
+
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: admin.html
+    UBICACIÓN: src/main/resources/templates/paginas/admin.html
+    MÓDULO: Inicio del administrador (pantallas de inicio por rol)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.1.0
+    FECHA DE ÚLTIMA MODIFICACIÓN: 2026-11-25
+    ESTADO: Finalizado
+    TICKET: SCRUM-53 (RF-02)
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la pantalla de inicio del administrador. Muestra
+    el saludo con su nombre, el resumen de usuarios (estudiantes,
+    voluntarios activos y suspendidos) y el acceso a la gestión de
+    usuarios. Sigue el estilo del mockup Gestión de usuarios (SCRUM-13).
+
+    DEPENDENCIAS:
+    - layouts/layout-interno: aporta el head, el menú y el pie.
+    - /css/solicitudes.css y /css/inicio-panel.css.
+    - /js/solicitudes.js y /js/inicio-panel.js (conteo de cifras).
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - nombre: nombre del administrador para el saludo.
+    - resumen: estudiantes, voluntariosActivos y voluntariosSuspendidos.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /admin/usuarios: gestión de usuarios (RF-17, SCRUM-103).
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0 (2026-11-16): implementación inicial (SCRUM-53, RF-02).
+    - 1.1.0 (2026-11-25): se quitó el emoji del saludo. No cambiaron
+      textos ni funcionalidades.
+    -->
+
     <meta charset="UTF-8">
     <title>Administración | Feeling</title>
 </head>
+
 <body>
 
 <!--
@@ -32,7 +71,6 @@
                     <span class="solicitudes__etiqueta">Panel del administrador</span>
                     <h1 id="titulo-panel">
                         ¡Hola, <span th:text="${nombre}">Admin</span>!
-                        <span class="panel-hero__mano" aria-hidden="true">👋</span>
                     </h1>
                     <p>
                         Desde aquí administras los usuarios de Feeling: puedes ver cuántos estudiantes
