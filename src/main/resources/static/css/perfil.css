@@ -1,11 +1,46 @@
-/* ==========================================================
-   Mi perfil (RF-03) - Panel del estudiante
-   Se apoya en solicitudes.css (etiqueta, alertas, botones,
-   animaciones) y en las variables de global.css.
-   Basado en el mockup "Perfil y accesibilidad".
-   ========================================================== */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: perfil.css
+ * UBICACIÓN: src/main/resources/static/css/perfil.css
+ * MÓDULO: Mi perfil (gestión del perfil y accesibilidad)
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.2.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: SCRUM-91 (RF-03), con ampliación de SCRUM-93 (RF-04)
+ *
+ * DESCRIPCIÓN:
+ * Hoja de estilos de la pantalla perfil.html. Organiza el formulario para
+ * editar el nombre preferido, los pronombres y el WhatsApp, y la columna
+ * lateral con las preferencias de accesibilidad (letra grande y alto
+ * contraste), la vista previa de cómo ven el perfil los demás estudiantes
+ * y el aviso de privacidad del número de contacto.
+ *
+ * DEPENDENCIAS:
+ * - solicitudes.css: alertas, botones de acción y la animación
+ *   solicitudes-aparecer.
+ * - global.css: variables de color, tamaños de texto, radios y sombras.
+ * - accesibilidad.css: aplica en todas las páginas las preferencias que
+ *   se eligen aquí.
+ *
+ * ESTRUCTURA DEL ARCHIVO:
+ * - Encabezado de la página.
+ * - Distribución principal: formulario y columna lateral.
+ * - Tarjetas, campos del formulario, errores y botones.
+ * - 5. Columna lateral: vista previa y privacidad.
+ * - 6. Preferencias de accesibilidad (RF-04): interruptores.
+ * - 7. Animaciones.
+ * - 8. Pantallas medianas y celulares.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: estilos de Mi perfil (SCRUM-91, RF-03).
+ * - 1.1.0: preferencias de accesibilidad (SCRUM-93, RF-04).
+ * - 1.2.0 (2026-11-25): documentación completa. No cambia ningún estilo.
+ */
 
-/* 1. Encabezado */
+
+/* Encabezado de la página */
 
 .perfil__encabezado {
     margin-bottom: 24px;
@@ -22,7 +57,7 @@
     color: var(--color-text-secondary);
 }
 
-/* 2. Distribución: formulario a la izquierda y columna lateral */
+/* Distribución principal: formulario y columna lateral */
 
 .perfil__grid {
     display: grid;
@@ -30,6 +65,8 @@
     gap: 24px;
     align-items: start;
 }
+
+/* Estilo general de las tarjetas */
 
 .perfil__tarjeta {
     min-width: 0;
@@ -40,6 +77,8 @@
     box-shadow: var(--shadow-soft);
     animation: solicitudes-aparecer 0.6s ease both;
 }
+
+/* Encabezado de cada tarjeta */
 
 .perfil__tarjeta-cabecera {
     display: flex;
@@ -62,6 +101,8 @@
 .perfil__tarjeta-cabecera strong {
     color: var(--color-primary);
 }
+
+/* Iconos que acompañan los títulos */
 
 .perfil__tarjeta-icono {
     display: inline-flex;
@@ -93,7 +134,7 @@
     height: 24px;
 }
 
-/* 3. Campos del formulario */
+/* Campos del formulario de edición */
 
 .perfil__formulario {
     display: flex;
@@ -122,6 +163,8 @@
     color: var(--color-danger);
     font-weight: 800;
 }
+
+/* Apariencia de los controles y sus estados */
 
 .campo__control {
     width: 100%;
@@ -152,7 +195,8 @@ select.campo__control {
     cursor: pointer;
 }
 
-/* Prefijo +57 del WhatsApp */
+/* El prefijo +57 se mantiene separado del número de WhatsApp */
+
 .campo__con-prefijo {
     display: flex;
     align-items: stretch;
@@ -173,6 +217,8 @@ select.campo__control {
 .campo__con-prefijo .campo__control {
     border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
 }
+
+/* Texto de ayuda y contador debajo de los campos */
 
 .campo__pie {
     display: flex;
@@ -197,7 +243,8 @@ select.campo__control {
     font-weight: 700;
 }
 
-/* Campo con error */
+/* Estilos que se aplican cuando un campo tiene un error */
+
 .campo--error .campo__control,
 .campo--error .campo__prefijo {
     border-color: var(--color-danger);
@@ -229,7 +276,7 @@ select.campo__control {
     font-size: var(--text-small);
 }
 
-/* 4. Botón para guardar */
+/* Botón para guardar los cambios del perfil */
 
 .perfil__acciones {
     display: flex;
@@ -255,6 +302,7 @@ select.campo__control {
     background-color: var(--color-primary-dark);
 }
 
+/* Botón secundario (Guardar preferencias), con borde y fondo blanco. */
 .boton-accion--secundario {
     display: inline-flex;
     align-items: center;
@@ -265,6 +313,8 @@ select.campo__control {
 }
 
 /* 5. Columna lateral */
+
+/* Contenido que aparece al lado del formulario */
 
 .perfil__lateral {
     display: flex;
@@ -296,6 +346,8 @@ select.campo__control {
     color: var(--color-text);
     font-size: var(--text-small);
 }
+
+/* Vista previa de cómo se verá el perfil */
 
 .vista-previa {
     display: flex;
@@ -342,12 +394,14 @@ select.campo__control {
 
 /* 6. Preferencias de accesibilidad (RF-04) */
 
+/* Tarjeta de accesibilidad con sus interruptores uno debajo del otro. */
 .perfil__accesibilidad {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
+/* Cabecera de la tarjeta: ícono, título y texto. */
 .perfil__accesibilidad-cabecera {
     display: flex;
     align-items: flex-start;
@@ -355,6 +409,7 @@ select.campo__control {
     margin-bottom: 4px;
 }
 
+/* Aviso de error dentro de la tarjeta de accesibilidad. */
 .perfil__alerta-accesibilidad {
     margin-bottom: 0;
     font-size: var(--text-small);
@@ -376,34 +431,41 @@ select.campo__control {
     transition: border-color 0.25s ease, background-color 0.25s ease;
 }
 
+/* Al pasar el cursor el borde se resalta. */
 .interruptor:hover {
     border-color: var(--color-primary-light);
 }
 
+/* Cuando la preferencia está activa, el interruptor toma el color principal. */
 .interruptor:has(input:checked) {
     border-color: var(--color-primary);
     background-color: var(--color-soft);
 }
 
+/* Contorno visible cuando la casilla recibe el foco con el teclado. */
 .interruptor:has(input:focus-visible) {
     outline: 3px solid var(--color-primary-light);
     outline-offset: 3px;
 }
 
+/* Nombre y descripción de la preferencia. */
 .interruptor__texto {
     display: flex;
     flex-direction: column;
 }
 
+/* Nombre de la preferencia. */
 .interruptor__texto strong {
     color: var(--color-navy);
 }
 
+/* Descripción de la preferencia. */
 .interruptor__texto small {
     color: var(--color-text);
     font-size: var(--text-small);
 }
 
+/* La casilla real se hace invisible, pero sigue disponible para el teclado. */
 .interruptor input {
     position: absolute;
     opacity: 0;
@@ -411,6 +473,7 @@ select.campo__control {
     height: 1px;
 }
 
+/* Riel del interruptor; gris cuando está apagado. */
 .interruptor__control {
     position: relative;
     flex-shrink: 0;
@@ -421,6 +484,7 @@ select.campo__control {
     transition: background-color 0.25s ease;
 }
 
+/* Círculo blanco que se desliza dentro del riel. */
 .interruptor__control::after {
     content: "";
     position: absolute;
@@ -434,10 +498,12 @@ select.campo__control {
     transition: transform 0.25s ease;
 }
 
+/* Encendido: el riel toma el color principal. */
 .interruptor input:checked ~ .interruptor__control {
     background-color: var(--color-primary);
 }
 
+/* Encendido: el círculo se desliza a la derecha. */
 .interruptor input:checked ~ .interruptor__control::after {
     transform: translateX(20px);
 }
@@ -453,11 +519,14 @@ select.campo__control {
     width: 100%;
 }
 
+/* Con JavaScript el botón se oculta porque se guarda al mover el interruptor. */
 .perfil:not(.sin-js) .perfil__guardar-preferencias {
     display: none;
 }
 
 /* 7. Animaciones */
+
+/* Movimiento del campo cuando se marca un error */
 
 @keyframes perfil-sacudir {
     0%, 100% { transform: translateX(0); }
@@ -466,6 +535,8 @@ select.campo__control {
 }
 
 /* 8. Pantallas medianas y celulares */
+
+/* Ajustes para pantallas medianas */
 
 @media (max-width: 1100px) {
     .perfil__grid {
@@ -477,6 +548,8 @@ select.campo__control {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* Ajustes para celulares */
 
 @media (max-width: 600px) {
     .perfil__tarjeta {
@@ -496,6 +569,8 @@ select.campo__control {
         font-size: 1rem;
     }
 }
+
+/* Se respetan las preferencias de movimiento del dispositivo */
 
 @media (prefers-reduced-motion: reduce) {
     .perfil__encabezado,
