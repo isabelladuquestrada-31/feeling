@@ -1,12 +1,53 @@
-/* ==========================================================
-   Solicitudes recibidas (RF-10, SCRUM-83) - Panel del voluntario
-   Se apoya en solicitudes.css (alertas, contador, botones Aceptar
-   y Rechazar, entrada de tarjetas) y en las variables de global.css.
-   Basado en el bloque "Solicitudes que has recibido" del mockup.
-   ========================================================== */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: solicitudes-recibidas.css
+ * UBICACIÓN: src/main/resources/static/css/solicitudes-recibidas.css
+ * MÓDULO: Solicitudes recibidas (panel del voluntario)
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.3.1
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: SCRUM-83 (RF-10), con ampliaciones de RF-11, SCRUM-95 (RF-09) y SCRUM-97 (RF-14)
+ *
+ * DESCRIPCIÓN:
+ * Hoja de estilos de la pantalla solicitudes-recibidas.html. Da el diseño al
+ * encabezado, a las tarjetas de solicitudes (pendientes, por marcar como
+ * realizadas y aceptadas), al detalle desplegable, al aviso de ajustes
+ * razonables, al formulario de seguimiento y al aviso para quien todavía no
+ * es voluntario. Basada en el bloque "Solicitudes que has recibido" del
+ * mockup del panel del voluntario.
+ *
+ * DEPENDENCIAS:
+ * - solicitudes.css: alertas, contador, botones Aceptar y Rechazar, estados
+ *   y la animación solicitudes-aparecer.
+ * - global.css: variables de color, tamaños de texto, radios y sombras
+ *   (por ejemplo --color-primary, --text-small y --radius-large).
+ *
+ * ESTRUCTURA DEL ARCHIVO:
+ * - Encabezado con botón para volver.
+ * - Lista de solicitudes y tarjeta.
+ * - Detalle desplegable.
+ * - Acompañamientos aceptados (RF-11).
+ * - Aviso para quien todavía no es voluntario.
+ * - Animaciones propias.
+ * - Ajustes razonables (RF-09).
+ * - Por marcar como realizados y formulario de seguimiento (RF-14).
+ * - Adaptación a tabletas y celulares.
+ * - Pantallas táctiles y menos movimiento.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: estilos de solicitudes recibidas (SCRUM-83, RF-10).
+ * - 1.1.0: acompañamientos aceptados (RF-11).
+ * - 1.2.0: ajustes razonables (SCRUM-95, RF-09).
+ * - 1.3.0: por marcar como realizados y seguimiento (SCRUM-97, RF-14).
+ * - 1.3.1 (2026-11-25): documentación completa. No cambia ningún estilo.
+ */
 
 /* 1. Encabezado con botón para volver */
 
+/* Contenedor del encabezado: botón, títulos y contador en una fila que
+   baja a otra línea cuando no hay espacio. */
 .recibidas__encabezado {
     display: flex;
     flex-wrap: wrap;
@@ -16,6 +57,7 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Bloque de título y descripción; ocupa el espacio sobrante. */
 .recibidas__titulos {
     flex: 1 1 320px;
 }
@@ -33,11 +75,13 @@
     color: var(--color-text-secondary);
 }
 
+/* El contador se alinea al final de la fila del encabezado. */
 .recibidas__encabezado .solicitudes__contador {
     align-self: flex-end;
     margin-top: 0;
 }
 
+/* Botón circular de volver; mide 44 px para ser fácil de tocar. */
 .recibidas__volver {
     display: inline-flex;
     flex-shrink: 0;
@@ -53,6 +97,7 @@
     transition: transform 0.2s ease, background-color 0.25s ease;
 }
 
+/* Al pasar el cursor la flecha se desplaza un poco hacia la izquierda. */
 .recibidas__volver:hover {
     background-color: var(--color-surface);
     transform: translateX(-3px);
@@ -63,6 +108,7 @@
 }
 
 /* Íconos de línea */
+/* Estilo común de los iconos SVG: sin relleno y con trazo del color del texto. */
 .recibidas__volver svg,
 .recibidas__campana svg,
 .recibidas__aviso-icono svg,
@@ -79,6 +125,7 @@
     height: 22px;
 }
 
+/* Campana del título: se mece dos veces al cargar la página. */
 .recibidas__campana {
     display: inline-flex;
     color: var(--color-primary);
@@ -86,6 +133,7 @@
     animation: recibidas-campana 2.4s ease-in-out 0.6s 2;
 }
 
+/* La campana lleva relleno, a diferencia de los demás iconos de línea. */
 .recibidas__campana svg {
     width: 30px;
     height: 30px;
@@ -94,6 +142,7 @@
 
 /* 2. Lista de solicitudes (filas como en el mockup) */
 
+/* Lista sin viñetas; las tarjetas se apilan con espacio entre ellas. */
 .recibidas__lista {
     display: flex;
     flex-direction: column;
@@ -101,6 +150,9 @@
     list-style: none;
 }
 
+/* Tarjeta de solicitud. Usa una rejilla con áreas con nombre: avatar, datos,
+   estado y acciones en la primera fila, y el detalle o el formulario de
+   seguimiento en la segunda. */
 .recibida {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto auto;
@@ -122,11 +174,14 @@
     box-shadow: 0 10px 24px rgba(23, 59, 101, 0.1);
 }
 
+/* Clase que agrega solicitudes-recibidas.js al tocar la tarjeta en pantallas táctiles. */
 .recibida.presionada {
     transform: scale(0.99);
 }
 
 /* Avatar con la inicial del estudiante */
+/* El color base es el azul; las variantes --1, --2 y --3 se eligen en el HTML
+   según el resto de dividir el id del estudiante entre 4. */
 .recibida__avatar {
     grid-area: avatar;
     display: inline-flex;
@@ -142,21 +197,26 @@
     box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.8);
 }
 
+/* Variante morada. */
 .recibida__avatar--1 {
     background-color: #F1E3F6;
     color: #8A3FA5;
 }
 
+/* Variante verde. */
 .recibida__avatar--2 {
     background-color: #E3F4EA;
     color: var(--color-success);
 }
 
+/* Variante ámbar. */
 .recibida__avatar--3 {
     background-color: #FDF1DC;
     color: #8A5A00;
 }
 
+/* Datos principales de la tarjeta. min-width en 0 permite que el texto largo
+   se ajuste en lugar de ensanchar la columna. */
 .recibida__info {
     grid-area: info;
     min-width: 0;
@@ -167,6 +227,7 @@
     font-size: 1.05rem;
 }
 
+/* Materia y tema; overflow-wrap evita que un tema largo desborde la tarjeta. */
 .recibida__tema {
     display: flex;
     flex-wrap: wrap;
@@ -180,6 +241,7 @@
     color: var(--color-primary-dark);
 }
 
+/* Fecha y hora con el icono de calendario. */
 .recibida__fecha {
     display: flex;
     align-items: center;
@@ -195,12 +257,15 @@
     flex-shrink: 0;
 }
 
+/* Etiqueta de estado, ubicada en su área de la rejilla. */
 .recibida > .estado {
     grid-area: estado;
     align-self: start;
 }
 
 /* Botones Ver, Aceptar y Rechazar */
+/* Contenedor de botones de la tarjeta. El ancho automático y la altura mínima
+   de 44 px reemplazan el ancho completo definido en solicitudes.css. */
 .recibida__acciones {
     grid-area: acciones;
     display: flex;
@@ -219,6 +284,8 @@
     font-size: var(--text-small);
 }
 
+/* Botón Ver: aspecto de botón secundario. Queda resaltado mientras el
+   detalle está abierto (aria-expanded en true). */
 .boton-accion--ver {
     color: var(--color-primary);
     background-color: var(--color-text-light);
@@ -232,6 +299,8 @@
 }
 
 /* Detalle que se abre con "Ver" */
+/* Rejilla de datos que se adapta al ancho: cada dato mide al menos 160 px.
+   Ocupa la segunda fila de la tarjeta. */
 .recibida__detalle {
     grid-area: detalle;
     display: grid;
@@ -244,6 +313,8 @@
     animation: recibidas-abrir 0.3s ease both;
 }
 
+/* Como la clase fija display: grid, esta regla asegura que el atributo hidden
+   siga ocultando el detalle. */
 .recibida__detalle[hidden] {
     display: none;
 }
@@ -261,6 +332,7 @@
 
 /* Acompañamientos aceptados (RF-11): el voluntario contacta al estudiante */
 
+/* Región de aceptados; entra con la animación general con un pequeño retraso. */
 .recibidas__aceptadas {
     margin-top: 32px;
     animation: solicitudes-aparecer 0.6s ease 0.2s both;
@@ -271,11 +343,13 @@
     font-size: var(--text-subtitle);
 }
 
+/* Texto de apoyo bajo el título. También lo usa la sección por marcar como realizados. */
 .recibidas__aceptadas-texto {
     margin-bottom: 14px;
     color: var(--color-text-secondary);
 }
 
+/* Mensaje que aparece cuando no hay acompañamientos aceptados. */
 .recibidas__aceptadas-vacio {
     padding: 16px 18px;
     border: 1px dashed var(--color-border);
@@ -283,6 +357,7 @@
     color: var(--color-text-secondary);
 }
 
+/* Tarjeta aceptada: borde verde claro y degradado suave hacia verde. */
 .recibida--aceptada {
     border-color: #CDEBDA;
     background: linear-gradient(135deg, #FFFFFF 70%, #EEF8F2);
@@ -293,6 +368,7 @@
     font-size: 1.05rem;
 }
 
+/* Etiqueta de estado Aceptada. */
 .estado--aceptada {
     color: var(--color-success);
     background-color: #E3F4EA;
@@ -300,6 +376,8 @@
 
 /* 3. Aviso para quien todavía no es voluntario */
 
+/* Tarjeta con borde punteado, icono, texto y botón; los elementos pasan a
+   otra línea cuando no caben. */
 .recibidas__aviso {
     display: flex;
     flex-wrap: wrap;
@@ -325,6 +403,7 @@
     color: var(--color-text-secondary);
 }
 
+/* Círculo con el icono del corazón. */
 .recibidas__aviso-icono {
     display: inline-flex;
     align-items: center;
@@ -342,6 +421,8 @@
     fill: var(--color-primary);
 }
 
+/* Botón del aviso. Al ser un enlace se quita el subrayado y se conserva el
+   color del texto al pasar el cursor. */
 .recibidas__aviso-boton {
     display: inline-flex;
     width: auto;
@@ -358,12 +439,14 @@
 
 /* 4. Animaciones propias */
 
+/* Balanceo de la campana: gira hacia un lado y hacia el otro y vuelve al reposo. */
 @keyframes recibidas-campana {
     0%, 50%, 100% { transform: rotate(0); }
     10%, 30% { transform: rotate(14deg); }
     20%, 40% { transform: rotate(-14deg); }
 }
 
+/* Aparición del detalle y del formulario de seguimiento: suben desde 6 px más arriba. */
 @keyframes recibidas-abrir {
     from {
         opacity: 0;
@@ -376,10 +459,10 @@
     }
 }
 
-/* 5. Tabletas: los botones pasan a una segunda fila */
-
 /* Ajustes razonables que pidió el estudiante (RF-09, SCRUM-95) */
 
+/* Píldora ámbar de la tarjeta pendiente: "Pidió ajustes razonables". En los
+   aceptados se usa con el texto "Ajustes razonables". */
 .recibida__ajustes-aviso {
     display: inline-flex;
     align-items: center;
@@ -403,6 +486,7 @@
     stroke-linejoin: round;
 }
 
+/* Dentro del detalle, los ajustes ocupan todo el ancho de la rejilla. */
 .recibida__detalle-ajustes {
     grid-column: 1 / -1;
 }
@@ -411,6 +495,7 @@
     margin-top: 6px;
 }
 
+/* Lista de ajustes, tanto en el detalle como en los aceptados. */
 .lista-ajustes {
     display: flex;
     flex-direction: column;
@@ -421,6 +506,7 @@
     font-weight: 700;
 }
 
+/* Descripción que escribió el estudiante en "Otro", con peso normal. */
 .lista-ajustes__detalle {
     font-weight: 500;
     overflow-wrap: anywhere;
@@ -428,6 +514,7 @@
 
 /* Por marcar como realizados (RF-14, SCRUM-97) */
 
+/* Región de acompañamientos por cerrar; entra con la animación general. */
 .recibidas__por-cerrar {
     margin-top: 32px;
     animation: solicitudes-aparecer 0.6s ease 0.1s both;
@@ -438,21 +525,26 @@
     font-size: var(--text-subtitle);
 }
 
+/* Tarjeta por cerrar: franja ámbar en el borde izquierdo. */
 .recibida--por-cerrar {
     border-left: 4px solid #B7791F;
 }
 
+/* Etiqueta de estado Por cerrar. */
 .estado--por-cerrar {
     background-color: #FFF4DD;
     color: #7A4A00;
 }
 
+/* Nota "Podrás marcarlo como realizado cuando pase la fecha" de los aceptados. */
 .recibida__nota-cierre {
     margin-top: 6px;
     color: var(--color-text-secondary);
     font-size: 0.8rem;
 }
 
+/* Formulario de seguimiento. Ocupa la segunda fila de la tarjeta, igual que
+   el detalle, y entra con la misma animación. */
 .seguimiento {
     grid-area: detalle;
     display: flex;
@@ -465,15 +557,19 @@
     animation: recibidas-abrir 0.3s ease both;
 }
 
+/* Como la clase fija display: flex, esta regla asegura que hidden lo oculte. */
 .seguimiento[hidden] {
     display: none;
 }
 
 /* Sin JavaScript el formulario siempre se ve */
+/* La sección lleva la clase sin-js hasta que el script la quita; mientras
+   tanto el formulario se muestra aunque tenga el atributo hidden. */
 .recibidas.sin-js .seguimiento[hidden] {
     display: flex;
 }
 
+/* Grupo de opciones de duración, sin el borde ni el margen del fieldset. */
 .seguimiento__duracion {
     min-width: 0;
     margin: 0;
@@ -481,6 +577,7 @@
     border: 0;
 }
 
+/* Título del grupo de duración y de las notas. */
 .seguimiento__duracion legend,
 .seguimiento__notas > span {
     margin-bottom: 8px;
@@ -501,6 +598,8 @@
     gap: 8px;
 }
 
+/* Opción de duración en forma de pastilla. El radio real se oculta de la vista
+   pero sigue siendo accesible con el teclado. */
 .chip-duracion {
     position: relative;
     cursor: pointer;
@@ -530,17 +629,20 @@
     border-color: rgba(8, 126, 150, 0.5);
 }
 
+/* Pastilla elegida: se rellena con el color principal. */
 .chip-duracion input:checked + span {
     border-color: var(--color-primary);
     background-color: var(--color-primary);
     color: var(--color-text-light);
 }
 
+/* Indicador de foco visible para quien navega con teclado. */
 .chip-duracion input:focus-visible + span {
     outline: 3px solid var(--color-primary-light);
     outline-offset: 2px;
 }
 
+/* Campo de notas con su título encima. */
 .seguimiento__notas {
     display: flex;
     flex-direction: column;
@@ -559,12 +661,14 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Al enfocar se reemplaza el contorno del navegador por un borde y un halo. */
 .seguimiento__notas textarea:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(8, 126, 150, 0.15);
     outline: none;
 }
 
+/* Contador de caracteres, alineado a la derecha y pegado al campo de notas. */
 .seguimiento__contador {
     margin-top: -8px;
     color: var(--color-text-secondary);
@@ -572,6 +676,7 @@
     text-align: right;
 }
 
+/* Botones Cancelar y Guardar, alineados a la derecha. */
 .seguimiento__botones {
     display: flex;
     flex-wrap: wrap;
@@ -585,6 +690,8 @@
     min-width: 140px;
 }
 
+/* Adaptación a tabletas (hasta 900 px): los botones pasan a una segunda fila
+   y el avatar ocupa las dos primeras filas. */
 @media (max-width: 900px) {
     .recibida {
         grid-template-columns: auto minmax(0, 1fr) auto;
@@ -602,6 +709,8 @@
 
 /* 6. Celulares */
 
+/* Adaptación a celulares (hasta 600 px): la tarjeta pasa a una sola columna
+   con el avatar y el estado arriba, luego los datos, las acciones y el detalle. */
 @media (max-width: 600px) {
     .recibidas__titulos h1 {
         font-size: 1.45rem;
@@ -642,12 +751,14 @@
         grid-column: 1 / -1;
     }
 
+    /* WhatsApp y Marcar como realizado ocupan todo el ancho. */
     .recibida__acciones .boton-whatsapp,
     .recibida__acciones [data-abrir-seguimiento] {
         grid-column: 1 / -1;
         width: 100%;
     }
 
+    /* Botones del seguimiento más altos para tocarlos con facilidad. */
     .seguimiento__botones .boton-accion {
         flex: 1 1 140px;
         min-height: 48px;
@@ -665,6 +776,8 @@
 
 /* 7. Pantallas táctiles y menos movimiento */
 
+/* En pantallas sin cursor se anula el resalte al pasar el mouse, que en
+   táctiles queda "pegado" después de tocar. */
 @media (hover: none) {
     .recibida:hover {
         border-color: var(--color-border);
@@ -672,6 +785,8 @@
     }
 }
 
+/* Para quien pidió menos movimiento al sistema se desactivan la campana y la
+   animación del detalle. */
 @media (prefers-reduced-motion: reduce) {
     .recibidas__campana,
     .recibida__detalle {
