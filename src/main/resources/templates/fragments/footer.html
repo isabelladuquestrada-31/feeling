@@ -1,23 +1,103 @@
+<!--
+    PROYECTO: Feeling
+    ARCHIVO: footer.html
+    UBICACIÓN: src/main/resources/templates/fragments/footer.html
+    MÓDULO: Plantilla base, pie de página
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.1.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-24
+    ESTADO: Finalizado
+    TICKET: SCRUM-XX (completar con el número del ticket)
+
+    DESCRIPCIÓN:
+    Fragmento de Thymeleaf con el pie de página de Feeling. Presenta la
+    identidad de la marca (logo, lema y descripción), una lista de enlaces
+    rápidos, los datos de contacto (correo y WhatsApp), una breve
+    explicación del proyecto y una franja inferior con los derechos de
+    autor y el lema. Se incluye en los layouts con la expresión
+    ~{fragments/footer :: footer}.
+
+    FUNCIONALIDADES:
+    - Logo de Feeling que lleva a la página de inicio.
+    - Enlaces rápidos: Inicio, Voluntarios, Solicitar apoyo y Perfil.
+    - Contacto por correo electrónico (mailto) y por WhatsApp.
+    - Enlace "Conoce más" hacia la sección de inicio.
+    - Año del copyright calculado automáticamente con Thymeleaf.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura semántica (footer, nav, section, h2, ul).
+    - Thymeleaf: fragmento, rutas (@{...}) y texto dinámico (th:text).
+    - SVG en línea: íconos de correo y WhatsApp.
+    - CSS3: estilos mediante las clases con prefijo feeling-footer
+      (metodología BEM).
+
+    DEPENDENCIAS:
+    - Hoja de estilos con las clases feeling-footer__* (verificar el
+      nombre del archivo CSS que las define).
+    - /img/Logosímbolo_Sin_Fondo.png: logo mostrado en el pie.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /                          : página de inicio.
+    - /voluntarios               : listado de voluntarios.
+    - /acompanamientos/solicitar : solicitud de apoyo.
+    - /perfil                    : perfil del usuario.
+    - /#inicio                   : sección de inicio ("Conoce más").
+
+    RECURSOS GRÁFICOS:
+    - /img/Logosímbolo_Sin_Fondo.png
+    - Íconos SVG en línea (correo y WhatsApp).
+
+    ACCESIBILIDAD:
+    - aria-label en el pie, el logo y la navegación.
+    - aria-labelledby relaciona cada sección con su título.
+    - aria-hidden="true" oculta a los lectores de pantalla los
+      símbolos decorativos (♥, ♡, →) y los íconos SVG.
+    - feeling-footer__sr-only: texto visible solo para lectores de
+      pantalla, avisa que WhatsApp se abre en una pestaña nueva.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación inicial del pie de página.
+    - 1.1.0 (2026-11-24): documentación completa. No se modificó el
+      código.
+
+    OBSERVACIONES:
+    - El enlace de correo apunta a yulieht.dominguezl@uam.edu.co pero el
+      texto visible es feeling@uam.edu.co. Conviene unificarlos, por ahora solo tenemos este correo disponible.
+    - El enlace de WhatsApp apunta a 573207155596 pero el texto visible
+      es +57 310 123 4567.
+-->
 <footer th:fragment="footer"
         class="feeling-footer"
         aria-label="Pie de página de Feeling">
 
+    <!-- Contenedor principal: agrupa las cuatro columnas del pie de página
+         (identidad, enlaces rápidos, contacto y sobre el proyecto). -->
     <div class="feeling-footer__main">
 
-        <!-- IDENTIDAD DE FEELING -->
+        <!-- IDENTIDAD DE FEELING
+             Logo, lema y descripción breve de la comunidad. aria-labelledby
+             toma como título accesible el párrafo con id footer-brand-title. -->
         <section class="feeling-footer__brand"
                  aria-labelledby="footer-brand-title">
 
+            <!-- Enlace del logo: lleva a la página de inicio. El aria-label
+                 describe el destino porque la imagen sola no lo indica.
+                 th:href genera la ruta con el contexto de la aplicación. -->
             <a class="feeling-footer__brand-link"
                th:href="@{/}"
                aria-label="Feeling, ir al inicio">
 
+                <!-- Logo de Feeling. th:src resuelve la ruta del recurso
+                     estático dentro de /img. -->
                 <img class="feeling-footer__logo"
                      th:src="@{/img/Logosímbolo_Sin_Fondo.png}"
                      alt="Feeling">
 
             </a>
 
+            <!-- Lema principal. Su id sirve de título accesible de la
+                 sección. El corazón es decorativo, por eso aria-hidden. -->
             <p id="footer-brand-title"
                class="feeling-footer__tagline">
 
@@ -26,6 +106,7 @@
 
             </p>
 
+            <!-- Descripción breve de lo que es Feeling. -->
             <p class="feeling-footer__description">
                 Una comunidad universitaria que te acompaña,
                 te escucha y te apoya.
@@ -34,22 +115,30 @@
         </section>
 
 
-        <!-- ENLACES RÁPIDOS -->
+        <!-- ENLACES RÁPIDOS
+             Navegación con accesos directos a las páginas principales. Al
+             ser un nav, aria-label lo identifica entre los demás menús. -->
         <nav class="feeling-footer__column"
              aria-label="Enlaces rápidos">
 
+            <!-- Título de la columna. El span interno permite aplicarle
+                 estilos al texto (por ejemplo, un subrayado decorativo). -->
             <h2 class="feeling-footer__heading">
                 <span>Enlaces rápidos</span>
             </h2>
 
+            <!-- Lista de enlaces. th:href genera la ruta con Thymeleaf y
+                 href queda como respaldo al abrir el HTML sin servidor. -->
             <ul class="feeling-footer__links">
 
+                <!-- Página de inicio -->
                 <li>
                     <a th:href="@{/}" href="/">
                         Inicio
                     </a>
                 </li>
 
+                <!-- Listado de voluntarios -->
                 <li>
                     <a th:href="@{/voluntarios}"
                        href="/voluntarios">
@@ -57,6 +146,7 @@
                     </a>
                 </li>
 
+                <!-- Formulario para pedir un acompañamiento -->
                 <li>
                     <a th:href="@{/acompanamientos/solicitar}"
                        href="/acompanamientos/solicitar">
@@ -64,6 +154,7 @@
                     </a>
                 </li>
 
+                <!-- Perfil del usuario -->
                 <li>
                     <a th:href="@{/perfil}"
                        href="/perfil">
@@ -76,10 +167,13 @@
         </nav>
 
 
-        <!-- CONTACTO -->
+        <!-- CONTACTO
+             Medios para comunicarse con el equipo de Feeling. El título se
+             relaciona con la sección mediante aria-labelledby. -->
         <section class="feeling-footer__column feeling-footer__contact"
                  aria-labelledby="footer-contact-title">
 
+            <!-- Título de la sección; su id lo usa aria-labelledby. -->
             <h2 id="footer-contact-title"
                 class="feeling-footer__heading">
 
@@ -87,15 +181,23 @@
 
             </h2>
 
+            <!-- Lista de medios de contacto, cada uno con su ícono. -->
             <ul class="feeling-footer__contact-list">
 
-                <!-- CORREO -->
+                <!-- CORREO
+                     Ícono de sobre dibujado con SVG en línea y enlace mailto
+                     que abre el programa de correo del usuario. -->
                 <li>
 
+                    <!-- Ícono de correo. viewBox define el lienzo de 24x24
+                         y aria-hidden lo oculta a los lectores de pantalla
+                         porque es solo decorativo. -->
                     <svg class="feeling-footer__icon"
                          viewBox="0 0 24 24"
                          aria-hidden="true">
 
+                        <!-- Cuerpo del sobre: rectángulo con esquinas
+                             redondeadas (rx). -->
                         <rect x="3"
                               y="5"
                               width="18"
@@ -103,10 +205,13 @@
                               rx="2">
                         </rect>
 
+                        <!-- Solapa del sobre: línea en forma de V. -->
                         <path d="m4 7 8 6 8-6"></path>
 
                     </svg>
 
+                    <!-- Enlace de correo. El destino y el texto visible
+                         son distintos (ver OBSERVACIONES). -->
                     <a href="mailto:yulieht.dominguezl@uam.edu.co">
                         feeling@uam.edu.co
                     </a>
@@ -114,27 +219,37 @@
                 </li>
 
 
-                <!-- WHATSAPP -->
+                <!-- WHATSAPP
+                     Ícono de WhatsApp y enlace a wa.me para iniciar un chat. -->
                 <li>
 
+                    <!-- Ícono de WhatsApp. El modificador --whatsapp permite
+                         darle estilos propios (por ejemplo, el color). -->
                     <svg class="feeling-footer__icon feeling-footer__icon--whatsapp"
                          viewBox="0 0 24 24"
                          aria-hidden="true">
 
+                        <!-- Globo de diálogo del ícono. -->
                         <path d="M20.5 11.7a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.5-4.8a8.4 8.4 0 1 1 16-4Z">
                         </path>
 
+                        <!-- Auricular del teléfono dentro del globo. -->
                         <path d="M8.5 8.2c.4-.7.8-.7 1.2-.1l.8 1.3c.2.3.1.6-.2.9l-.5.5c.7 1.3 1.6 2.2 2.9 2.9l.5-.6c.3-.3.6-.3.9-.1l1.3.8c.6.4.6.8-.1 1.2-.7.5-1.5.6-2.3.3-2.5-.9-4.8-3.2-5.7-5.7-.3-.8-.2-1.6.3-2.3Z">
                         </path>
 
                     </svg>
 
+                    <!-- Enlace de WhatsApp. target="_blank" lo abre en una
+                         pestaña nueva y rel="noopener noreferrer" evita que
+                         la página nueva acceda a esta ventana. -->
                     <a href="https://wa.me/573207155596"
                        target="_blank"
                        rel="noopener noreferrer">
 
                         +57 310 123 4567
 
+                        <!-- Aviso solo para lectores de pantalla: indica
+                             que el enlace se abre en otra pestaña. -->
                         <span class="feeling-footer__sr-only">
                             (abre WhatsApp en una nueva pestaña)
                         </span>
@@ -145,6 +260,7 @@
 
             </ul>
 
+            <!-- Mensaje de invitación a escribir. El corazón es decorativo. -->
             <p class="feeling-footer__contact-note">
 
                 ¡Escríbenos! Estamos aquí para ayudarte.
@@ -156,10 +272,12 @@
         </section>
 
 
-        <!-- SOBRE EL PROYECTO -->
+        <!-- SOBRE EL PROYECTO
+             Explica el propósito de Feeling y enlaza a más información. -->
         <section class="feeling-footer__column feeling-footer__about"
                  aria-labelledby="footer-about-title">
 
+            <!-- Título de la sección; su id lo usa aria-labelledby. -->
             <h2 id="footer-about-title"
                 class="feeling-footer__heading">
 
@@ -167,12 +285,15 @@
 
             </h2>
 
+            <!-- Resumen del objetivo del proyecto. -->
             <p>
                 Feeling promueve el apoyo entre estudiantes,
                 fomentando una universidad más inclusiva,
                 solidaria y humana.
             </p>
 
+            <!-- Enlace "Conoce más": lleva a la sección #inicio de la
+                 página principal. La flecha es decorativa. -->
             <a class="feeling-footer__about-link"
                 th:href="@{/#inicio}">
 
@@ -185,9 +306,13 @@
     </div>
 
 
-    <!-- FRANJA INFERIOR -->
+    <!-- FRANJA INFERIOR
+         Derechos de autor y lema final del sitio. -->
     <div class="feeling-footer__bottom">
 
+        <!-- Copyright. th:text reemplaza el 2026 por el año actual del
+             servidor (#dates.createNow()); el 2026 solo se ve al abrir el
+             HTML sin Thymeleaf. -->
         <p>
             ©
             <span th:text="${#dates.year(#dates.createNow())}">
@@ -198,6 +323,7 @@
             Todos los derechos reservados.
         </p>
 
+        <!-- Lema de cierre. El corazón es decorativo. -->
         <p class="feeling-footer__motto">
 
             Porque juntos llegamos más lejos
