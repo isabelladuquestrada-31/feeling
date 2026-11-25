@@ -1,12 +1,51 @@
-/* ==========================================================
-   Mi disponibilidad (RF-06, SCRUM-77) - Panel del voluntario
-   Se apoya en solicitudes.css (alertas, botones, entrada de
-   tarjetas) y en las variables de global.css.
-   Basado en el bloque "Mi disponibilidad" del mockup.
-   ========================================================== */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: disponibilidad.css
+ * UBICACIÓN: src/main/resources/static/css/disponibilidad.css
+ * MÓDULO: Mi disponibilidad (panel del voluntario)
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.1.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: SCRUM-77 (RF-06)
+ *
+ * DESCRIPCIÓN:
+ * Hoja de estilos de la pantalla disponibilidad.html, donde el voluntario
+ * registra las franjas de días y horas en que puede dar acompañamiento.
+ * Da el diseño al formulario para agregar una franja, a la lista de franjas
+ * guardadas con sus botones de editar y eliminar, a la columna lateral con
+ * el resumen de la semana y al aviso para quien todavía no es voluntario.
+ * Basada en el bloque "Mi disponibilidad" del mockup del panel del voluntario.
+ *
+ * DEPENDENCIAS:
+ * - solicitudes.css: alertas, botones de acción y la animación
+ *   solicitudes-aparecer para la entrada de las tarjetas.
+ * - global.css: variables de color, tamaños de texto, radios y sombras
+ *   (por ejemplo --color-primary, --text-small y --radius-large).
+ *
+ * ESTRUCTURA DEL ARCHIVO:
+ * - 1. Distribución en dos columnas.
+ * - 2. Encabezado con botón para volver.
+ * - 3. Formulario para agregar una franja.
+ * - 4. Lista de franjas, edición y confirmación para eliminar.
+ * - 5. Columna lateral: resumen de la semana y consejos.
+ * - 6. Aviso para quien todavía no es voluntario.
+ * - 7. Animaciones propias.
+ * - 8. Tabletas y lista angosta.
+ * - 9. Celulares.
+ * - 10. Pantallas táctiles y menos movimiento.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: estilos de Mi disponibilidad (SCRUM-77, RF-06).
+ * - 1.1.0 (2026-11-25): documentación completa. No cambia ningún estilo.
+ */
+
 
 /* 1. Distribución */
 
+/* Dos columnas: la principal con el formulario y la lista, y la lateral
+   de 300 px con el resumen de la semana. */
 .disponibilidad__grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
@@ -14,6 +53,7 @@
     align-items: start;
 }
 
+/* Columna principal; min-width: 0 evita que su contenido la desborde. */
 .disponibilidad__principal {
     display: flex;
     min-width: 0;
@@ -23,6 +63,7 @@
 
 /* 2. Encabezado */
 
+/* Fila con el botón de volver, el ícono y los títulos de la página. */
 .disponibilidad__encabezado {
     display: flex;
     align-items: flex-start;
@@ -31,6 +72,7 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Título de la página con su ícono al lado. */
 .disponibilidad__titulos h1 {
     display: flex;
     align-items: center;
@@ -39,11 +81,13 @@
     font-size: var(--text-title);
 }
 
+/* Descripción debajo del título. */
 .disponibilidad__titulos p {
     max-width: 620px;
     color: var(--color-text-secondary);
 }
 
+/* Botón circular de volver; mide 44 px para que sea fácil de tocar. */
 .disponibilidad__volver {
     display: inline-flex;
     flex-shrink: 0;
@@ -59,11 +103,13 @@
     transition: transform 0.2s ease, background-color 0.25s ease;
 }
 
+/* Al pasar el cursor la flecha se desplaza un poco hacia la izquierda. */
 .disponibilidad__volver:hover {
     background-color: var(--color-surface);
     transform: translateX(-3px);
 }
 
+/* Efecto de presión al hacer clic. */
 .disponibilidad__volver:active {
     transform: scale(0.92);
 }
@@ -83,11 +129,13 @@
     stroke-linejoin: round;
 }
 
+/* La flecha de volver es un poco más gruesa que los demás íconos. */
 .disponibilidad__volver svg {
     width: 22px;
     height: 22px;
 }
 
+/* Ícono decorativo al lado del título. */
 .disponibilidad__icono-titulo {
     display: inline-flex;
     color: var(--color-primary);
@@ -100,6 +148,7 @@
 
 /* 3. Formulario para agregar una franja */
 
+/* Tarjeta del formulario para agregar una franja nueva. */
 .franja-nueva {
     display: flex;
     flex-direction: column;
@@ -112,10 +161,12 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Cuando la franja no es válida, la tarjeta se sacude para avisar. */
 .franja-nueva.con-error {
     animation: disponibilidad-sacudir 0.4s ease;
 }
 
+/* Título y texto de ayuda del formulario. */
 .franja-nueva__cabecera h2 {
     margin-bottom: 4px;
     font-size: 1.15rem;
@@ -126,6 +177,7 @@
     font-size: var(--text-small);
 }
 
+/* Grupo de botones de los días de la semana. */
 .franja-nueva__dias {
     display: flex;
     flex-wrap: wrap;
@@ -135,6 +187,7 @@
     border: none;
 }
 
+/* Texto que explica qué se elige en el grupo de días. */
 .franja-nueva__dias legend {
     width: 100%;
     margin-bottom: 8px;
@@ -143,18 +196,22 @@
     font-weight: 800;
 }
 
+/* Cada día es un radio oculto con una etiqueta que se ve como botón. */
 .dia-opcion {
     position: relative;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 }
 
+/* El radio real se oculta, pero sigue disponible para el teclado
+   y los lectores de pantalla. */
 .dia-opcion input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Etiqueta visible del día, con forma de píldora. */
 .dia-opcion span {
     display: inline-flex;
     align-items: center;
@@ -170,14 +227,17 @@
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
+/* Al pasar el cursor el día se resalta. */
 .dia-opcion:hover span {
     border-color: var(--color-primary);
 }
 
+/* Efecto de presión al tocar el día. */
 .dia-opcion:active span {
     transform: scale(0.94);
 }
 
+/* Día elegido: fondo de color principal y texto blanco. */
 .dia-opcion input:checked + span {
     border-color: var(--color-primary);
     background-color: var(--color-primary);
@@ -186,11 +246,13 @@
     animation: disponibilidad-pop 0.3s ease;
 }
 
+/* Contorno visible cuando el día recibe el foco con el teclado. */
 .dia-opcion input:focus-visible + span {
     outline: 3px solid var(--color-primary-light);
     outline-offset: 2px;
 }
 
+/* Fila con la hora de inicio, el guion y la hora de fin. */
 .franja-nueva__horas {
     display: flex;
     flex-wrap: wrap;
@@ -198,6 +260,7 @@
     gap: 12px;
 }
 
+/* Etiqueta y campo de cada hora, uno encima del otro. */
 .campo-hora {
     display: flex;
     flex-direction: column;
@@ -207,6 +270,7 @@
     font-weight: 800;
 }
 
+/* Campos de hora con el mismo alto y borde que el resto del formulario. */
 .campo-hora input,
 .campo-hora select {
     min-width: 140px;
@@ -220,6 +284,7 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Borde de color principal cuando el campo tiene el foco. */
 .campo-hora input:focus,
 .campo-hora select:focus {
     border-color: var(--color-primary);
@@ -227,16 +292,19 @@
     outline: none;
 }
 
+/* Borde rojo cuando la hora no es válida. */
 .campo-hora input.invalida {
     border-color: var(--color-danger);
 }
 
+/* Guion entre la hora de inicio y la de fin. */
 .franja-nueva__guion {
     padding-bottom: 12px;
     color: var(--color-text);
     font-weight: 800;
 }
 
+/* Texto con la duración de la franja; se llena mientras se eligen las horas. */
 .franja-nueva__duracion {
     padding: 6px 12px;
     border-radius: 50px;
@@ -247,16 +315,19 @@
     align-self: center;
 }
 
+/* Si todavía no hay duración, el texto no ocupa espacio. */
 .franja-nueva__duracion:empty {
     display: none;
 }
 
+/* Mensaje de error del formulario. */
 .franja-nueva__error {
     color: var(--color-danger);
     font-size: var(--text-small);
     font-weight: 700;
 }
 
+/* Botón Agregar franja, con su ícono a la izquierda. */
 .boton-accion--franja {
     display: inline-flex;
     width: auto;
@@ -271,17 +342,20 @@
     text-decoration: none;
 }
 
+/* Al pasar el cursor el botón se oscurece y sube un poco. */
 .boton-accion--franja:hover {
     background-color: var(--color-primary-dark);
     color: var(--color-text-light);
     text-decoration: none;
 }
 
+/* Tamaño del ícono dentro del botón. */
 .boton-accion--franja svg {
     width: 18px;
     height: 18px;
 }
 
+/* Botón secundario (Cancelar), con borde y fondo claro. */
 .boton-accion--secundaria {
     display: inline-flex;
     width: auto;
@@ -293,12 +367,14 @@
     color: var(--color-navy);
 }
 
+/* Al pasar el cursor el botón secundario toma un fondo suave. */
 .boton-accion--secundaria:hover {
     border-color: var(--color-primary);
 }
 
 /* 4. Lista de franjas (filas como en el mockup) */
 
+/* Tarjeta que contiene la lista de franjas guardadas. */
 .franjas {
     container-type: inline-size;
     padding: 22px;
@@ -309,6 +385,7 @@
     animation: solicitudes-aparecer 0.6s ease 0.1s both;
 }
 
+/* Encabezado de la lista con el título y el contador de franjas. */
 .franjas__cabecera {
     display: flex;
     align-items: center;
@@ -317,10 +394,12 @@
     margin-bottom: 14px;
 }
 
+/* Título de la lista. */
 .franjas__cabecera h2 {
     font-size: 1.15rem;
 }
 
+/* Contador con el número de franjas. */
 .franjas__contador {
     padding: 4px 12px;
     border-radius: 50px;
@@ -330,6 +409,7 @@
     font-weight: 800;
 }
 
+/* Lista sin viñetas; cada franja es un elemento de la lista. */
 .franjas__lista {
     display: flex;
     flex-direction: column;
@@ -337,6 +417,7 @@
     list-style: none;
 }
 
+/* Cada franja guardada. */
 .franja {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-medium);
@@ -344,14 +425,17 @@
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Al pasar el cursor la franja se resalta. */
 .franja:hover {
     border-color: rgba(8, 126, 150, 0.4);
 }
 
+/* La franja recién agregada se resalta en verde un momento. */
 .franja--nueva {
     animation: disponibilidad-resaltar 2s ease 0.6s;
 }
 
+/* Fila de la franja: ícono, día, horas, estado y botones. */
 .franja__fila {
     display: grid;
     grid-template-columns: auto minmax(90px, auto) minmax(0, 1fr) auto auto;
@@ -360,6 +444,7 @@
     padding: 12px 14px;
 }
 
+/* Ícono del reloj al inicio de la fila. */
 .franja__icono {
     display: inline-flex;
     color: var(--color-primary);
@@ -370,10 +455,12 @@
     height: 22px;
 }
 
+/* Nombre del día. */
 .franja__dia {
     color: var(--color-navy);
 }
 
+/* Horas de la franja; no se parten en dos líneas. */
 .franja__horas {
     white-space: nowrap;
     color: var(--color-text-secondary);
@@ -381,6 +468,7 @@
     font-weight: 700;
 }
 
+/* Etiqueta verde con el estado de la franja. */
 .franja__estado {
     padding: 4px 12px;
     border-radius: 50px;
@@ -390,16 +478,19 @@
     font-weight: 800;
 }
 
+/* Botones de editar y eliminar al final de la fila. */
 .franja__acciones {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
+/* El formulario de eliminar no agrega espacio extra. */
 .franja__acciones form {
     margin: 0;
 }
 
+/* Botón circular de editar o eliminar. */
 .franja__boton {
     display: inline-flex;
     align-items: center;
@@ -417,28 +508,34 @@
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
+/* Al pasar el cursor, o mientras la edición está abierta, el botón se resalta. */
 .franja__boton:hover,
 .franja__boton[aria-expanded="true"] {
     background-color: var(--color-soft);
 }
 
+/* Efecto de presión al hacer clic. */
 .franja__boton:active {
     transform: scale(0.92);
 }
 
+/* Tamaño del ícono dentro del botón. */
 .franja__boton svg {
     width: 20px;
     height: 20px;
 }
 
+/* El botón de eliminar usa el color de peligro. */
 .franja__boton--eliminar {
     color: var(--color-danger);
 }
 
+/* Al pasar el cursor el botón de eliminar se resalta en rojo. */
 .franja__boton--eliminar:hover {
     background-color: #FBECEC;
 }
 
+/* Texto de confirmación; está oculto hasta el primer toque. */
 .franja__confirmar {
     display: none;
     font-size: 0.8rem;
@@ -457,6 +554,7 @@
 }
 
 /* Edición de una franja */
+/* Formulario de edición que aparece debajo de la fila. */
 .franja__edicion {
     display: flex;
     flex-wrap: wrap;
@@ -469,20 +567,24 @@
     animation: disponibilidad-abrir 0.3s ease both;
 }
 
+/* Cuando el formulario de edición está oculto no se muestra. */
 .franja__edicion[hidden] {
     display: none;
 }
 
+/* Mensaje de error dentro de la edición. */
 .franja__edicion .franja-nueva__error {
     width: 100%;
 }
 
+/* Botones Guardar y Cancelar de la edición. */
 .franja__edicion-botones {
     display: flex;
     gap: 8px;
     margin-left: auto;
 }
 
+/* Animación de salida cuando se elimina una franja. */
 .franja.saliendo {
     opacity: 0;
     transform: translateX(30px);
@@ -490,6 +592,7 @@
 }
 
 /* Sin franjas */
+/* Tarjeta que se muestra cuando todavía no hay franjas. */
 .franjas__vacio {
     display: flex;
     align-items: center;
@@ -500,16 +603,19 @@
     background-color: #F7FCFD;
 }
 
+/* Título del estado vacío. */
 .franjas__vacio h3 {
     margin-bottom: 4px;
     font-size: 1rem;
 }
 
+/* Texto del estado vacío. */
 .franjas__vacio p {
     color: var(--color-text-secondary);
     font-size: var(--text-small);
 }
 
+/* Ícono circular del estado vacío. */
 .franjas__vacio-icono {
     display: inline-flex;
     flex-shrink: 0;
@@ -529,12 +635,15 @@
 
 /* 5. Columna lateral: tu semana */
 
+/* Columna lateral con sus tarjetas una debajo de la otra. */
 .disponibilidad__lateral {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
+/* Tarjetas de la columna lateral (resumen de la semana y consejos);
+   entran con una animación. */
 .semana,
 .disponibilidad__consejo {
     padding: 20px;
@@ -545,22 +654,26 @@
     animation: solicitudes-aparecer 0.6s ease 0.15s both;
 }
 
+/* El resumen de la semana tiene un fondo degradado suave. */
 .semana {
     background: linear-gradient(160deg, #FFFFFF 0%, var(--color-soft) 100%);
 }
 
+/* Títulos de las tarjetas laterales. */
 .semana h2,
 .disponibilidad__consejo h2 {
     margin-bottom: 4px;
     font-size: 1rem;
 }
 
+/* Texto de ayuda del resumen de la semana. */
 .semana > p {
     margin-bottom: 12px;
     color: var(--color-text-secondary);
     font-size: var(--text-small);
 }
 
+/* Lista de los siete días de la semana. */
 .semana__dias {
     display: flex;
     flex-direction: column;
@@ -568,6 +681,7 @@
     list-style: none;
 }
 
+/* Fila de cada día: nombre y bloques de horas. */
 .semana__dia {
     display: grid;
     grid-template-columns: 40px minmax(0, 1fr);
@@ -575,18 +689,21 @@
     gap: 8px;
 }
 
+/* Nombre corto del día. */
 .semana__nombre {
     color: var(--color-navy);
     font-size: 0.8rem;
     font-weight: 800;
 }
 
+/* Bloques de horas del día, uno al lado del otro. */
 .semana__bloques {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
 }
 
+/* Cada bloque de horas, con forma de píldora. */
 .semana__bloque {
     padding: 3px 8px;
     border-radius: 6px;
@@ -597,16 +714,19 @@
     animation: disponibilidad-crecer 0.4s ease both;
 }
 
+/* Texto "Libre" cuando el día no tiene franjas. */
 .semana__sin {
     color: var(--color-text);
     font-size: 0.75rem;
     font-style: italic;
 }
 
+/* El nombre de un día libre se ve más claro. */
 .semana__dia--libre .semana__nombre {
     color: var(--color-text);
 }
 
+/* Lista de consejos para el voluntario. */
 .disponibilidad__consejo ul {
     display: flex;
     flex-direction: column;
@@ -619,6 +739,7 @@
 
 /* 6. Aviso para quien todavía no es voluntario */
 
+/* Tarjeta de aviso para quien todavía no es voluntario. */
 .disponibilidad__aviso {
     display: flex;
     flex-wrap: wrap;
@@ -630,19 +751,23 @@
     background-color: var(--color-text-light);
 }
 
+/* Bloque de texto del aviso. */
 .disponibilidad__aviso > div {
     flex: 1 1 260px;
 }
 
+/* Título del aviso. */
 .disponibilidad__aviso h2 {
     margin-bottom: 4px;
     font-size: var(--text-subtitle);
 }
 
+/* Texto del aviso. */
 .disponibilidad__aviso p {
     color: var(--color-text-secondary);
 }
 
+/* Ícono circular del aviso. */
 .disponibilidad__aviso-icono {
     display: inline-flex;
     align-items: center;
@@ -662,28 +787,33 @@
 
 /* 7. Animaciones propias */
 
+/* Pequeño salto del contador cuando cambia el número de franjas. */
 @keyframes disponibilidad-pop {
     0% { transform: scale(1); }
     40% { transform: scale(1.08); }
     100% { transform: scale(1); }
 }
 
+/* Sacudida del formulario cuando la franja no es válida. */
 @keyframes disponibilidad-sacudir {
     0%, 100% { transform: translateX(0); }
     25% { transform: translateX(-6px); }
     75% { transform: translateX(6px); }
 }
 
+/* Resaltado en verde de la franja recién agregada. */
 @keyframes disponibilidad-resaltar {
     0%, 100% { box-shadow: none; }
     30% { box-shadow: 0 0 0 4px rgba(35, 134, 91, 0.25); border-color: var(--color-success); }
 }
 
+/* Apertura del formulario de edición. */
 @keyframes disponibilidad-abrir {
     from { opacity: 0; transform: translateY(-6px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Entrada de los bloques de horas del resumen de la semana. */
 @keyframes disponibilidad-crecer {
     from { opacity: 0; transform: scaleX(0.6); }
     to { opacity: 1; transform: scaleX(1); }
@@ -691,6 +821,7 @@
 
 /* 8. Tabletas: la columna lateral pasa abajo */
 
+/* Por debajo de 1100 px la columna lateral pasa debajo de la principal. */
 @media (max-width: 1100px) {
     .disponibilidad__grid {
         grid-template-columns: minmax(0, 1fr);
@@ -702,6 +833,7 @@
     }
 }
 
+/* Consulta de contenedor: depende del ancho de la lista, no de la pantalla. */
 @container (max-width: 620px) {
     /* Si la lista es angosta, la fila pasa a dos líneas: día y botones arriba, horas y estado abajo */
     .franja__fila {
@@ -721,6 +853,7 @@
 
 /* 9. Celulares */
 
+/* En celulares se reducen márgenes y tamaños y los botones ocupan todo el ancho. */
 @media (max-width: 600px) {
     .disponibilidad__titulos h1 {
         font-size: 1.5rem;
@@ -806,6 +939,8 @@
 
 /* 10. Pantallas táctiles y menos movimiento */
 
+/* En pantallas táctiles no hay cursor, así que se quitan los efectos
+   de pasar el cursor para que no queden pegados. */
 @media (hover: none) {
     .franja:hover {
         border-color: var(--color-border);
@@ -816,6 +951,7 @@
     }
 }
 
+/* Si el usuario pidió menos movimiento, se desactivan las animaciones. */
 @media (prefers-reduced-motion: reduce) {
     .disponibilidad *,
     .disponibilidad *::before,

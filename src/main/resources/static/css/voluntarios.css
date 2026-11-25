@@ -1,11 +1,48 @@
-/* ==========================================================
-   Buscar voluntarios (RF-07) - Panel del estudiante
-   Se apoya en solicitudes.css (encabezado, botones y
-   animaciones) y en las variables de global.css
-   ========================================================== */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: voluntarios.css
+ * UBICACIÓN: src/main/resources/static/css/voluntarios.css
+ * MÓDULO: Buscar voluntarios (panel del estudiante)
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.2.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: RF-07 (búsqueda de voluntarios)
+ *
+ * DESCRIPCIÓN:
+ * Hoja de estilos de la pantalla buscar-voluntarios.html. Da el diseño al
+ * panel de filtros (materia, tipo de apoyo y programa), al resumen de
+ * resultados, a las tarjetas de los voluntarios con sus etiquetas de
+ * materias, apoyos y días, al estado sin resultados y al buscador con
+ * sugerencias que reemplaza a las listas desplegables largas.
+ *
+ * DEPENDENCIAS:
+ * - solicitudes.css: encabezado de la página, botones de acción y la
+ *   animación solicitudes-aparecer.
+ * - global.css: variables de color, tamaños de texto, radios y sombras.
+ * - buscador-select.js: crea los elementos con clases buscador__*.
+ *
+ * ESTRUCTURA DEL ARCHIVO:
+ * - 1. Panel de filtros y botones Buscar y Limpiar.
+ * - 2. Resumen de resultados.
+ * - 3. Tarjetas de voluntarios y etiquetas.
+ * - 4. Sin resultados.
+ * - 4b. Buscador con sugerencias.
+ * - 5 a 7. Tabletas, celulares y celulares muy pequeños.
+ * - 8. Pantallas táctiles.
+ * - 9. Movimiento reducido.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: estilos de Buscar voluntarios (RF-07).
+ * - 1.1.0: buscador con sugerencias para listas largas (RF-07).
+ * - 1.2.0 (2026-11-25): documentación completa. No cambia ningún estilo.
+ */
+
 
 /* 1. Panel de filtros */
 
+/* Tarjeta de filtros con tres campos en una fila. */
 .busqueda__filtros {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -22,6 +59,7 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Cada filtro: etiqueta arriba y campo abajo. */
 .busqueda__campo {
     display: flex;
     flex-direction: column;
@@ -29,12 +67,14 @@
     min-width: 0;
 }
 
+/* Etiqueta del filtro. */
 .busqueda__campo label {
     color: var(--color-navy);
     font-size: var(--text-small);
     font-weight: 800;
 }
 
+/* Lista desplegable del filtro, con el mismo alto y borde que los demás campos. */
 .busqueda__campo select {
     width: 100%;
     min-height: 48px;
@@ -52,15 +92,18 @@
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Al pasar el cursor el borde se resalta. */
 .busqueda__campo select:hover {
     border-color: var(--color-primary-light);
 }
 
+/* Contorno visible cuando la lista recibe el foco con el teclado. */
 .busqueda__campo select:focus-visible {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px var(--color-soft);
 }
 
+/* Fila con los botones Buscar y Limpiar. */
 .busqueda__acciones {
     display: flex;
     grid-column: 1 / -1;
@@ -68,21 +111,25 @@
     gap: 10px;
 }
 
+/* Los botones de los filtros no ocupan todo el ancho. */
 .busqueda__acciones .boton-accion {
     width: auto;
     padding: 12px 24px;
 }
 
+/* Botón Buscar con el color principal. */
 .boton-accion--buscar {
     color: var(--color-text-light);
     background-color: var(--color-primary);
     box-shadow: var(--shadow-soft);
 }
 
+/* Al pasar el cursor el botón Buscar se oscurece. */
 .boton-accion--buscar:hover {
     background-color: var(--color-primary-dark);
 }
 
+/* Botón Limpiar: es un enlace con apariencia de botón secundario. */
 .boton-accion--limpiar {
     display: inline-flex;
     align-items: center;
@@ -93,6 +140,7 @@
     text-decoration: none;
 }
 
+/* Al pasar el cursor el botón Limpiar toma el color principal. */
 .boton-accion--limpiar:hover {
     color: var(--color-primary);
     border-color: var(--color-primary);
@@ -101,12 +149,14 @@
 
 /* 2. Resumen de resultados */
 
+/* Texto con el número de voluntarios encontrados. */
 .busqueda__resumen {
     margin-bottom: 18px;
     color: var(--color-text-secondary);
     font-weight: 700;
 }
 
+/* El número se resalta en azul oscuro. */
 .busqueda__resumen strong {
     color: var(--color-navy);
 }
@@ -116,6 +166,7 @@
     transition: opacity 0.25s ease;
 }
 
+/* La clase buscando la pone el JS mientras se envía la búsqueda. */
 .busqueda__resultados.buscando {
     opacity: 0.45;
     pointer-events: none;
@@ -123,6 +174,7 @@
 
 /* 3. Tarjetas de voluntarios */
 
+/* Cuadrícula de tarjetas de voluntarios. */
 .voluntarios__lista {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
@@ -130,6 +182,7 @@
     list-style: none;
 }
 
+/* Tarjeta de cada voluntario. */
 .tarjeta-voluntario {
     height: 100%;
     display: flex;
@@ -143,21 +196,25 @@
     transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
+/* Al pasar el cursor la tarjeta sube un poco. */
 .tarjeta-voluntario:hover {
     transform: translateY(-4px);
     border-color: var(--color-primary-light);
 }
 
+/* Efecto al tocar la tarjeta en el celular. */
 .tarjeta-voluntario.presionada {
     transform: scale(0.985);
 }
 
+/* Cabecera de la tarjeta: avatar y nombre. */
 .tarjeta-voluntario__cabecera {
     display: flex;
     align-items: center;
     gap: 14px;
 }
 
+/* Avatar circular con la inicial del voluntario sobre un degradado. */
 .tarjeta-voluntario__avatar {
     flex-shrink: 0;
     display: flex;
@@ -172,20 +229,24 @@
     font-weight: 800;
 }
 
+/* El bloque del nombre puede encogerse sin desbordar. */
 .tarjeta-voluntario__cabecera > div {
     min-width: 0;
 }
 
+/* Nombre del voluntario. */
 .tarjeta-voluntario h2 {
     font-size: 1.17rem;
     overflow-wrap: anywhere;
 }
 
+/* Programa académico del voluntario. */
 .tarjeta-voluntario__programa {
     color: var(--color-text-secondary);
     font-size: 0.92rem;
 }
 
+/* Subtítulo de cada grupo de etiquetas (Materias, Tipo de apoyo, Días). */
 .tarjeta-voluntario__grupo h3 {
     margin-bottom: 8px;
     color: var(--color-navy);
@@ -201,6 +262,7 @@
     list-style: none;
 }
 
+/* Etiqueta base con forma de píldora. */
 .etiqueta {
     padding: 4px 12px;
     border-radius: 50px;
@@ -208,30 +270,36 @@
     font-weight: 700;
 }
 
+/* Etiqueta de materia. */
 .etiqueta--materia {
     color: var(--color-primary);
     background-color: var(--color-soft);
 }
 
+/* Etiqueta de tipo de apoyo. */
 .etiqueta--apoyo {
     color: var(--color-navy);
     background-color: var(--color-surface);
 }
 
+/* Etiqueta de día disponible. */
 .etiqueta--dia {
     color: var(--color-success);
     background-color: #E5F5EE;
 }
 
+/* Texto cuando el voluntario no tiene datos en ese grupo. */
 .etiqueta--vacia {
     color: var(--color-text-secondary);
     font-weight: 600;
 }
 
+/* El botón de solicitar queda siempre al final de la tarjeta. */
 .tarjeta-voluntario__accion {
     margin-top: auto;
 }
 
+/* Botón Solicitar acompañamiento. */
 .boton-accion--solicitar {
     display: inline-flex;
     align-items: center;
@@ -242,6 +310,7 @@
     text-decoration: none;
 }
 
+/* Al pasar el cursor el botón se oscurece. */
 .boton-accion--solicitar:hover {
     color: var(--color-text-light);
     background-color: var(--color-primary-dark);
@@ -250,6 +319,7 @@
 
 /* 4. Sin resultados */
 
+/* Tarjeta que se muestra cuando no hay voluntarios con esos filtros. */
 .busqueda__vacio {
     padding: 48px 24px;
     text-align: center;
@@ -259,15 +329,18 @@
     animation: solicitudes-aparecer 0.6s ease both;
 }
 
+/* Título del estado sin resultados. */
 .busqueda__vacio h2 {
     margin-bottom: 8px;
     font-size: var(--text-subtitle);
 }
 
+/* Texto del estado sin resultados. */
 .busqueda__vacio p {
     color: var(--color-text-secondary);
 }
 
+/* Botón para limpiar los filtros desde el estado sin resultados. */
 .busqueda__vacio .boton-accion {
     display: inline-flex;
     align-items: center;
@@ -278,6 +351,7 @@
     text-decoration: none;
 }
 
+/* Al pasar el cursor el botón se oscurece. */
 .busqueda__vacio .boton-accion:hover {
     color: var(--color-text-light);
     text-decoration: none;
@@ -304,14 +378,17 @@
     pointer-events: none;
 }
 
+/* El campo es la referencia para ubicar la lista de sugerencias. */
 .busqueda__campo {
     position: relative;
 }
 
+/* Contenedor del buscador creado por buscador-select.js. */
 .buscador {
     position: relative;
 }
 
+/* Campo de texto del buscador con una lupa a la izquierda. */
 .buscador__campo {
     width: 100%;
     min-height: 48px;
@@ -327,15 +404,18 @@
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+/* Texto de ejemplo del buscador. */
 .buscador__campo::placeholder {
     color: var(--color-text);
     opacity: 0.8;
 }
 
+/* Al pasar el cursor el borde se resalta. */
 .buscador__campo:hover {
     border-color: var(--color-primary-light);
 }
 
+/* Contorno suave cuando el campo tiene el foco o la lista está abierta. */
 .buscador__campo:focus-visible,
 .buscador--abierto .buscador__campo {
     border-color: var(--color-primary);
@@ -343,6 +423,7 @@
     box-shadow: 0 0 0 3px var(--color-soft);
 }
 
+/* Botón × para borrar el texto; oculto hasta que hay un valor. */
 .buscador__limpiar {
     position: absolute;
     top: 50%;
@@ -360,16 +441,19 @@
     transform: translateY(-50%);
 }
 
+/* El botón de borrar aparece cuando el buscador tiene un valor. */
 .buscador--con-valor .buscador__limpiar {
     display: block;
 }
 
+/* Al pasar el cursor o recibir el foco, el botón de borrar se resalta. */
 .buscador__limpiar:hover,
 .buscador__limpiar:focus-visible {
     background-color: var(--color-soft);
     color: var(--color-primary-dark);
 }
 
+/* Lista de sugerencias debajo del campo, por encima de las tarjetas. */
 .buscador__lista {
     position: absolute;
     z-index: 20;
@@ -388,6 +472,7 @@
     animation: buscador-abrir 0.18s ease both;
 }
 
+/* Título de un grupo de sugerencias, en mayúsculas. */
 .buscador__grupo {
     padding: 10px 10px 4px;
     color: var(--color-primary);
@@ -397,6 +482,7 @@
     text-transform: uppercase;
 }
 
+/* Cada sugerencia de la lista. */
 .buscador__opcion {
     padding: 10px 12px;
     border-radius: var(--radius-small);
@@ -404,21 +490,25 @@
     cursor: pointer;
 }
 
+/* Primera opción ("Todas"), que quita el filtro. */
 .buscador__opcion--todas {
     color: var(--color-text);
     font-style: italic;
 }
 
+/* Sugerencia bajo el cursor o elegida con las flechas del teclado. */
 .buscador__opcion:hover,
 .buscador__opcion--activa {
     background-color: var(--color-soft);
     color: var(--color-primary-dark);
 }
 
+/* Sugerencia que ya está seleccionada. */
 .buscador__opcion[aria-selected="true"] {
     font-weight: 800;
 }
 
+/* Texto cuando ninguna sugerencia coincide. */
 .buscador__vacio {
     padding: 12px;
     color: var(--color-text);
@@ -426,6 +516,7 @@
     text-align: center;
 }
 
+/* Apertura de la lista de sugerencias. */
 @keyframes buscador-abrir {
     from {
         opacity: 0;
@@ -439,6 +530,7 @@
 
 /* 5. Tabletas */
 
+/* En tabletas los filtros pasan a dos columnas. */
 @media (max-width: 900px) {
     .busqueda__filtros {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -451,6 +543,7 @@
 
 /* 6. Celulares */
 
+/* En celulares los filtros quedan en una sola columna. */
 @media (max-width: 600px) {
     .busqueda__filtros {
         grid-template-columns: 1fr;
@@ -470,6 +563,7 @@
 
 /* 7. Celulares muy pequeños */
 
+/* En celulares muy pequeños los botones de los filtros se apilan. */
 @media (max-width: 380px) {
     .busqueda__acciones {
         flex-direction: column;
@@ -482,6 +576,7 @@
 
 /* 8. Pantallas táctiles */
 
+/* En pantallas táctiles la tarjeta no sube al tocarla. */
 @media (hover: none) {
     .tarjeta-voluntario:hover {
         transform: none;
@@ -491,6 +586,7 @@
 
 /* 9. Movimiento reducido */
 
+/* Si el usuario pidió menos movimiento, se quitan las animaciones. */
 @media (prefers-reduced-motion: reduce) {
     .busqueda__filtros,
     .buscador__lista,

@@ -1,4 +1,47 @@
-/* Global Styles */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: global.css
+ * UBICACIÓN: src/main/resources/static/css/global.css
+ * MÓDULO: Estilos globales de la plataforma
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.1.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: SCRUM-43 (plantilla base de la plataforma)
+ *
+ * DESCRIPCIÓN:
+ * Hoja de estilos base que cargan todas las páginas. Define la tipografía,
+ * las variables de color, tamaños de texto y bordes que usan las demás
+ * hojas de estilo, y los estilos generales de títulos, enlaces, botones,
+ * campos de formulario, foco del teclado e imágenes.
+ *
+ * DEPENDENCIAS:
+ * - Google Fonts: tipografía Nunito Sans.
+ * - Ninguna hoja de estilos del proyecto; las demás dependen de esta.
+ *
+ * ESTRUCTURA DEL ARCHIVO:
+ * - 1. Tipografía.
+ * - 2. Variables globales (colores, texto, bordes y sombras).
+ * - 3. Configuración general.
+ * - 4. Títulos.
+ * - 5. Enlaces.
+ * - 6. Botones.
+ * - 7. Campos de formulario.
+ * - 8. Accesibilidad: navegación con teclado.
+ * - 9. Imágenes adaptables.
+ * - 10. Adaptación para pantallas pequeñas.
+ *
+ * OBSERVACIONES:
+ * - accesibilidad.css reemplaza estas variables cuando el usuario activa
+ *   el alto contraste, y agranda la letra de la raíz con letra grande.
+ *   Por eso los colores y tamaños deben usarse siempre con estas variables.
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: estilos globales de la plataforma (SCRUM-43).
+ * - 1.1.0 (2026-11-25): documentación completa. No cambia ningún estilo.
+ */
+
 
 /* 1. Tipografía */
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap');
@@ -46,16 +89,20 @@
 }
 
 /* 3. Configuración general */
+/* Quita los márgenes del navegador y hace que el ancho incluya el
+   relleno y el borde de cada elemento. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Desplazamiento suave al ir a un ancla de la misma página. */
 html {
     scroll-behavior: smooth;
 }
 
+/* Letra, color y fondo de todas las páginas. */
 body {
     font-family: var(--font-main);
     font-size: var(--text-normal);
@@ -83,12 +130,14 @@ a {
     text-decoration: none;
 }
 
+/* El subrayado aparece al pasar el cursor. */
 a:hover {
     text-decoration: underline;
 }
 
 /* 6. Botones */
 button {
+    /* Los botones usan la misma letra que el resto y muestran la mano al pasar el cursor. */
     font-family: var(--font-main);
     font-size: var(--text-normal);
     cursor: pointer;
@@ -125,6 +174,7 @@ img {
         --text-subtitle: 1.125rem;
     }
 
+    /* En celulares se reducen los títulos y el texto normal. */
     body {
         font-size: 0.9375rem;
     }

@@ -1,14 +1,49 @@
-/* ==========================================================
-   Buscador con sugerencias para listas largas (RF-07)
-   Convierte cada <select data-buscador> en un campo donde se
-   escribe y se eligen sugerencias. Ignora tildes y mayúsculas,
-   así "algebra" encuentra "Álgebra Lineal" y "sistemas"
-   encuentra "Ingeniería de Sistemas".
-   El select original se queda oculto y es el que se envía en
-   el formulario, por eso el backend no cambia y sin JavaScript
-   la página sigue funcionando con la lista normal.
-   ========================================================== */
+/*
+ * PROYECTO: Feeling
+ * ARCHIVO: buscador-select.js
+ * UBICACIÓN: src/main/resources/static/js/buscador-select.js
+ * MÓDULO: Buscar voluntarios (panel del estudiante)
+ *
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.1.0
+ * FECHA DE DOCUMENTACIÓN: 2026-11-25
+ * ESTADO: Finalizado
+ * TICKET: RF-07 (búsqueda de voluntarios)
+ *
+ * DESCRIPCIÓN:
+ * Convierte cada lista desplegable con data-buscador en un campo donde se
+ * escribe y se eligen sugerencias. La búsqueda ignora tildes y mayúsculas,
+ * así "algebra" encuentra "Álgebra Lineal" y "sistemas" encuentra
+ * "Ingeniería de Sistemas". El select original queda oculto y es el que se
+ * envía en el formulario, por eso el servidor no cambia y, sin
+ * JavaScript, la página sigue funcionando con la lista normal.
+ *
+ * FUNCIONALIDADES:
+ * - Campo de texto con lista de sugerencias agrupadas (por ejemplo, por facultad).
+ * - Búsqueda por varias palabras, sin tildes ni mayúsculas.
+ * - Navegación con el teclado: flechas para moverse, Enter para elegir y
+ *   Escape para cerrar.
+ * - Botón × para quitar el filtro.
+ * - Al elegir una opción avisa con el evento change, para que
+ *   solicitudes.js envíe la búsqueda.
+ * - Roles y atributos ARIA de combobox y listbox para lectores de pantalla.
+ *
+ * DEPENDENCIAS:
+ * - buscar-voluntarios.html: listas desplegables con data-buscador.
+ * - voluntarios.css: estilos de las clases buscador__*.
+ * - solicitudes.js: envía la búsqueda cuando el select cambia.
+ *
+ * ATRIBUTOS DATA-* UTILIZADOS:
+ * - data-buscador: marca las listas que se convierten en buscador.
+ * - data-buscador-placeholder: texto de ejemplo del campo (opcional).
+ *
+ * HISTORIAL DE VERSIONES:
+ * - 1.0.0: buscador con sugerencias para listas largas (RF-07).
+ * - 1.1.0 (2026-11-25): documentación completa. No cambia la lógica.
+ */
 
+
+// El script se ejecuta cuando el documento terminó de cargarse.
 document.addEventListener("DOMContentLoaded", () => {
     "use strict";
 
@@ -27,7 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
             .trim();
     }
 
+    // Se convierte cada lista desplegable marcada con data-buscador.
     document.querySelectorAll("select[data-buscador]").forEach((select, indice) => {
+        // Identificadores del campo y de la lista, y etiqueta del select.
         const idLista = `${select.id || "buscador-" + indice}-sugerencias`;
         const idCampo = `${select.id || "buscador-" + indice}-texto`;
         const etiqueta = select.id ? document.querySelector(`label[for="${select.id}"]`) : null;
@@ -39,12 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
             grupo: opcion.parentElement.tagName === "OPTGROUP" ? opcion.parentElement.label : "",
             busqueda: normalizar(`${opcion.textContent} ${opcion.value} ${opcion.parentElement.label || ""}`)
         }));
+        // Opción vacía ("Todas"), que sirve para quitar el filtro.
         const opcionTodas = opciones.find(opcion => opcion.valor === "");
 
         // 1. Construye el campo y la lista de sugerencias.
+        // Contenedor del buscador.
         const contenedor = document.createElement("div");
         contenedor.className = "buscador";
 
+        // Campo de texto con el rol de combobox para lectores de pantalla.
         const campo = document.createElement("input");
         campo.type = "text";
         campo.id = idCampo;
@@ -57,12 +97,15 @@ document.addEventListener("DOMContentLoaded", () => {
         campo.setAttribute("aria-expanded", "false");
         campo.setAttribute("aria-controls", idLista);
 
+        // Botón × para borrar el valor.
         const botonLimpiar = document.createElement("button");
         botonLimpiar.type = "button";
         botonLimpiar.className = "buscador__limpiar";
         botonLimpiar.setAttribute("aria-label", opcionTodas ? `Quitar filtro: ${opcionTodas.texto}` : "Borrar");
         botonLimpiar.textContent = "×";
 
+        // Lista de sugerencias, oculta al inicio. La etiqueta del select pasa
+        // a apuntar al campo nuevo.
         const lista = document.createElement("ul");
         lista.id = idLista;
         lista.className = "buscador__lista";
@@ -73,21 +116,26 @@ document.addEventListener("DOMContentLoaded", () => {
             etiqueta.htmlFor = idCampo;
         }
 
+        // El select original se oculta y deja de recibir el foco, pero se sigue
+        // enviando en el formulario. El buscador se pone justo después.
         select.classList.add("buscador__select-oculto");
         select.tabIndex = -1;
         select.setAttribute("aria-hidden", "true");
         select.after(contenedor);
         contenedor.append(campo, botonLimpiar, lista);
 
+        // Sugerencias que se ven y posición de la sugerencia marcada.
         let visibles = [];
         let activa = -1;
 
         // 2. Muestra en el campo la opción elegida actualmente.
+        // Texto de la opción elegida, o vacío si es "Todas".
         function textoElegido() {
             const elegida = opciones.find(opcion => opcion.valor === select.value);
             return elegida && elegida.valor !== "" ? elegida.texto : "";
         }
 
+        // Escribe en el campo la opción elegida y muestra u oculta el botón ×.
         function actualizarCampo() {
             campo.value = textoElegido();
             contenedor.classList.toggle("buscador--con-valor", campo.value !== "");
@@ -95,10 +143,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 3. Pinta las sugerencias que coinciden con lo escrito.
         function pintar(consulta) {
+            // Una opción coincide si contiene todas las palabras escritas.
             const terminos = normalizar(consulta).split(" ").filter(Boolean);
             visibles = opciones.filter(opcion =>
                 terminos.every(termino => opcion.busqueda.includes(termino)));
 
+            // Se vacía la lista y se agregan las sugerencias, con un título por grupo.
             lista.replaceChildren();
             let grupoActual = null;
 
@@ -112,6 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     lista.append(titulo);
                 }
 
+                // Cada sugerencia con el rol de opción.
                 const item = document.createElement("li");
                 item.id = `${idLista}-${posicion}`;
                 item.className = "buscador__opcion";
@@ -130,6 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 lista.append(item);
             });
 
+            // Mensaje cuando ninguna opción coincide.
             if (visibles.length === 0) {
                 const vacio = document.createElement("li");
                 vacio.className = "buscador__vacio";
@@ -138,9 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 lista.append(vacio);
             }
 
+            // Si se escribió algo, se marca la primera sugerencia.
             marcar(visibles.length > 0 && terminos.length > 0 ? 0 : -1);
         }
 
+        // Marca la sugerencia de la posición indicada y la deja a la vista.
         function marcar(posicion) {
             activa = posicion;
             lista.querySelectorAll(".buscador__opcion").forEach((item, i) => {
@@ -155,6 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        // Abre la lista de sugerencias.
         function abrir() {
             if (!lista.hidden) {
                 return;
@@ -164,6 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
             contenedor.classList.add("buscador--abierto");
         }
 
+        // Cierra la lista de sugerencias.
         function cerrar() {
             lista.hidden = true;
             campo.setAttribute("aria-expanded", "false");
@@ -184,18 +240,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // 5. Eventos del campo.
+        // Al entrar al campo se selecciona su texto y se muestran todas las opciones.
         campo.addEventListener("focus", () => {
             campo.select();
             pintar("");
             abrir();
         });
 
+        // Al escribir se filtran las sugerencias.
         campo.addEventListener("input", () => {
             contenedor.classList.toggle("buscador--con-valor", campo.value !== "");
             pintar(campo.value);
             abrir();
         });
 
+        // Teclado: las flechas mueven la sugerencia marcada (y vuelven al inicio
+        // al llegar al final), Enter la elige y Escape cierra la lista.
         campo.addEventListener("keydown", evento => {
             if (evento.key === "ArrowDown" || evento.key === "ArrowUp") {
                 evento.preventDefault();
@@ -239,6 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
             actualizarCampo();
         });
 
+        // El botón × quita el filtro y devuelve el foco al campo.
         botonLimpiar.addEventListener("click", () => {
             if (opcionTodas) {
                 elegir(opcionTodas);
@@ -249,6 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Si otra parte de la página cambia el select, el campo se actualiza.
         select.addEventListener("change", actualizarCampo);
 
+        // Al cargar se muestra en el campo la opción que ya estaba elegida.
         actualizarCampo();
     });
 });
