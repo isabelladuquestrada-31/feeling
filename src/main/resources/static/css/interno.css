@@ -58,15 +58,14 @@
 
    OBSERVACIONES:
    - Las imágenes Fondo_Sidebar.png y Fondo_Header.png ya no se usan
-     y pueden eliminarse de static/img si el equipo está de acuerdo.
+     y fueron eliminadas
      Fondo_Footer.png sigue en uso en el pie de página.
    - El color base del menú (.sidebar) sigue siendo #fefbfb, casi
      blanco. Los textos del menú definen su propio color oscuro, pero
      un texto nuevo sin color propio no se vería sobre el fondo claro.
    - Algunos elementos son blancos y quedan casi sin contraste con el
      fondo #FEFEFE: el botón de expandir, la tarjeta del usuario, el
-     borde del avatar y el botón del perfil en el encabezado. Se
-     conservaron sin cambios por indicación de no modificar estilos.
+     borde del avatar y el botón del perfil en el encabezado. Se mantienen los estilos actuales de estos elementos.
    */
 
 /* 1. MENÚ LATERAL
@@ -687,8 +686,7 @@
     align-items: center;
     justify-content: flex-end;
 
-    /* Fondo liso (ajuste de diseño de la docente): reemplaza la imagen
-       Fondo_Header.png. */
+    /* ajustes de diseño realizados en esta versión */
     background-color: #FEFEFE;
 
     border-bottom: 1px solid #DCE7EB;
