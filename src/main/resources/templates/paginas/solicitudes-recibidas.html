@@ -2,7 +2,113 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layouts/layout-interno :: layout('Solicitudes recibidas | Feeling', ~{::section})}">
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: solicitudes-recibidas.html
+    UBICACIÓN: src/main/resources/templates/paginas/solicitudes-recibidas.html
+    MÓDULO: Solicitudes recibidas (panel del voluntario)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.4.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-25
+    ESTADO: Finalizado
+    TICKET: SCRUM-83 (RF-10), con ampliaciones de RF-11, SCRUM-95 (RF-09) y SCRUM-97 (RF-14)
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la pantalla donde el voluntario gestiona las solicitudes
+    de apoyo que le envían otros estudiantes. Reúne en una sola página tres
+    listas: las solicitudes pendientes (con Ver, Aceptar y Rechazar), los
+    acompañamientos aceptados cuya fecha ya pasó (por marcar como realizados)
+    y los acompañamientos aceptados próximos (con contacto por WhatsApp).
+    Se basa en el bloque "Solicitudes que has recibido" del mockup del panel
+    del voluntario (SCRUM-13).
+
+    FUNCIONALIDADES:
+    - Contador de solicitudes pendientes en el encabezado.
+    - Botón Ver que abre el detalle de cada solicitud.
+    - Botones Aceptar y Rechazar que envían un formulario POST por solicitud.
+    - Aviso "Pidió ajustes razonables" cuando el estudiante los solicitó (RF-09).
+    - Lista de ajustes razonables en el detalle y en los acompañamientos aceptados.
+    - Sección "Por marcar como realizados" con formulario de duración y notas (RF-14).
+    - Sección "Acompañamientos aceptados" con enlace para contactar por WhatsApp (RF-11).
+    - Aviso para quien todavía no es voluntario, con enlace para activarse.
+    - Mensajes de éxito y error enviados por el servidor.
+
+    ESTRUCTURA DE LA PÁGINA:
+    - Encabezado con botón de volver, título, descripción y contador.
+    - Alertas del servidor y aviso para lectores de pantalla.
+    - Aviso de "Todavía no eres voluntario" (si no lo es).
+    - Si es voluntario: estado vacío, lista de pendientes, por marcar como
+      realizados y acompañamientos aceptados.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura y accesibilidad (ARIA).
+    - Thymeleaf: layout, condicionales, iteración, rutas, fechas y textos.
+    - CSS3: presentación y diseño adaptable.
+    - JavaScript: detalle desplegable, formulario de seguimiento y contador.
+
+    DEPENDENCIAS:
+    - layouts/layout-interno: aporta el head del documento, el menú y el pie.
+      Este archivo solo entrega la sección de contenido y el título.
+    - /css/solicitudes.css y /css/solicitudes-recibidas.css.
+    - /js/solicitudes.js y /js/solicitudes-recibidas.js.
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - esVoluntario: indica si el usuario ya es voluntario.
+    - solicitudesRecibidas: lista de solicitudes pendientes.
+    - porCerrar: lista de solicitudes aceptadas cuya fecha ya pasó.
+    - aceptadas: lista de solicitudes aceptadas próximas.
+    - nombresEstudiantes: mapa del id del estudiante a su nombre.
+    - nombresMaterias: mapa del código de la materia a su nombre.
+    - etiquetasApoyo: mapa del tipo de apoyo a su etiqueta legible.
+    - ajustesPorSolicitud: mapa del id de la solicitud a la lista de ajustes razonables.
+    - duraciones: mapa de la duración en minutos a su texto (por ejemplo 60 y "1 hora").
+    - largoMaximoNotas: máximo de caracteres de las notas del seguimiento.
+    - idioma: configuración regional para formatear las fechas.
+    - mensajeExito y mensajeError: mensajes después de una acción.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /ser-voluntario: perfil del voluntario y activación.
+    - /solicitudes/{id}/aceptar: acepta una solicitud (POST).
+    - /solicitudes/{id}/rechazar: rechaza una solicitud (POST).
+    - /solicitudes/{id}/realizada: marca un acompañamiento como realizado (POST).
+    - /solicitudes/{id}/whatsapp: abre el contacto por WhatsApp con el estudiante.
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-solicitudes: lo usa solicitudes.js para la entrada de tarjetas y las alertas.
+    - data-recibidas: lo usa solicitudes-recibidas.js para detectar la pantalla.
+    - data-contador y data-contador-texto: número de pendientes y su texto.
+    - data-vacio: estado vacío que se muestra al responder la última solicitud.
+    - data-ver: botón que abre el detalle de la solicitud.
+    - data-accion y data-quitar-tarjeta: formularios de aceptar y rechazar.
+    - data-abrir-seguimiento, data-form-seguimiento, data-notas-seguimiento,
+      data-caracteres-notas, data-cancelar-seguimiento y data-guardar-seguimiento:
+      formulario de seguimiento (RF-14).
+    - data-aviso: zona de avisos para lectores de pantalla.
+    - data-alerta y data-cerrar-alerta: alertas que se pueden cerrar.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación inicial de solicitudes recibidas (SCRUM-83, RF-10).
+    - 1.1.0: acompañamientos aceptados con contacto por WhatsApp (RF-11).
+    - 1.2.0: ajustes razonables en la tarjeta y el detalle (SCRUM-95, RF-09).
+    - 1.3.0: sección por marcar como realizados (SCRUM-97, RF-14).
+    - 1.4.0 (2026-11-25): documentación completa. No cambia la estructura ni los textos.
+
+    OBSERVACIONES:
+    - El título Solicitudes recibidas | Feeling es distinto al de las demás
+      páginas, así que no se repite.
+    - El favicon no se define aquí: lo aporta layouts/layout-interno.
+    - Las etiquetas link y script están dentro de la sección porque el layout
+      solo recibe ese fragmento.
+    - Los comentarios HTML llegan al navegador. Para que no se envíen, se pueden
+      escribir como comentarios de Thymeleaf.
+    -->
+
     <meta charset="UTF-8">
+
+    <!-- Título de respaldo para ver el archivo sin servidor. El título real
+         se envía al layout en el atributo th:replace de la etiqueta html. -->
     <title>Solicitudes recibidas | Feeling</title>
 </head>
 <body>
@@ -16,15 +122,22 @@
     detalle ("Ver") los muestra; en los aceptados se ven siempre.
     RF-14 (SCRUM-97): sección "Por marcar como realizados" con los aceptados cuya fecha
     ya pasó; el botón "Marcar como realizado" abre el formulario de duración y notas.
+    El layout recibe esta sección como su contenido. La etiqueta section se asocia
+    con su título mediante aria-labelledby.
 -->
 <section class="solicitudes recibidas sin-js" data-solicitudes data-recibidas aria-labelledby="titulo-solicitudes">
 
+    <!-- Hojas de estilo y scripts de la pantalla. Los scripts usan defer para
+         ejecutarse cuando el documento ya fue analizado. -->
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/solicitudes-recibidas.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
     <script th:src="@{/js/solicitudes-recibidas.js}" defer></script>
 
     <!-- Encabezado con el número de solicitudes pendientes -->
+    <!-- Contiene el botón de volver, el título con el icono de campana, la
+         descripción y el contador. El contador solo se muestra si el usuario
+         es voluntario. -->
     <header class="recibidas__encabezado">
         <a th:href="@{/ser-voluntario}" class="recibidas__volver" aria-label="Volver a mi perfil de voluntario">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
@@ -39,6 +152,8 @@
             </h1>
             <p>Revisa las solicitudes que te han enviado y decide si puedes acompañar a cada estudiante.</p>
         </div>
+        <!-- Número de pendientes. solicitudes.js lo actualiza al responder una
+             solicitud y solicitudes-recibidas.js ajusta el singular o plural. -->
         <p th:if="${esVoluntario}" class="solicitudes__contador">
             <span class="solicitudes__contador-numero" data-contador
                   th:text="${#lists.size(solicitudesRecibidas)}">0</span>
@@ -48,6 +163,8 @@
     </header>
 
     <!-- Mensajes después de aceptar o rechazar -->
+    <!-- Alerta de éxito: se muestra si el controlador envía mensajeExito.
+         Se puede cerrar con el botón de la derecha. -->
     <div th:if="${mensajeExito}" class="solicitudes__alerta solicitudes__alerta--exito"
          role="status" data-alerta>
         <span th:text="${mensajeExito}"></span>
@@ -55,6 +172,7 @@
                 aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
 
+    <!-- Alerta de error: se muestra si el controlador envía mensajeError. -->
     <div th:if="${mensajeError}" class="solicitudes__alerta solicitudes__alerta--error"
          role="alert" data-alerta>
         <span th:text="${mensajeError}"></span>
@@ -63,9 +181,12 @@
     </div>
 
     <!-- Avisos para lectores de pantalla -->
+    <!-- Zona oculta que anuncia los cambios de la pantalla. El texto lo
+         escriben solicitudes.js y solicitudes-recibidas.js. -->
     <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
 
     <!-- Todavía no es voluntario -->
+    <!-- Se muestra solo si el usuario no es voluntario, con un enlace para activarse. -->
     <div th:unless="${esVoluntario}" class="recibidas__aviso">
         <span class="recibidas__aviso-icono" aria-hidden="true">
             <svg viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11Z"/></svg>
@@ -77,9 +198,12 @@
         <a th:href="@{/ser-voluntario}" class="boton-accion boton-accion--aceptar recibidas__aviso-boton">Quiero ser voluntario</a>
     </div>
 
+    <!-- Contenido que solo ve un voluntario. th:block no genera etiqueta en el HTML final. -->
     <th:block th:if="${esVoluntario}">
 
         <!-- Sin solicitudes (el JS también lo muestra cuando se responde la última) -->
+        <!-- Estado vacío. Empieza oculto si hay solicitudes y solicitudes.js lo
+             muestra cuando se responde la última. -->
         <div class="solicitudes__vacio" data-vacio
              th:hidden="${not #lists.isEmpty(solicitudesRecibidas)}">
             <div class="solicitudes__vacio-icono" aria-hidden="true">✓</div>
@@ -88,16 +212,22 @@
         </div>
 
         <!-- Solicitudes pendientes -->
+        <!-- Una tarjeta por solicitud. En th:with se calculan el nombre del
+             estudiante y el nombre de la materia; si no están en los mapas se
+             usa "Estudiante" y el código de la materia. -->
         <ul th:unless="${#lists.isEmpty(solicitudesRecibidas)}" class="recibidas__lista">
             <li th:each="s : ${solicitudesRecibidas}" class="solicitudes__item"
                 th:with="nombre=${nombresEstudiantes.get(s.estudianteId) != null ? nombresEstudiantes.get(s.estudianteId) : 'Estudiante'},
                          materia=${nombresMaterias.get(s.materiaCodigo) != null ? nombresMaterias.get(s.materiaCodigo) : s.materiaCodigo}">
                 <article class="recibida" th:attr="aria-labelledby='solicitud-' + ${s.id}">
 
+                    <!-- Avatar con la inicial del nombre. El color depende del
+                         resto de dividir el id del estudiante entre 4. -->
                     <span class="recibida__avatar" aria-hidden="true"
                           th:classappend="' recibida__avatar--' + ${s.estudianteId % 4}"
                           th:text="${#strings.toUpperCase(#strings.substring(nombre, 0, 1))}">E</span>
 
+                    <!-- Datos principales: estudiante, materia con tema y fecha. -->
                     <div class="recibida__info">
                         <h2 th:id="'solicitud-' + ${s.id}" th:text="${nombre}">Carlos R.</h2>
                         <p class="recibida__tema">
@@ -105,6 +235,7 @@
                             <span aria-hidden="true">–</span>
                             <span th:text="${s.tema}">Derivadas</span>
                         </p>
+                        <!-- Fecha y hora programadas, con la fecha en mayúscula inicial. -->
                         <p class="recibida__fecha">
                             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
                             <span th:text="${#strings.capitalize(#temporals.format(s.fechaProgramada, 'EEE, d MMM yyyy', idioma))} + ' · ' + ${#temporals.format(s.fechaProgramada, 'h:mm a', idioma)}">
@@ -118,8 +249,12 @@
                         </p>
                     </div>
 
+                    <!-- Etiqueta de estado de la solicitud. -->
                     <span class="estado estado--pendiente">Pendiente</span>
 
+                    <!-- Acciones: Ver abre el detalle; Aceptar y Rechazar son
+                         formularios POST. El aria-label de cada botón incluye el
+                         nombre y el tema para distinguirlos entre tarjetas. -->
                     <div class="recibida__acciones">
                         <button type="button" class="boton-accion boton-accion--ver"
                                 aria-expanded="false" th:attr="aria-controls='detalle-' + ${s.id}"
@@ -137,6 +272,9 @@
                     </div>
 
                     <!-- Detalle que se abre con "Ver" -->
+                    <!-- Lista de definición oculta por defecto. Si el tipo de apoyo no
+                         tiene etiqueta en etiquetasApoyo, se arma una desde el código
+                         (minúsculas, guiones bajos como espacios, mayúscula inicial). -->
                     <dl class="recibida__detalle" th:id="'detalle-' + ${s.id}" hidden>
                         <div>
                             <dt>Tipo de apoyo</dt>
@@ -151,6 +289,8 @@
                             <dd th:text="${s.materiaCodigo}">MAT101</dd>
                         </div>
                         <!-- RF-09: ajustes razonables que pidió el estudiante -->
+                        <!-- Solo aparece si la solicitud tiene ajustes. El detalle
+                             del ajuste se muestra después del nombre cuando existe. -->
                         <div class="recibida__detalle-ajustes" th:unless="${#lists.isEmpty(ajustesPorSolicitud.get(s.id))}">
                             <dt>Ajustes razonables</dt>
                             <dd>
@@ -163,6 +303,7 @@
                                 </ul>
                             </dd>
                         </div>
+                        <!-- Fecha de envío, solo si la solicitud la tiene registrada. -->
                         <div th:if="${s.fechaCreacion != null}">
                             <dt>Solicitud enviada</dt>
                             <dd th:text="${#temporals.format(s.fechaCreacion, 'd MMM yyyy, h:mm a', idioma)}">20 oct 2026</dd>
@@ -174,6 +315,7 @@
         </ul>
 
         <!-- RF-14: acompañamientos aceptados cuya fecha ya pasó, para registrar el seguimiento -->
+        <!-- Región con nombre accesible. Solo aparece si hay solicitudes por cerrar. -->
         <div class="recibidas__por-cerrar" role="region" aria-labelledby="titulo-por-cerrar"
              th:unless="${#lists.isEmpty(porCerrar)}">
             <h2 id="titulo-por-cerrar">Por marcar como realizados</h2>
@@ -202,6 +344,7 @@
                             </p>
                         </div>
                         <span class="estado estado--por-cerrar">Por cerrar</span>
+                        <!-- El botón abre el formulario de seguimiento de esta tarjeta. -->
                         <div class="recibida__acciones">
                             <button type="button" class="boton-accion boton-accion--aceptar"
                                     aria-expanded="false" th:attr="aria-controls='seguimiento-' + ${s.id}"
@@ -209,9 +352,13 @@
                         </div>
 
                         <!-- Formulario de seguimiento: duración y notas -->
+                        <!-- Se envía por POST a /solicitudes/{id}/realizada. Está oculto
+                             hasta que se pulsa el botón de arriba. -->
                         <form class="seguimiento" th:id="'seguimiento-' + ${s.id}"
                               th:action="@{/solicitudes/{id}/realizada(id=${s.id})}" method="post"
                               hidden data-form-seguimiento>
+                            <!-- Duración: una opción por cada elemento de duraciones;
+                                 la de 60 minutos viene marcada por defecto. -->
                             <fieldset class="seguimiento__duracion">
                                 <legend>¿Cuánto duró el acompañamiento?</legend>
                                 <div class="seguimiento__opciones">
@@ -222,12 +369,14 @@
                                     </label>
                                 </div>
                             </fieldset>
+                            <!-- Notas opcionales, limitadas por largoMaximoNotas. -->
                             <label class="seguimiento__notas">
                                 <span>Notas del acompañamiento <small>(opcional)</small></span>
                                 <textarea name="notas" rows="3" th:attr="maxlength=${largoMaximoNotas}"
                                           placeholder="Ej.: repasamos la regla de la cadena; le falta practicar ejercicios con logaritmos."
                                           data-notas-seguimiento></textarea>
                             </label>
+                            <!-- Contador de caracteres escritos sobre el máximo permitido. -->
                             <p class="seguimiento__contador">
                                 <span data-caracteres-notas>0</span> / <span th:text="${largoMaximoNotas}">1000</span>
                             </p>
@@ -245,6 +394,7 @@
         </div>
 
         <!-- RF-11: acompañamientos que el voluntario ya aceptó, con el contacto del estudiante -->
+        <!-- Esta región siempre se muestra; si no hay aceptadas, aparece un mensaje. -->
         <div class="recibidas__aceptadas" role="region" aria-labelledby="titulo-aceptadas">
             <h2 id="titulo-aceptadas">Acompañamientos aceptados</h2>
             <p class="recibidas__aceptadas-texto">Escríbele al estudiante para coordinar el acompañamiento.</p>
@@ -273,6 +423,7 @@
                                 <span th:text="${#strings.capitalize(#temporals.format(s.fechaProgramada, 'EEE, d MMM yyyy', idioma))} + ' · ' + ${#temporals.format(s.fechaProgramada, 'h:mm a', idioma)}">Vie, 24 oct 2026 · 3:00 p. m.</span>
                             </p>
                             <!-- RF-09: ajustes razonables a tener en cuenta en el acompañamiento -->
+                            <!-- En los aceptados la lista se ve siempre, sin pulsar Ver. -->
                             <div class="recibida__ajustes" th:unless="${#lists.isEmpty(ajustesPorSolicitud.get(s.id))}">
                                 <p class="recibida__ajustes-aviso">
                                     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5M12 15l-3 6M12 15l3 6"/></svg>
@@ -290,6 +441,8 @@
                             <p class="recibida__nota-cierre">Podrás marcarlo como realizado cuando pase la fecha.</p>
                         </div>
                         <span class="estado estado--aceptada">Aceptada</span>
+                        <!-- Enlace de contacto: se abre en otra pestaña. El parámetro
+                             volver=recibidas indica a qué pantalla regresar. -->
                         <div class="recibida__acciones">
                             <a th:href="@{/solicitudes/{id}/whatsapp(id=${s.id}, volver='recibidas')}" target="_blank" rel="noopener"
                                    class="boton-whatsapp"
