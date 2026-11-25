@@ -2,7 +2,95 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layouts/layout-interno :: layout('Mi perfil | Feeling', ~{::section})}">
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: perfil.html
+    UBICACIÓN: src/main/resources/templates/paginas/perfil.html
+    MÓDULO: Mi perfil (gestión del perfil y accesibilidad)
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.2.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-25
+    ESTADO: Finalizado
+    TICKET: SCRUM-91 (RF-03), con ampliación de SCRUM-93 (RF-04)
+
+    DESCRIPCIÓN:
+    Plantilla HTML de la pantalla donde el estudiante consulta y actualiza
+    la información básica de su perfil: nombre preferido, pronombres y
+    número de WhatsApp. En la columna lateral activa las preferencias de
+    accesibilidad (letra grande y alto contraste), ve una vista previa de
+    cómo lo ven los demás estudiantes y lee cómo se protege su número.
+    Basada en el mockup "Perfil y accesibilidad".
+
+    FUNCIONALIDADES:
+    - Formulario precargado con el nombre preferido, los pronombres y el WhatsApp.
+    - Contador de caracteres del nombre preferido.
+    - Errores del servidor debajo de cada campo.
+    - Interruptores de letra grande y alto contraste que se guardan en la cuenta (RF-04).
+    - Vista previa del perfil que se actualiza mientras se escribe.
+    - Aviso de privacidad del número de contacto.
+    - Mensajes de éxito y error enviados por el servidor.
+
+    ESTRUCTURA DE LA PÁGINA:
+    - Aviso para lectores de pantalla.
+    - Encabezado con etiqueta, título y descripción.
+    - Alertas del servidor.
+    - Columna principal: formulario de datos personales.
+    - Columna lateral: accesibilidad, vista previa y privacidad.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura, formularios y accesibilidad (ARIA).
+    - Thymeleaf: layout, condicionales, iteración, rutas y textos.
+    - CSS3: presentación y diseño adaptable.
+    - JavaScript: vista previa, validación y guardado de las preferencias.
+
+    DEPENDENCIAS:
+    - layouts/layout-interno: aporta el head del documento, el menú y el pie.
+      Este archivo solo entrega la sección de contenido y el título.
+    - /css/solicitudes.css y /css/perfil.css.
+    - /js/solicitudes.js y /js/perfil.js.
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - nombrePreferido, pronombres y whatsapp: datos actuales o escritos.
+    - opcionesPronombres: opciones de la lista de pronombres.
+    - errores: mapa del campo a su mensaje de error.
+    - letraGrande y altoContraste: preferencias de accesibilidad guardadas.
+    - errorAccesibilidad: mensaje si no se pudieron guardar las preferencias.
+    - usuarioNombre: nombre de usuario para la vista previa.
+    - mensaje: mensaje después de guardar.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /perfil: guarda los datos del perfil (POST).
+    - /perfil/accesibilidad: guarda las preferencias de accesibilidad (POST).
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-solicitudes: lo usa solicitudes.js para las alertas.
+    - data-formulario-perfil, data-campo, data-contador-nombre, data-guardar
+      y data-guardar-texto: formulario de datos personales.
+    - data-previa-nombre, data-previa-pronombres y data-previa-inicial: vista previa.
+    - data-formulario-accesibilidad, data-preferencia y data-guardar-preferencias:
+      preferencias de accesibilidad.
+    - data-aviso: zona de avisos para lectores de pantalla.
+    - data-alerta y data-cerrar-alerta: alertas que se pueden cerrar.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación de Mi perfil (SCRUM-91, RF-03).
+    - 1.1.0: preferencias de accesibilidad (SCRUM-93, RF-04).
+    - 1.2.0 (2026-11-25): documentación completa. No cambia la estructura ni los textos.
+
+    OBSERVACIONES:
+    - Las preferencias de accesibilidad se aplican en todas las páginas internas
+      mediante layouts/layout-interno y accesibilidad.css.
+    - Las etiquetas link y script están dentro de la sección porque el layout
+      solo recibe ese fragmento.
+    - Los comentarios HTML llegan al navegador. Para que no se envíen, se pueden
+      escribir como comentarios de Thymeleaf.
+    -->
+
     <meta charset="UTF-8">
+    <!-- Título de respaldo para ver el archivo sin servidor. El título real
+         se envía al layout en el atributo th:replace de la etiqueta html. -->
     <title>Mi perfil | Feeling</title>
 </head>
 <body>
@@ -16,31 +104,51 @@
     - Interruptores de letra grande y alto contraste que se guardan en la cuenta.
     Basada en el mockup "Perfil y accesibilidad".
 -->
+
 <section class="solicitudes perfil sin-js" data-solicitudes aria-labelledby="titulo-perfil">
 
+    <!--
+        Recursos de la vista:
+        Se incluyen los estilos generales de solicitudes y los estilos propios
+        del perfil. También se cargan los archivos JavaScript encargados de
+        los comportamientos compartidos y de la interacción de esta pantalla.
+    -->
     <link rel="stylesheet" th:href="@{/css/solicitudes.css}">
     <link rel="stylesheet" th:href="@{/css/perfil.css}">
     <script th:src="@{/js/solicitudes.js}" defer></script>
     <script th:src="@{/js/perfil.js}" defer></script>
 
-    <!-- Avisos para lectores de pantalla -->
+    <!--
+        Región destinada a los anuncios dinámicos de la interfaz.
+        El atributo aria-live permite que los lectores de pantalla comuniquen
+        los mensajes que se actualicen durante la interacción.
+    -->
     <p class="solicitudes__sr-only" aria-live="polite" data-aviso></p>
 
-    <!-- Encabezado -->
+    <!-- Encabezado principal de la sección del perfil. -->
     <header class="perfil__encabezado">
         <span class="solicitudes__etiqueta">Tu cuenta</span>
         <h1 id="titulo-perfil">Mi perfil</h1>
         <p>Mantén tus datos al día para que tus compañeros sepan cómo llamarte y cómo contactarte.</p>
     </header>
 
-    <!-- Mensaje de éxito después de guardar -->
+    <!--
+        Mensaje de confirmación:
+        Se muestra cuando el controlador envía la variable mensaje después
+        de procesar correctamente la actualización del perfil.
+    -->
     <div th:if="${mensaje}" class="solicitudes__alerta solicitudes__alerta--exito" role="status" data-alerta>
         <span th:text="${mensaje}">Tus datos se guardaron correctamente.</span>
         <button type="button" class="solicitudes__alerta-cerrar"
                 aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
 
-    <!-- Resumen de errores (si el servidor rechazó el formulario) -->
+    <!--
+        Resumen de errores:
+        Comprueba que exista el mapa de errores y que contenga información.
+        Si hay campos que no superaron la validación del servidor, se muestra
+        este aviso general para que el estudiante pueda corregirlos.
+    -->
     <div th:if="${errores != null and !errores.isEmpty()}"
          class="solicitudes__alerta solicitudes__alerta--error" role="alert" data-alerta>
         <span>No pudimos guardar tus datos. Revisa los campos marcados.</span>
@@ -48,12 +156,20 @@
                 aria-label="Cerrar mensaje" data-cerrar-alerta>×</button>
     </div>
 
+    <!-- Distribución de la pantalla en el formulario y la información lateral del perfil. -->
     <div class="perfil__grid">
 
-        <!-- Formulario: Mis datos -->
+        <!--
+            Formulario de datos personales:
+            Envía la información mediante el método POST al controlador de /perfil.
+            Los atributos de Thymeleaf permiten cargar los datos actuales del
+            estudiante y relacionar los errores devueltos por el servidor con
+            los campos correspondientes.
+        -->
         <form class="perfil__tarjeta perfil__formulario" th:action="@{/perfil}" method="post"
               novalidate aria-labelledby="titulo-datos" data-formulario-perfil>
 
+            <!-- Encabezado de la tarjeta con el nombre de usuario de la sesión. -->
             <div class="perfil__tarjeta-cabecera">
                 <span class="perfil__tarjeta-icono" aria-hidden="true">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
@@ -67,7 +183,12 @@
                 </div>
             </div>
 
-            <!-- Nombre preferido -->
+            <!--
+                Campo de nombre preferido:
+                Permite registrar el nombre con el que el estudiante desea
+                ser identificado dentro de Feeling. Es opcional y tiene
+                un límite de 50 caracteres.
+            -->
             <div class="campo" th:classappend="${errores != null and errores['nombrePreferido'] != null} ? 'campo--error'"
                  data-campo="nombrePreferido">
                 <label for="nombrePreferido" class="campo__etiqueta">
@@ -81,14 +202,21 @@
                        aria-describedby="ayuda-nombre error-nombre">
                 <div class="campo__pie">
                     <p id="ayuda-nombre" class="campo__ayuda">Si lo dejas vacío, se usará tu nombre de usuario.</p>
+                    <!-- Contador de caracteres asociado al campo de nombre preferido. -->
                     <span class="campo__contador" aria-hidden="true" data-contador-nombre>0/50</span>
                 </div>
+                <!-- Mensaje específico para los errores de validación del nombre preferido. -->
                 <p id="error-nombre" class="campo__error" role="alert"
                    th:text="${errores != null} ? ${errores['nombrePreferido']}"
                    th:hidden="${errores == null or errores['nombrePreferido'] == null}"></p>
             </div>
 
-            <!-- Pronombres -->
+            <!--
+                Campo de pronombres:
+                Presenta las opciones disponibles enviadas desde el controlador.
+                Thymeleaf recorre la lista y conserva seleccionada la opción
+                que corresponde al valor actual del perfil.
+            -->
             <div class="campo" th:classappend="${errores != null and errores['pronombres'] != null} ? 'campo--error'"
                  data-campo="pronombres">
                 <label for="pronombres" class="campo__etiqueta">
@@ -103,12 +231,18 @@
                             th:value="${opcion}" th:text="${opcion}"
                             th:selected="${opcion == pronombres}">Elle</option>
                 </select>
+                <!-- Espacio para presentar el mensaje de validación de los pronombres. -->
                 <p id="error-pronombres" class="campo__error" role="alert"
                    th:text="${errores != null} ? ${errores['pronombres']}"
                    th:hidden="${errores == null or errores['pronombres'] == null}"></p>
             </div>
 
-            <!-- WhatsApp -->
+            <!--
+                Campo de WhatsApp:
+                Solicita el número celular del estudiante. Es obligatorio
+                y está configurado para recibir hasta 10 dígitos numéricos.
+                El prefijo internacional de Colombia se presenta por separado.
+            -->
             <div class="campo" th:classappend="${errores != null and errores['whatsapp'] != null} ? 'campo--error'"
                  data-campo="whatsapp">
                 <label for="whatsapp" class="campo__etiqueta">
@@ -127,15 +261,18 @@
                 <p id="ayuda-whatsapp" class="campo__ayuda">
                     Celular de 10 dígitos. Solo se comparte cuando se acepta una solicitud de acompañamiento.
                 </p>
+                <!-- Mensaje específico para los errores relacionados con el número de WhatsApp. -->
                 <p id="error-whatsapp" class="campo__error" role="alert"
                    th:text="${errores != null} ? ${errores['whatsapp']}"
                    th:hidden="${errores == null or errores['whatsapp'] == null}"></p>
             </div>
 
+            <!-- Identificación visual del campo obligatorio dentro del formulario. -->
             <p class="perfil__nota">
                 <span class="campo__obligatorio" aria-hidden="true">*</span> Campo obligatorio.
             </p>
 
+            <!-- Acción para enviar los datos y solicitar su actualización. -->
             <div class="perfil__acciones">
                 <button type="submit" class="boton-accion boton-accion--principal" data-guardar>
                     <span data-guardar-texto>Guardar cambios</span>
@@ -143,7 +280,12 @@
             </div>
         </form>
 
-        <!-- Columna lateral: accesibilidad, vista previa y privacidad -->
+        <!--
+            Columna lateral:
+            Reúne las preferencias de accesibilidad (RF-04), una representación
+            del perfil y un mensaje que explica cómo se protege la información
+            de contacto.
+        -->
         <aside class="perfil__lateral" aria-label="Accesibilidad y cómo te ven los demás">
 
             <!-- RF-04: preferencias de accesibilidad (SCRUM-93) -->
@@ -193,14 +335,23 @@
                         data-guardar-preferencias>Guardar preferencias</button>
             </form>
 
+            <!--
+                Vista previa del perfil:
+                Muestra el nombre que se utilizará para identificar al estudiante
+                y sus pronombres cuando estén disponibles.
+                Si no se registra un nombre preferido, se utiliza el nombre de usuario.
+            -->
             <div class="perfil__tarjeta perfil__vista-previa">
                 <h2 class="perfil__lateral-titulo">Así te verán tus compañeros</h2>
                 <div class="vista-previa">
+                    <!-- Inicial del nombre mostrado en la vista previa del perfil. -->
                     <span class="vista-previa__avatar" aria-hidden="true" data-previa-inicial
                           th:text="${#strings.toUpperCase(#strings.substring(nombrePreferido != null and !#strings.isEmpty(nombrePreferido) ? nombrePreferido : usuarioNombre, 0, 1))}">S</span>
                     <div>
+                        <!-- Nombre que se presenta en la vista previa. -->
                         <strong class="vista-previa__nombre" data-previa-nombre
                                 th:text="${nombrePreferido != null and !#strings.isEmpty(nombrePreferido)} ? ${nombrePreferido} : ${usuarioNombre}">Sam</strong>
+                        <!-- Los pronombres se muestran entre paréntesis cuando tienen un valor válido. -->
                         <span class="vista-previa__pronombres" data-previa-pronombres
                               th:text="${pronombres != null and !#strings.isEmpty(pronombres) and pronombres != 'Prefiero no decir'} ? '(' + ${pronombres} + ')' : ''">(Elle)</span>
                     </div>
@@ -210,6 +361,12 @@
                 </p>
             </div>
 
+            <!--
+                Información de privacidad:
+                Explica al estudiante que su número de WhatsApp no se muestra
+                públicamente en la búsqueda de voluntarios y que se comparte
+                cuando una solicitud de acompañamiento queda aceptada.
+            -->
             <div class="perfil__tarjeta perfil__privacidad">
                 <span class="perfil__tarjeta-icono perfil__tarjeta-icono--suave" aria-hidden="true">
                     <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
