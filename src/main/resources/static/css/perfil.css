@@ -1,11 +1,22 @@
-/* ==========================================================
-   Mi perfil (RF-03) - Panel del estudiante
-   Se apoya en solicitudes.css (etiqueta, alertas, botones,
-   animaciones) y en las variables de global.css.
-   Basado en el mockup "Perfil y accesibilidad".
-   ========================================================== */
 
-/* 1. Encabezado */
+/*
+ * PROYECTO: Feeling
+ * MÓDULO: Gestión del perfil
+ * REQUERIMIENTO: RF-03 - Editar perfil
+ * HISTORIA DE USUARIO: SCRUM-91
+ * AUTOR: Yulipaola Domínguez
+ * VERSIÓN: 1.0
+ * ESTADO: Implementación de estilos
+ *
+ * DESCRIPCIÓN:
+ * Estilos de la vista Mi perfil. Organiza el formulario de edición
+ * y la información que se muestra en la columna lateral.
+ *
+ * La vista utiliza variables de global.css y algunos elementos
+ * compartidos de solicitudes.css para conservar el diseño de Feeling.
+ */
+
+/* Encabezado de la página */
 
 .perfil__encabezado {
     margin-bottom: 24px;
@@ -22,7 +33,7 @@
     color: var(--color-text-secondary);
 }
 
-/* 2. Distribución: formulario a la izquierda y columna lateral */
+/* Distribución principal: formulario y columna lateral */
 
 .perfil__grid {
     display: grid;
@@ -30,6 +41,8 @@
     gap: 24px;
     align-items: start;
 }
+
+/* Estilo general de las tarjetas */
 
 .perfil__tarjeta {
     min-width: 0;
@@ -40,6 +53,8 @@
     box-shadow: var(--shadow-soft);
     animation: solicitudes-aparecer 0.6s ease both;
 }
+
+/* Encabezado de cada tarjeta */
 
 .perfil__tarjeta-cabecera {
     display: flex;
@@ -62,6 +77,8 @@
 .perfil__tarjeta-cabecera strong {
     color: var(--color-primary);
 }
+
+/* Iconos que acompañan los títulos */
 
 .perfil__tarjeta-icono {
     display: inline-flex;
@@ -93,7 +110,7 @@
     height: 24px;
 }
 
-/* 3. Campos del formulario */
+/* Campos del formulario de edición */
 
 .perfil__formulario {
     display: flex;
@@ -122,6 +139,8 @@
     color: var(--color-danger);
     font-weight: 800;
 }
+
+/* Apariencia de los controles y sus estados */
 
 .campo__control {
     width: 100%;
@@ -152,7 +171,8 @@ select.campo__control {
     cursor: pointer;
 }
 
-/* Prefijo +57 del WhatsApp */
+/* El prefijo +57 se mantiene separado del número de WhatsApp */
+
 .campo__con-prefijo {
     display: flex;
     align-items: stretch;
@@ -173,6 +193,8 @@ select.campo__control {
 .campo__con-prefijo .campo__control {
     border-radius: 0 var(--radius-medium) var(--radius-medium) 0;
 }
+
+/* Texto de ayuda y contador debajo de los campos */
 
 .campo__pie {
     display: flex;
@@ -197,7 +219,8 @@ select.campo__control {
     font-weight: 700;
 }
 
-/* Campo con error */
+/* Estilos que se aplican cuando un campo tiene un error */
+
 .campo--error .campo__control,
 .campo--error .campo__prefijo {
     border-color: var(--color-danger);
@@ -229,7 +252,7 @@ select.campo__control {
     font-size: var(--text-small);
 }
 
-/* 4. Botón para guardar */
+/* Botón para guardar los cambios del perfil */
 
 .perfil__acciones {
     display: flex;
@@ -255,7 +278,7 @@ select.campo__control {
     background-color: var(--color-primary-dark);
 }
 
-/* 5. Columna lateral */
+/* Contenido que aparece al lado del formulario */
 
 .perfil__lateral {
     display: flex;
@@ -287,6 +310,8 @@ select.campo__control {
     color: var(--color-text);
     font-size: var(--text-small);
 }
+
+/* Vista previa de cómo se verá el perfil */
 
 .vista-previa {
     display: flex;
@@ -331,7 +356,7 @@ select.campo__control {
     font-weight: 700;
 }
 
-/* 6. Animaciones */
+/* Movimiento del campo cuando se marca un error */
 
 @keyframes perfil-sacudir {
     0%, 100% { transform: translateX(0); }
@@ -339,7 +364,7 @@ select.campo__control {
     75% { transform: translateX(6px); }
 }
 
-/* 7. Pantallas medianas y celulares */
+/* Ajustes para pantallas medianas */
 
 @media (max-width: 1100px) {
     .perfil__grid {
@@ -351,6 +376,8 @@ select.campo__control {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* Ajustes para celulares */
 
 @media (max-width: 600px) {
     .perfil__tarjeta {
@@ -370,6 +397,8 @@ select.campo__control {
         font-size: 1rem;
     }
 }
+
+/* Se respetan las preferencias de movimiento del dispositivo */
 
 @media (prefers-reduced-motion: reduce) {
     .perfil__encabezado,
