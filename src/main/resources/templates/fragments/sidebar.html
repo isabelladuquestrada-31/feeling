@@ -250,18 +250,11 @@
 
                 </a>
 
-<<<<<<< HEAD
-                <!-- OPCIONES DEL ESTUDIANTE (el administrador tiene las suyas abajo) -->
-                <th:block th:unless="${usuarioRol == 'Administrador'}">
-
-                <!-- BUSCAR VOLUNTARIOS -->
-=======
                 <!-- OPCIONES DEL ESTUDIANTE: no se muestran al administrador, que
                      tiene las suyas más abajo. -->
                 <th:block th:unless="${usuarioRol == 'Administrador'}">
 
                 <!-- BUSCAR VOLUNTARIOS: abre la búsqueda de voluntarios. -->
->>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
                 <a href="/voluntarios"
                    th:href="@{/voluntarios}"
                    class="sidebar__link"
@@ -338,12 +331,8 @@
 
                 </th:block>
 
-<<<<<<< HEAD
-                <!-- OPCIONES DEL ADMINISTRADOR -->
-=======
                 <!-- OPCIONES DEL ADMINISTRADOR: gestión de usuarios, visible solo
                      cuando el rol es Administrador. -->
->>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
                 <a th:if="${usuarioRol == 'Administrador'}"
                    href="/admin/usuarios"
                    th:href="@{/admin/usuarios}"
@@ -370,11 +359,7 @@
 
                 </a>
 
-<<<<<<< HEAD
-                <!-- PERFIL -->
-=======
                 <!-- PERFIL: disponible para todos los roles. -->
->>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
                 <a href="/perfil"
                    th:href="@{/perfil}"
                    class="sidebar__link"

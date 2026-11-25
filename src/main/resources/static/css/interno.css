@@ -1394,17 +1394,10 @@
     }
 }
 
-<<<<<<< HEAD
-/* ==========================================================
-   ESTRUCTURA DE LAS PÁGINAS INTERNAS
-   El menú lateral y el contenido quedan lado a lado.
-   ========================================================== */
-=======
 /* 4. ESTRUCTURA DE LAS PÁGINAS INTERNAS
 
    El menú lateral y el contenido quedan lado a lado.
    */
->>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
 
 .app-shell {
     display: flex;
@@ -1422,13 +1415,3 @@
     flex: 1;
     padding: 32px clamp(16px, 4vw, 48px);
 }
-<<<<<<< HEAD
-
-/* El fondo del encabezado ocupa todo el ancho disponible,
-   ahora que el menú lateral ya no queda encima del contenido. */
-.app-shell .main-header {
-    background-size: cover;
-    background-position: center 60%;
-}
-=======
->>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
