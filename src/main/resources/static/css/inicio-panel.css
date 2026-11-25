@@ -4,8 +4,8 @@
    MÓDULO: Pantallas de inicio por rol (RF-02)
 
    AUTOR: Yulipaola Domínguez
-   VERSIÓN: 1.1.0
-   FECHA DE DOCUMENTACIÓN: 2026-11-22
+   VERSIÓN: 1.2.0
+   FECHA DE DOCUMENTACIÓN: 2026-11-25
    ESTADO: Finalizado
    TICKET: SCRUM-53
 
@@ -57,6 +57,10 @@
      retiró la rotación de los textos .panel-hero__nota,
      .panel-tarjeta__frase y .panel__lema, y la cursiva de
      .panel-hero__nota, para que queden horizontales.
+    - 1.2.0 (2026-11-25): se eliminaron los estilos del emoji del
+     saludo (.panel-hero__mano y la animación panel-saludar) y el
+     retraso de .panel-tarjeta--ajustes, porque se quitó la tarjeta
+     Ajustes razonables. No cambió ningún otro estilo.
 
    OBSERVACIONES:
    - Las reglas .cifra, .gestion y .panel-cifras son de la pantalla
@@ -70,6 +74,9 @@
      :has().
    - Dos reglas usan !important para vencer a .panel-tarjeta p, que
      tiene mayor especificidad.
+   - .panel-tarjeta__pronto (etiqueta Muy pronto) ya no se usa en
+     ninguna pantalla. Se conserva por si se necesita para otra
+     función futura.
    */
 
 /* 1. DISTRIBUCIÓN GENERAL Y ALERTAS
@@ -185,13 +192,6 @@
    con la clase solicitudes__etiqueta. */
 .panel-hero__texto .solicitudes__etiqueta {
     margin-bottom: 10px;
-}
-
-/* Emoji de saludo: se agita dos veces al cargar la página. */
-.panel-hero__mano {
-    display: inline-block;
-    transform-origin: 70% 80%;
-    animation: panel-saludar 2.4s ease-in-out 0.8s 2;
 }
 
 /* Pastilla informativa bajo el saludo. */
@@ -815,11 +815,6 @@
     height: 16px;
 }
 
-/* Retrasos escalonados de la animación de entrada de las tarjetas. */
-.panel-tarjeta--ajustes {
-    animation-delay: 0.2s;
-}
-
 .panel-tarjeta--voluntariado {
     animation-delay: 0.3s;
 }
@@ -1110,13 +1105,6 @@
    Los nombres llevan el prefijo panel-. Todas se desactivan en la
    sección 11 cuando el usuario prefiere menos movimiento.
    */
-
-/* Mano que saluda. */
-@keyframes panel-saludar {
-    0%, 60%, 100% { transform: rotate(0); }
-    10%, 30% { transform: rotate(16deg); }
-    20%, 40% { transform: rotate(-10deg); }
-}
 
 /* Latido del corazón. */
 @keyframes panel-latir {
