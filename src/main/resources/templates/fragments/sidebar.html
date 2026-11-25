@@ -1,8 +1,89 @@
-
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
+    <!--
+    PROYECTO: Feeling
+    ARCHIVO: sidebar.html
+    UBICACIÓN: src/main/resources/templates/fragments/sidebar.html
+    MÓDULO: Plantilla base, menú lateral
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.1.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-24
+    ESTADO: Finalizado
+    TICKET: SCRUM-43
+
+    DESCRIPCIÓN:
+    Fragmento de Thymeleaf con el menú lateral de las páginas internas.
+    Muestra el logo de Feeling, la información del usuario, las
+    opciones de navegación según su rol (estudiante o administrador) y
+    el logo de la Universidad Autónoma de Manizales. Lo incluye
+    layouts/layout-interno.html con la expresión
+    ~{fragments/sidebar :: sidebar}.
+
+    FUNCIONALIDADES:
+    - Dos estados en pantallas grandes: compacto (solo iconos) y
+      expandido, con un botón para alternarlos.
+    - En celulares y tabletas se abre como panel deslizable, con un
+      fondo para cerrarlo.
+    - Resalta la opción de la página actual.
+    - Opciones distintas para estudiantes y administradores.
+
+    ESTRUCTURA:
+    - Fondo para cerrar el menú en móviles.
+    - Menú lateral (aside): logos y botones, línea divisora, información
+      del usuario, navegación e información institucional.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura semántica y accesibilidad (ARIA).
+    - Thymeleaf: fragmento, condicionales, rutas y textos.
+    - SVG en línea: iconos que heredan el color del texto.
+    - CSS3 y JavaScript: estilos y comportamiento del menú.
+
+    DEPENDENCIAS:
+    - /css/global.css y /css/interno.css.
+    - /js/sidebar.js: abre, cierra y alterna el menú.
+
+    DATOS DEL MODELO (suministrados por el controlador):
+    - usuarioNombre: nombre del usuario. Si no llega, se muestra
+      Estudiante.
+    - usuarioRol: rol del usuario (por ejemplo, Administrador). Si no
+      llega, se muestra Estudiante.
+    - paginaActiva: identifica la opción que debe resaltarse. Valores:
+      inicio, voluntarios, acompanamientos, ser-voluntario, usuarios y
+      perfil.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /inicio, /voluntarios, /mis-acompanamientos, /ser-voluntario,
+      /perfil y /admin/usuarios.
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-sidebar-toggle: botón que expande o contrae el menú.
+    - data-sidebar-open y data-sidebar-close: botones que abren y cierran
+      el menú en móviles.
+    - data-tooltip: nombre de la opción que se muestra en modo compacto.
+    - aria-current: marca la página actual para lectores de pantalla.
+
+    ATRIBUTOS src Y th:src:
+    Cada imagen tiene src con ruta relativa y th:src con ruta del
+    servidor. El primero permite ver este archivo abierto directamente
+    en el navegador; el segundo es el que se usa en la aplicación.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación inicial del menú (SCRUM-43).
+    - 1.1.0 (2026-11-24): documentación completa. No se modificó el
+      código. El cambio del fondo del menú a color liso se hizo en
+      interno.css.
+
+    OBSERVACIONES:
+    - El nombre que muestra el menú depende de que el controlador envíe
+      usuarioNombre; si una página no lo envía, aparece Estudiante.
+    - El botón de prueba que está fuera del fragmento solo se ve al
+      abrir este archivo directamente. No se incluye en la aplicación.
+    -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feeling</title>
@@ -15,8 +96,9 @@
 
 <body>
 
-    <!-- BOTÓN TEMPORAL PARA PROBAR LA APERTURA EN EL NAVEGADOR -->
-    <!-- Después lo trasladaremos al header -->
+    <!-- BOTÓN TEMPORAL DE PRUEBA: solo se ve al abrir este archivo
+         directamente en el navegador. No forma parte del fragmento. El botón
+         que se usa en la aplicación está en header.html. -->
     <button type="button"
             class="sidebar-mobile-open"
             data-sidebar-open
@@ -28,21 +110,24 @@
 
     </button>
 
+    <!-- Fragmento reutilizable del menú lateral (nombre: sidebar). -->
     <th:block th:fragment="sidebar">
 
-        <!-- FONDO PARA CERRAR EL MENÚ EN MÓVILES -->
+        <!-- FONDO PARA CERRAR EL MENÚ EN MÓVILES: al tocarlo, sidebar.js
+             cierra el panel. -->
         <button type="button"
                 class="sidebar-backdrop"
                 data-sidebar-close
                 aria-label="Cerrar menú de navegación">
         </button>
 
-        <!-- MENÚ LATERAL -->
+        <!-- MENÚ LATERAL: nace en estado compacto (clase de estado compacto).
+             sidebar.js lo cambia a expandido o lo abre en móviles. -->
         <aside class="sidebar sidebar--collapsed"
                id="main-sidebar"
                aria-label="Menú principal">
 
-            <!-- CABECERA Y LOGOS -->
+            <!-- CABECERA Y LOGOS: enlace al inicio y botones de expandir y cerrar. -->
             <div class="sidebar__brand">
 
                 <a href="/inicio"
@@ -50,14 +135,13 @@
                    class="sidebar__brand-link"
                    aria-label="Feeling, ir al inicio">
 
-                    <!-- LOGO COMPLETO: ESTADO EXPANDIDO -->
+                    <!-- LOGO COMPLETO: se muestra cuando el menú está expandido. -->
                     <img src="../../static/img/Logosímbolo_Sin_Fondo.png"
                          th:src="@{/img/Logosímbolo_Sin_Fondo.png}"
                          alt="Feeling, juntos es más fácil"
                          class="sidebar__logo sidebar__logo--expanded">
 
-                    <!-- ISOTIPO: ESTADO COMPACTO -->
-                    <!-- Reemplaza Isotipo_Feeling.png por el nombre de tu archivo -->
+                    <!-- ISOTIPO: se muestra cuando el menú está compacto. -->
                     <img src="../../static/img/Isotipo.png"
                          th:src="@{/img/Isotipo.png}"
                          alt="Feeling"
@@ -65,7 +149,8 @@
 
                 </a>
 
-                <!-- BOTÓN PARA EXPANDIR Y CONTRAER -->
+                <!-- BOTÓN PARA EXPANDIR Y CONTRAER: aria-expanded y el texto accesible
+                     los actualiza sidebar.js. -->
                 <button type="button"
                         class="sidebar__toggle"
                         data-sidebar-toggle
@@ -89,7 +174,7 @@
 
                 </button>
 
-                <!-- BOTÓN DE CIERRE PARA MÓVILES -->
+                <!-- BOTÓN DE CIERRE: solo se ve en celulares y tabletas. -->
                 <button type="button"
                         class="sidebar__close"
                         data-sidebar-close
@@ -101,10 +186,11 @@
 
             </div>
 
-            <!-- LÍNEA DIVISORA -->
+            <!-- LÍNEA DIVISORA entre la cabecera y la información del usuario. -->
             <hr class="sidebar__divider">
 
-            <!-- INFORMACIÓN DEL USUARIO -->
+            <!-- INFORMACIÓN DEL USUARIO: foto, nombre y rol. El nombre y el rol
+                 vienen del modelo (usuarioNombre y usuarioRol). -->
             <section class="sidebar__user"
                      aria-label="Información del usuario">
 
@@ -129,7 +215,8 @@
 
             </section>
 
-            <!-- NAVEGACIÓN PRINCIPAL -->
+            <!-- NAVEGACIÓN PRINCIPAL: enlaces del menú. La opción de la página
+                 actual recibe una clase de resaltado y aria-current. -->
             <nav class="sidebar__navigation"
                  aria-label="Secciones de Feeling">
 
@@ -137,7 +224,7 @@
                     MENÚ PRINCIPAL
                 </p>
 
-                <!-- INICIO -->
+                <!-- INICIO: disponible para todos los roles. -->
                 <a href="/inicio"
                    th:href="@{/inicio}"
                    class="sidebar__link"
@@ -163,10 +250,18 @@
 
                 </a>
 
+<<<<<<< HEAD
                 <!-- OPCIONES DEL ESTUDIANTE (el administrador tiene las suyas abajo) -->
                 <th:block th:unless="${usuarioRol == 'Administrador'}">
 
                 <!-- BUSCAR VOLUNTARIOS -->
+=======
+                <!-- OPCIONES DEL ESTUDIANTE: no se muestran al administrador, que
+                     tiene las suyas más abajo. -->
+                <th:block th:unless="${usuarioRol == 'Administrador'}">
+
+                <!-- BUSCAR VOLUNTARIOS: abre la búsqueda de voluntarios. -->
+>>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
                 <a href="/voluntarios"
                    th:href="@{/voluntarios}"
                    class="sidebar__link"
@@ -216,7 +311,7 @@
 
                 </a>
 
-                <!-- SER VOLUNTARIO -->
+                <!-- SER VOLUNTARIO: abre el formulario o el perfil de voluntario. -->
                 <a href="/ser-voluntario"
                    th:href="@{/ser-voluntario}"
                    class="sidebar__link"
@@ -243,7 +338,12 @@
 
                 </th:block>
 
+<<<<<<< HEAD
                 <!-- OPCIONES DEL ADMINISTRADOR -->
+=======
+                <!-- OPCIONES DEL ADMINISTRADOR: gestión de usuarios, visible solo
+                     cuando el rol es Administrador. -->
+>>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
                 <a th:if="${usuarioRol == 'Administrador'}"
                    href="/admin/usuarios"
                    th:href="@{/admin/usuarios}"
@@ -270,7 +370,11 @@
 
                 </a>
 
+<<<<<<< HEAD
                 <!-- PERFIL -->
+=======
+                <!-- PERFIL: disponible para todos los roles. -->
+>>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
                 <a href="/perfil"
                    th:href="@{/perfil}"
                    class="sidebar__link"
@@ -297,16 +401,17 @@
 
             </nav>
 
-            <!-- INFORMACIÓN INSTITUCIONAL -->
+            <!-- INFORMACIÓN INSTITUCIONAL: logo de la Universidad Autónoma de
+                 Manizales, al final del menú. -->
             <div class="sidebar__decoration">
 
-            <!-- LOGO UAM PARA MENÚ EXPANDIDO -->
+            <!-- LOGO UAM: se muestra con el menú expandido. -->
             <img src="../../static/img/Logo_UAM.png"
                 th:src="@{/img/Logo_UAM.png}"
                 alt="Logo de la Universidad Autónoma de Manizales"
                 class="sidebar__uam-logo sidebar__uam-logo--expanded">
 
-            <!-- ISOTIPO UAM PARA MENÚ COMPACTO -->
+            <!-- ISOTIPO UAM: se muestra con el menú compacto. -->
             <img src="../../static/img/Isotipo_UAM.jpg"
                 th:src="@{/img/Isotipo_UAM.jpg}"
                 alt="Isotipo de la Universidad Autónoma de Manizales"

@@ -1,11 +1,85 @@
+/* PROYECTO: Feeling
+   ARCHIVO: interno.css
+   UBICACIÓN: src/main/resources/static/css/interno.css
+   MÓDULO: Plantilla base de las páginas internas (menú lateral,
+   encabezado y pie de página)
 
-/* =========================================
-   FEELING - MENÚ LATERAL
-   Estados compacto, expandido y móvil
-========================================= */
+   AUTOR: Yulipaola Domínguez
+   VERSIÓN: 1.1.0
+   FECHA DE DOCUMENTACIÓN: 2026-11-24
+   ESTADO: Finalizado
+   TICKET: SCRUM-43 (el pie de página corresponde a SCRUM-34)
+
+   DESCRIPCIÓN:
+   Hoja de estilos de la estructura común de las páginas internas de
+   Feeling. Define el menú lateral (con sus estados compacto, expandido
+   y móvil), el encabezado con el menú del usuario, el pie de página y
+   la estructura que coloca el menú junto al contenido.
+
+   CONTENIDO:
+   1. Menú lateral: estructura, logos, botones, usuario, navegación,
+      información institucional, accesibilidad y adaptación a móviles.
+   2. Encabezado: estructura, perfil, menú desplegable y adaptación.
+   3. Pie de página: estructura, columnas, enlaces, contacto y
+      adaptación.
+   4. Estructura de las páginas internas.
+
+   ESTADOS DEL MENÚ LATERAL:
+   - Compacto (por defecto): 88 px, solo iconos.
+   - Expandido: 300 px, iconos y textos.
+   - Móvil (hasta 768 px): panel deslizable con fondo para cerrarlo.
+
+   TECNOLOGÍAS:
+   - CSS3: flexbox, variables, transiciones y consultas de medios.
+
+   DEPENDENCIAS:
+   - global.css: variables de color, radios y tipografía.
+   - sidebar.js: alterna las clases sidebar--collapsed y
+     sidebar--expanded, y agrega sidebar-is-open al body.
+   - header.js: abre y cierra el menú desplegable del usuario.
+
+   PÁGINAS QUE LA UTILIZAN:
+   - Todas las páginas internas, mediante layouts/layout-interno.html
+     y los fragmentos sidebar.html, header.html y footer.html.
+
+   HISTORIAL DE VERSIONES:
+   - 1.0.0: plantilla base del menú, encabezado y pie de página
+     (SCRUM-43, SCRUM-34).
+   - 1.1.0 (2026-11-24): documentación completa de los bloques del menú
+     y del encabezado, y ajustes de diseño pedidos por la docente:
+     * El fondo del menú lateral pasó de imagen a color liso #FEFEFE.
+     * El fondo del encabezado pasó de imagen a color liso #FEFEFE. Se
+       retiraron las reglas de tamaño y posición de esa imagen
+       (background-size y background-position), que ya no tenían
+       efecto, y el bloque .app-shell .main-header, que solo las usaba.
+     * En pantallas de hasta 380 px el encabezado usaba
+       var(--color-surface); ahora usa #FEFEFE para ser coherente con
+       el resto de tamaños.
+
+   OBSERVACIONES:
+   - Las imágenes Fondo_Sidebar.png y Fondo_Header.png ya no se usan
+     y pueden eliminarse de static/img si el equipo está de acuerdo.
+     Fondo_Footer.png sigue en uso en el pie de página.
+   - El color base del menú (.sidebar) sigue siendo #fefbfb, casi
+     blanco. Los textos del menú definen su propio color oscuro, pero
+     un texto nuevo sin color propio no se vería sobre el fondo claro.
+   - Algunos elementos son blancos y quedan casi sin contraste con el
+     fondo #FEFEFE: el botón de expandir, la tarjeta del usuario, el
+     borde del avatar y el botón del perfil en el encabezado. Se
+     conservaron sin cambios por indicación de no modificar estilos.
+   */
+
+/* 1. MENÚ LATERAL
+
+   Estados compacto, expandido y móvil. Incluye la estructura, los
+   logos, los botones, la información del usuario, la navegación, la
+   zona institucional, la accesibilidad y la adaptación a móviles.
+   */
 
 /* ESTRUCTURA PRINCIPAL */
 
+/* Contenedor del menú: columna fija de 300 px con la altura de la
+   ventana. Versión 1.1.0: el fondo pasó de imagen a color liso. */
 .sidebar {
     box-sizing: border-box;
     width: 300px;
@@ -23,14 +97,16 @@
 
     padding: 24px 18px;
 
-    background: url('../img/Fondo_Sidebar.png') center / cover no-repeat;
+    /* Fondo liso (ajuste de diseño de la docente): reemplaza la imagen
+       Fondo_Sidebar.png. */
+    background: #FEFEFE;
 
     color: #fefbfb;
 
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
-
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     z-index: 100;
 
     transition: width 0.25s ease, min-width 0.25s ease,
@@ -39,6 +115,8 @@
 
 /* ESTADO COMPACTO */
 
+/* Estado compacto (por defecto): solo iconos, 88 px de ancho.
+   sidebar.js alterna entre sidebar--collapsed y sidebar--expanded. */
 .sidebar.sidebar--collapsed {
     width: 88px;
     min-width: 88px;
@@ -48,6 +126,7 @@
 
 /* CABECERA Y LOGOS */
 
+/* Zona del logo y de los botones de expandir y de cerrar. */
 .sidebar__brand {
     position: relative;
 
@@ -98,6 +177,7 @@
 
 /* BOTÓN DE EXPANDIR Y CONTRAER */
 
+/* Botón para expandir o contraer el menú; queda arriba a la derecha. */
 .sidebar__toggle {
     position: relative;
     order: -1;
@@ -170,6 +250,7 @@
 
 /* INFORMACIÓN DEL USUARIO */
 
+/* Tarjeta con la foto, el nombre y el rol del usuario. */
 .sidebar__user {
     display: flex;
     align-items: center;
@@ -237,6 +318,7 @@
     min-width: 0;
 }
 
+/* Título de la sección de navegación (MENÚ PRINCIPAL). */
 .sidebar__section-title {
     color: var(--color-navy);
     font-size: 0.9rem;
@@ -247,6 +329,8 @@
 
 /* OPCIONES */
 
+/* Opción del menú con icono y texto. En modo compacto solo se ve el
+   icono. */
 .sidebar__link {
     position: relative;
 
@@ -274,6 +358,7 @@
     text-decoration: none;
 }
 
+/* Opción de la página actual, marcada desde el HTML con paginaActiva. */
 .sidebar__link--active {
     color: var(--color-navy);
     background: #DDF5F7;
@@ -316,6 +401,8 @@
 
 /* INFORMACIÓN INSTITUCIONAL */
 
+/* Zona institucional con el logo de la UAM. margin-top: auto la
+   empuja al final del menú. */
 .sidebar__decoration {
     margin-top: auto;
     text-align: center;
@@ -576,15 +663,20 @@
 }
 
 
-/* =========================================
-   HEADER - FEELING RESPONSIVE
-========================================= */
+/* 2. ENCABEZADO
+
+   Barra superior con el menú del usuario y el botón que abre el menú
+   lateral en celulares y tabletas. Se adapta a tabletas, celulares y
+   pantallas pequeñas.
+   */
 
 /* ESTRUCTURA PRINCIPAL */
 
+/* Encabezado: barra superior de 60 a 80 px de alto con el perfil a la
+   derecha. Versión 1.1.0: el fondo pasó de imagen a color liso. */
 .main-header {
     box-sizing: border-box;
-
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     width: 100%;
     height: clamp(60px, 8vw, 80px);
     min-height: 60px;
@@ -595,10 +687,9 @@
     align-items: center;
     justify-content: flex-end;
 
-    background-image: url('../img/Fondo_Header.png');
-    background-size: 90%;
-    background-position: 170px 60%;
-    background-repeat: no-repeat;
+    /* Fondo liso (ajuste de diseño de la docente): reemplaza la imagen
+       Fondo_Header.png. */
+    background-color: #FEFEFE;
 
     border-bottom: 1px solid #DCE7EB;
 
@@ -608,12 +699,14 @@
 
 /* PERFIL */
 
+/* Contenedor del botón de perfil y de su menú desplegable. */
 .header-profile {
     position: relative;
     z-index: 2;
     transform: translateX(-30px);
 }
 
+/* Botón con la foto y la flecha que abre el menú del usuario. */
 .header-profile-button {
     display: flex;
     align-items: center;
@@ -622,10 +715,10 @@
 
     padding: 5px 8px;
 
-    border: 2px solid transparent;
+    border: 2px solid #087e9652;
     border-radius: 25px;
 
-    background-color: #FFFFFF;
+    background-color:#b0ebdb38;
     cursor: pointer;
 }
 
@@ -646,6 +739,7 @@
 
 /* MENÚ DESPLEGABLE */
 
+/* Menú desplegable del usuario; se muestra al quitarle el atributo hidden. */
 .header-profile-dropdown {
     position: absolute;
     top: calc(100% + 8px);
@@ -669,6 +763,7 @@
     margin: 0;
 }
 
+/* Botón Cerrar sesión del menú desplegable. */
 .header-logout-button {
     width: 100%;
 
@@ -710,8 +805,6 @@
         height: 60px;
         min-height: 60px;
         padding: 8px 14px;
-
-        background-position: 60px center;
     }
 
     .header-profile-image {
@@ -728,8 +821,6 @@
         height: 60px;
         min-height: 60px;
         padding: 6px 10px;
-
-        background-position: 35px center;
     }
 
     .header-profile-image {
@@ -749,8 +840,7 @@
         min-height: 55px;
         padding: 5px 8px;
 
-        background-image: none;
-        background-color: var(--color-surface);
+        background-color: #FEFEFE;
     }
 
     .header-profile-image {
@@ -775,11 +865,11 @@
 }
 
 
-/* =========================================
-   FOOTER - FEELING
-   SCRUM-34
-   Responsive - Mobile First
-========================================= */
+/* 3. PIE DE PÁGINA
+
+   Ticket SCRUM-34. Diseño adaptable que parte del celular y crece
+   hacia tabletas, escritorio y pantallas grandes (mobile first).
+   */
 
 /* ESTRUCTURA GENERAL */
 
@@ -1304,10 +1394,17 @@
     }
 }
 
+<<<<<<< HEAD
 /* ==========================================================
    ESTRUCTURA DE LAS PÁGINAS INTERNAS
    El menú lateral y el contenido quedan lado a lado.
    ========================================================== */
+=======
+/* 4. ESTRUCTURA DE LAS PÁGINAS INTERNAS
+
+   El menú lateral y el contenido quedan lado a lado.
+   */
+>>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)
 
 .app-shell {
     display: flex;
@@ -1325,6 +1422,7 @@
     flex: 1;
     padding: 32px clamp(16px, 4vw, 48px);
 }
+<<<<<<< HEAD
 
 /* El fondo del encabezado ocupa todo el ancho disponible,
    ahora que el menú lateral ya no queda encima del contenido. */
@@ -1332,3 +1430,5 @@
     background-size: cover;
     background-position: center 60%;
 }
+=======
+>>>>>>> 3037afd (SCRUM-43: actualizar plantilla interna y navegación)

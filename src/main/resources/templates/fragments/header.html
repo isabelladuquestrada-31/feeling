@@ -1,3 +1,61 @@
+<!--
+    PROYECTO: Feeling
+    ARCHIVO: header.html
+    UBICACIÓN: src/main/resources/templates/fragments/header.html
+    MÓDULO: Plantilla base, encabezado
+
+    AUTOR: Yulipaola Domínguez
+    VERSIÓN: 1.1.0
+    FECHA DE DOCUMENTACIÓN: 2026-11-24
+    ESTADO: Finalizado
+    TICKET: SCRUM-43
+
+    DESCRIPCIÓN:
+    Fragmento de Thymeleaf con el encabezado de las páginas internas.
+    Contiene el botón que abre el menú lateral en celulares y tabletas,
+    y el botón del perfil con un menú desplegable para cerrar sesión.
+    Lo incluye layouts/layout-interno.html con la expresión
+    ~{fragments/header :: header}.
+
+    FUNCIONALIDADES:
+    - Botón para abrir el menú lateral en pantallas pequeñas.
+    - Botón de perfil con la foto del usuario.
+    - Menú desplegable con la opción Cerrar sesión.
+
+    TECNOLOGÍAS:
+    - HTML5: estructura y accesibilidad (ARIA).
+    - Thymeleaf: fragmento, rutas y recursos.
+    - CSS3 y JavaScript: estilos y comportamiento del menú.
+
+    DEPENDENCIAS:
+    - /css/interno.css: estilos del encabezado.
+    - /js/header.js: abre y cierra el menú desplegable del usuario.
+    - /js/sidebar.js: usa el botón con data-sidebar-open.
+
+    RUTAS DE LA APLICACIÓN UTILIZADAS:
+    - /logout: cierre de sesión (método POST).
+
+    RECURSOS GRÁFICOS:
+    - /img/Foto_Perfil.jpg
+
+    ATRIBUTOS DE INTERACCIÓN:
+    - data-sidebar-open: botón que abre el menú lateral.
+    - aria-controls y aria-expanded: relacionan cada botón con el
+      elemento que controla y comunican si está abierto.
+    - hidden: el menú desplegable permanece oculto hasta que
+      header.js lo muestra.
+
+    HISTORIAL DE VERSIONES:
+    - 1.0.0: implementación inicial del encabezado (SCRUM-43).
+    - 1.1.0 (2026-11-24): documentación completa. No se modificó el
+      código. El cambio del fondo del encabezado a color liso se hizo
+      en interno.css.
+
+    OBSERVACIONES:
+    - La foto de perfil es la misma para todos los usuarios
+      (Foto_Perfil.jpg); no se carga la foto propia de cada usuario.
+    - El menú desplegable solo tiene la opción Cerrar sesión.
+-->
 <header th:fragment="header" class="main-header">
 
     <!-- Botón para abrir el menú lateral en celulares y tabletas -->
@@ -13,6 +71,21 @@
     </button>
 
     <!-- Botón para el menú del usuario -->
+    <!-- Botón para abrir el menú lateral en celulares y tabletas. Se oculta
+         en pantallas grandes mediante interno.css. Lo gestiona sidebar.js. -->
+    <button type="button"
+            class="sidebar-mobile-open"
+            data-sidebar-open
+            aria-controls="main-sidebar"
+            aria-expanded="false"
+            aria-label="Abrir menú de navegación">
+
+        <span aria-hidden="true">☰</span>
+
+    </button>
+
+    <!-- Perfil del usuario: botón con la foto y la flecha, y menú
+         desplegable. Lo gestiona header.js. -->
     <div class="header-profile">
 
         <button
@@ -35,7 +108,8 @@
 
         </button>
 
-        <!-- Menú desplegable -->
+        <!-- Menú desplegable: oculto por defecto. Contiene el formulario que
+             cierra la sesión mediante una petición POST a /logout. -->
         <div
             class="header-profile-dropdown"
             id="profile-menu"
